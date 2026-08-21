@@ -23,7 +23,7 @@
         appId: "e9c3d005-53b3-4bef-8721-dd6062e20559",
         safari_web_id: "web.onesignal.auto.e9c3d005-53b3-4bef-8721-dd6062e20559",
         notifyButton: {
-          enable: false // Menggunakan prompt bawaan browser / tombol khusus
+          enable: false
         },
         allowLocalhostAsSecureOrigin: true
       });
@@ -113,22 +113,20 @@
   <!-- GOOGLE APPS SCRIPT WEB APP IFRAME -->
   <iframe 
     id="appFrame" 
-    src="https://script.google.com/macros/s/AKfycbwPz8Q9iJ-J5t13-g89710-PAG/exec" 
+    src="https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec" 
     allow="clipboard-read; clipboard-write; geolocation; camera; microphone;"
   ></iframe>
 
   <script>
-    // URL Web App Google Apps Script Anda
-    var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbwPz8Q9iJ-J5t13-g89710-PAG/exec";
+    var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
 
     var frame = document.getElementById('appFrame');
     var splash = document.getElementById('splashScreen');
 
-    // 1. Teruskan Hash URL (Deep Linking dari Push Notification ke Iframe)
+    // 1. Sinkronisasi Hash URL (Deep Linking dari Notifikasi ke Halaman Menu)
     function syncUrlToIframe() {
       var hash = window.location.hash || '';
       if (frame && APPS_SCRIPT_EXEC_URL) {
-        // Ganti URL iframe dengan parameter hash aktif
         var targetUrl = APPS_SCRIPT_EXEC_URL + (hash ? hash : '');
         if (!frame.src || frame.src.indexOf(APPS_SCRIPT_EXEC_URL) === -1) {
           frame.src = targetUrl;
@@ -136,7 +134,7 @@
       }
     }
 
-    // 2. Hilangkan Splash Screen saat Iframe berhasil dimuat
+    // 2. Transisi Splash Screen saat Aplikasi Siap
     frame.onload = function() {
       if (splash) {
         splash.style.opacity = '0';
@@ -146,24 +144,22 @@
       }
     };
 
-    // 3. Jembatan Dua Arah (postMessage Listener dari Apps Script ke OneSignal)
+    // 3. Jembatan Sinkronisasi Role Login ke OneSignal Tag
     window.addEventListener('message', function(event) {
       var data = event.data;
       if (!data || typeof data !== 'object') return;
 
-      // Saat Apps Script mengirimkan data user yang sedang login
       if (data.type === 'SET_ONESIGNAL_USER') {
         var role = String(data.role || 'user biasa').toLowerCase().trim();
         var email = String(data.email || '').trim().toLowerCase();
         var nama = String(data.nama || 'User').trim();
 
         window.OneSignalDeferred.push(async function(OneSignal) {
-          // Set External User ID & Email
           if (email) {
             await OneSignal.login(email);
           }
 
-          // Pasang Label Tag Role untuk segmentasi push notifikasi
+          // Pasang Label Tag Role untuk filter pengiriman notifikasi
           await OneSignal.User.addTags({
             role: role,
             nama: nama,
@@ -171,20 +167,19 @@
             app: 'PAG_DOCS'
           });
 
-          console.log('✅ OneSignal Role Tagged:', role, email);
+          console.log('✅ OneSignal Tag Berhasil Ditetapkan:', role, email);
         });
       }
     });
 
-    // Jalankan Sinkronisasi Awal
     syncUrlToIframe();
     window.addEventListener('hashchange', syncUrlToIframe);
 
-    // Registrasi Service Worker PWA (Offline & Installable)
+    // Registrasi Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('./OneSignalSDKWorker.js').catch(function(err) {
-          console.log('SW registration error:', err);
+          console.log('SW Registration error:', err);
         });
       });
     }
