@@ -2,382 +2,192 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PT. PUTRA AULIA KONSULTAN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>PAG Docs - PT. Putra Aulia Group</title>
   
-  <!-- PWA & Mobile Meta Tags -->
+  <!-- PWA & Mobile Web Meta -->
   <meta name="theme-color" content="#0f766e">
-  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="PAG Docs">
-  
-  <!-- Manifest & Icons -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
 
-  <!-- OneSignal Web Push SDK -->
+  <!-- OneSignal Web Push SDK (v16+) -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
-    var deferredPrompt = null;
-    var unreadCount = 0;
-
-    // Deteksi event install browser
-    window.addEventListener('beforeinstallprompt', function(e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      var btnInstall = document.getElementById('btnActionInstall');
-      if (btnInstall && !cekStatusTerpasang()) {
-        btnInstall.style.display = 'block';
-      }
-    });
-
-    // Badge Counter
-    function pasangBadge(jumlah) {
-      if ('setAppBadge' in navigator) {
-        if (jumlah > 0) {
-          navigator.setAppBadge(jumlah).catch(function(e){});
-        } else {
-          navigator.clearAppBadge().catch(function(e){});
-        }
-      }
-    }
-
-    function hapusBadge() {
-      unreadCount = 0;
-      pasangBadge(0);
-    }
-
-    window.addEventListener('focus', hapusBadge);
-    document.addEventListener('visibilitychange', function() {
-      if (document.visibilityState === 'visible') {
-        hapusBadge();
-        evaluasiAksesPengguna();
-      }
-    });
-
-    // Inisialisasi OneSignal
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function(OneSignal) {
       await OneSignal.init({
-        appId: "e9c3d005-53b3-4bef-8721-dd6062e20559"
+        appId: "e9c3d005-53b3-4bef-8721-dd6062e20559",
+        safari_web_id: "web.onesignal.auto.e9c3d005-53b3-4bef-8721-dd6062e20559",
+        notifyButton: {
+          enable: false // Menggunakan prompt bawaan browser / tombol khusus
+        },
+        allowLocalhostAsSecureOrigin: true
       });
 
-      OneSignal.Notifications.addEventListener('foregroundWillDisplay', function() {
-        unreadCount++;
-        pasangBadge(unreadCount);
-      });
-
-      evaluasiAksesPengguna();
-    });
-
-    // --- LOGIKA VALIDASI AKSES KETAT ---
-    function cekStatusTerpasang() {
-      return window.matchMedia('(display-mode: standalone)').matches || 
-             window.navigator.standalone === true || 
-             document.referrer.includes('android-app://');
-    }
-
-    function cekStatusNotifikasi() {
-      return ('Notification' in window) && Notification.permission === 'granted';
-    }
-
-    function evaluasiAksesPengguna() {
-      var isInstalled = cekStatusTerpasang();
-      var isNotifGranted = cekStatusNotifikasi();
-
-      var badgeNotif = document.getElementById('statusBadgeNotif');
-      var badgeInstall = document.getElementById('statusBadgeInstall');
-      var btnNotif = document.getElementById('btnActionNotif');
-      var btnInstall = document.getElementById('btnActionInstall');
-      var btnEnter = document.getElementById('btnMasukApp');
-      var gateModal = document.getElementById('strictGateModal');
-      var appFrame = document.getElementById('appFrame');
-
-      // 1. Evaluasi Status Notifikasi
-      if (isNotifGranted) {
-        badgeNotif.innerHTML = '✅ Aktif';
-        badgeNotif.className = 'status-badge done';
-        btnNotif.disabled = true;
-        btnNotif.innerText = '✅ Izin Notifikasi Diberikan';
-        btnNotif.className = 'btn-action btn-disabled';
-      } else {
-        badgeNotif.innerHTML = '❌ Belum Aktif';
-        badgeNotif.className = 'status-badge pending';
-        btnNotif.disabled = false;
-        btnNotif.innerText = '🔔 Aktifkan Izin Notifikasi';
-        btnNotif.className = 'btn-action btn-primary';
-      }
-
-      // 2. Evaluasi Status Standalone PWA
-      if (isInstalled) {
-        badgeInstall.innerHTML = '✅ Terpasang';
-        badgeInstall.className = 'status-badge done';
-        btnInstall.style.display = 'none';
-        document.getElementById('installDesc').innerText = 'Aplikasi dijalankan dalam mode Standalone PWA.';
-      } else {
-        badgeInstall.innerHTML = '❌ Belum Terpasang';
-        badgeInstall.className = 'status-badge pending';
-        btnInstall.style.display = 'block';
-        btnInstall.innerText = '📲 Pasang Aplikasi Sekarang';
-        document.getElementById('installDesc').innerText = 'Wajib install ke Layar Utama & buka dari ikon aplikasi.';
-      }
-
-      // 3. Kunci Gerbang Akses (Hanya buka jika KEDUA syarat terpenuhi)
-      if (isNotifGranted && isInstalled) {
-        btnEnter.disabled = false;
-        btnEnter.className = 'btn-action btn-ready';
-        btnEnter.innerText = '🚀 Masuk ke Aplikasi PAG Docs';
-        document.getElementById('gateNotice').innerHTML = '✅ Semua syarat terpenuhi. Selamat datang!';
-        document.getElementById('gateNotice').style.color = '#0f766e';
-        
-        // Buka otomatis jika sudah running di mode standalone dan notif aktif
-        gateModal.style.display = 'none';
-        if (!appFrame.src || appFrame.src === 'about:blank') {
-          appFrame.src = 'https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec';
-        }
-      } else {
-        gateModal.style.display = 'flex';
-        btnEnter.disabled = true;
-        btnEnter.className = 'btn-action btn-disabled';
-        btnEnter.innerText = '🔒 Lengkapi 2 Syarat di Atas';
-        document.getElementById('gateNotice').innerHTML = '⚠️ Anda wajib mengaktifkan notifikasi dan meng-install aplikasi untuk mengakses database ini.';
-        document.getElementById('gateNotice').style.color = '#dc2626';
-      }
-    }
-
-    async function triggerMintaNotif() {
-      try {
-        if (!window.OneSignal) {
-          alert("OneSignal belum siap atau diblokir ekstensi browser.");
-          return;
-        }
-        await OneSignal.Notifications.requestPermission();
-        await OneSignal.User.PushSubscription.optIn();
-        evaluasiAksesPengguna();
-      } catch (err) {
-        alert("Gagal mengaktifkan notifikasi: " + err.message);
-      }
-    }
-
-    async function triggerPasangPWA() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        var choice = await deferredPrompt.userChoice;
-        if (choice.outcome === 'accepted') {
-          alert("✅ Aplikasi sedang dipasang. Buka aplikasi melalui ikon 'PAG Docs' di Layar Utama / Desktop Anda untuk melanjutkan.");
-        }
-        deferredPrompt = null;
-      } else {
-        alert("📲 Cara Memasang:\n• Chrome/Edge Laptop: Klik ikon 'Install' di sebelah kanan bilah URL atas.\n• Chrome Android: Klik Titik Tiga > 'Tambahkan ke Layar Utama (Install)'.\n• iPhone/Safari: Klik tombol Bagikan (Share) > 'Add to Home Screen'.");
-      }
-      evaluasiAksesPengguna();
-    }
-
-    function bukaAplikasiLangsung() {
-      if (cekStatusNotifikasi() && cekStatusTerpasang()) {
-        document.getElementById('strictGateModal').style.display = 'none';
-      } else {
-        evaluasiAksesPengguna();
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', evaluasiAksesPengguna);
-    window.addEventListener('appinstalled', function() {
-      alert("🎉 PWA Terpasang! Silakan buka dari menu/layar utama perangkat Anda.");
-      evaluasiAksesPengguna();
+      // Minta izin push notifikasi otomatis
+      OneSignal.Notifications.requestPermission();
     });
   </script>
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #0f172a;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #0f766e;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
     #appFrame {
       width: 100%;
       height: 100%;
       border: none;
       display: block;
-      background: #f8fafc;
+      background: #f1f5f9;
     }
-
-    /* FULLSCREEN STRICT GATE */
-    #strictGateModal {
+    /* Loading Splash Screen */
+    #splashScreen {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #090d16;
-      z-index: 99999999;
+      inset: 0;
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+      color: #ffffff;
       display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      align-items: center;
-      padding: 16px;
+      z-index: 9999;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
-    .gate-card {
-      background: #ffffff;
-      width: 100%;
-      max-width: 440px;
+    .splash-logo {
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      padding: 16px 24px;
       border-radius: 20px;
-      padding: 28px 22px;
-      text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    }
-    .gate-logo {
-      width: 68px;
-      height: 68px;
-      margin-bottom: 10px;
-    }
-    .gate-title {
-      font-size: 18px;
+      font-size: 28px;
       font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 4px;
-    }
-    .gate-subtitle {
-      font-size: 12px;
-      color: #0f766e;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 2px;
       margin-bottom: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
-    #gateNotice {
-      font-size: 12px;
-      line-height: 1.4;
-      margin-bottom: 18px;
-      font-weight: 600;
-    }
-
-    /* REQUIREMENT BOX */
-    .req-box {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 12px;
-      text-align: left;
-    }
-    .req-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .splash-title {
+      font-size: 18px;
+      font-weight: 700;
       margin-bottom: 4px;
     }
-    .req-header b {
-      font-size: 13px;
-      color: #0f172a;
+    .splash-sub {
+      font-size: 12px;
+      color: #99f6e4;
+      margin-bottom: 24px;
     }
-    .req-desc {
-      font-size: 11px;
-      color: #64748b;
-      line-height: 1.3;
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 0.8s linear infinite;
     }
-    .status-badge {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 20px;
-    }
-    .status-badge.pending {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-    .status-badge.done {
-      background: #ccfbf1;
-      color: #0f766e;
-    }
-
-    /* BUTTONS */
-    .btn-action {
-      width: 100%;
-      padding: 11px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      margin-top: 6px;
-      transition: all 0.2s;
-    }
-    .btn-primary {
-      background: #0f766e;
-      color: #ffffff;
-    }
-    .btn-primary:hover {
-      background: #115e59;
-    }
-    .btn-secondary {
-      background: #334155;
-      color: #ffffff;
-    }
-    .btn-disabled {
-      background: #e2e8f0;
-      color: #94a3b8;
-      cursor: not-allowed;
-    }
-    .btn-ready {
-      background: #0f766e;
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(15, 118, 110, 0.4);
-      margin-top: 14px;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
 
-  <!-- STRICT ONBOARDING GATE -->
-  <div id="strictGateModal">
-    <div class="gate-card">
-      <img src="icon-192.png" alt="Logo PAG" class="gate-logo">
-      <h3 class="gate-title">PT. PUTRA AULIA KONSULTAN</h3>
-      <div class="gate-subtitle">Akses Sistem Manajemen Terkunci</div>
-      <p id="gateNotice"></p>
-
-      <!-- SYARAT 1: PUSH NOTIFIKASI -->
-      <div class="req-box">
-        <div class="req-header">
-          <b>1. Izin Push Notifikasi</b>
-          <span id="statusBadgeNotif" class="status-badge pending">❌ Belum Aktif</span>
-        </div>
-        <div class="req-desc">Wajib untuk pengingat masa berlaku dokumen & jadwal tender.</div>
-        <button id="btnActionNotif" class="btn-action btn-primary" onclick="triggerMintaNotif()">
-          🔔 Aktifkan Izin Notifikasi
-        </button>
-      </div>
-
-      <!-- SYARAT 2: STANDALONE APP (INSTALL) -->
-      <div class="req-box">
-        <div class="req-header">
-          <b>2. Terpasang di Layar Utama (PWA)</b>
-          <span id="statusBadgeInstall" class="status-badge pending">❌ Belum Terpasang</span>
-        </div>
-        <div id="installDesc" class="req-desc">Wajib di-install ke HP/Laptop dan dibuka dari layar utama.</div>
-        <button id="btnActionInstall" class="btn-action btn-secondary" onclick="triggerPasangPWA()">
-          📲 Pasang Aplikasi (Install)
-        </button>
-      </div>
-
-      <!-- TOMBOL MASUK FINAL -->
-      <button id="btnMasukApp" class="btn-action btn-disabled" onclick="bukaAplikasiLangsung()" disabled>
-        🔒 Lengkapi 2 Syarat di Atas
-      </button>
-    </div>
+  <!-- SPLASH SCREEN -->
+  <div id="splashScreen">
+    <div class="splash-logo">PAG</div>
+    <div class="splash-title">PT. PUTRA AULIA GROUP</div>
+    <div class="splash-sub">Sistem Manajemen Dokumen Terpadu</div>
+    <div class="spinner"></div>
   </div>
 
-  <!-- APLIKASI UTAMA -->
+  <!-- GOOGLE APPS SCRIPT WEB APP IFRAME -->
   <iframe 
     id="appFrame" 
-    src="about:blank" 
-    allow="geolocation; microphone; camera; clipboard-write">
-  </iframe>
+    src="https://script.google.com/macros/s/AKfycbwPz8Q9iJ-J5t13-g89710-PAG/exec" 
+    allow="clipboard-read; clipboard-write; geolocation; camera; microphone;"
+  ></iframe>
 
+  <script>
+    // URL Web App Google Apps Script Anda
+    var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbwPz8Q9iJ-J5t13-g89710-PAG/exec";
+
+    var frame = document.getElementById('appFrame');
+    var splash = document.getElementById('splashScreen');
+
+    // 1. Teruskan Hash URL (Deep Linking dari Push Notification ke Iframe)
+    function syncUrlToIframe() {
+      var hash = window.location.hash || '';
+      if (frame && APPS_SCRIPT_EXEC_URL) {
+        // Ganti URL iframe dengan parameter hash aktif
+        var targetUrl = APPS_SCRIPT_EXEC_URL + (hash ? hash : '');
+        if (!frame.src || frame.src.indexOf(APPS_SCRIPT_EXEC_URL) === -1) {
+          frame.src = targetUrl;
+        }
+      }
+    }
+
+    // 2. Hilangkan Splash Screen saat Iframe berhasil dimuat
+    frame.onload = function() {
+      if (splash) {
+        splash.style.opacity = '0';
+        setTimeout(function() {
+          splash.style.visibility = 'hidden';
+        }, 400);
+      }
+    };
+
+    // 3. Jembatan Dua Arah (postMessage Listener dari Apps Script ke OneSignal)
+    window.addEventListener('message', function(event) {
+      var data = event.data;
+      if (!data || typeof data !== 'object') return;
+
+      // Saat Apps Script mengirimkan data user yang sedang login
+      if (data.type === 'SET_ONESIGNAL_USER') {
+        var role = String(data.role || 'user biasa').toLowerCase().trim();
+        var email = String(data.email || '').trim().toLowerCase();
+        var nama = String(data.nama || 'User').trim();
+
+        window.OneSignalDeferred.push(async function(OneSignal) {
+          // Set External User ID & Email
+          if (email) {
+            await OneSignal.login(email);
+          }
+
+          // Pasang Label Tag Role untuk segmentasi push notifikasi
+          await OneSignal.User.addTags({
+            role: role,
+            nama: nama,
+            email: email,
+            app: 'PAG_DOCS'
+          });
+
+          console.log('✅ OneSignal Role Tagged:', role, email);
+        });
+      }
+    });
+
+    // Jalankan Sinkronisasi Awal
+    syncUrlToIframe();
+    window.addEventListener('hashchange', syncUrlToIframe);
+
+    // Registrasi Service Worker PWA (Offline & Installable)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./OneSignalSDKWorker.js').catch(function(err) {
+          console.log('SW registration error:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
