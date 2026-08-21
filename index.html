@@ -15,15 +15,13 @@
   <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
 
-  <!-- OneSignal SDK Script -->
+  <!-- OneSignal SDK Script Standar -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function(OneSignal) {
       await OneSignal.init({
-        appId: "e9c3d005-53b3-4bef-8721-dd6062e20559",
-        serviceWorkerPath: "/pag-docs/OneSignalSDKWorker.js",
-        serviceWorkerParam: { scope: "/pag-docs/" }
+        appId: "e9c3d005-53b3-4bef-8721-dd6062e20559"
       });
     });
 
