@@ -20,13 +20,46 @@
   <!-- OneSignal Web Push SDK -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
+    var unreadCount = 0;
+
+    // --- FUNGSI BADGE NOTIFIKASI (APP BADGE API) ---
+    function pasangBadge(jumlah) {
+      if ('setAppBadge' in navigator) {
+        if (jumlah > 0) {
+          navigator.setAppBadge(jumlah).catch(function(e) { console.log('Badge error:', e); });
+        } else {
+          navigator.clearAppBadge().catch(function(e) { console.log('Clear badge error:', e); });
+        }
+      }
+    }
+
+    function hapusBadge() {
+      unreadCount = 0;
+      pasangBadge(0);
+    }
+
+    // Bersihkan badge saat aplikasi dibuka/difokuskan oleh pengguna
+    window.addEventListener('focus', hapusBadge);
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') {
+        hapusBadge();
+      }
+    });
+
+    // Inisialisasi OneSignal
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function(OneSignal) {
       await OneSignal.init({
         appId: "e9c3d005-53b3-4bef-8721-dd6062e20559"
       });
 
-      // Sembunyikan tombol jika pengguna sudah berlangganan notifikasi
+      // Jika ada notifikasi push yang masuk saat browser menyala, naikkan badge angka
+      OneSignal.Notifications.addEventListener('foregroundWillDisplay', function() {
+        unreadCount++;
+        pasangBadge(unreadCount);
+      });
+
+      // Sembunyikan tombol izin jika sudah berlangganan
       const isPushSupported = OneSignal.Notifications.isPushSupported();
       if (isPushSupported) {
         const permission = OneSignal.Notifications.permission;
@@ -34,6 +67,14 @@
           var btn = document.getElementById('btnNotif');
           if (btn) btn.style.display = 'none';
         }
+      }
+    });
+
+    // Menerima perintah update badge dari Apps Script iframe
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'SET_UNREAD_BADGE') {
+        var count = parseInt(event.data.count, 10) || 0;
+        pasangBadge(count);
       }
     });
 
@@ -45,7 +86,7 @@
         }
         await OneSignal.Notifications.requestPermission();
         await OneSignal.User.PushSubscription.optIn();
-        alert("✅ Berhasil! Perangkat terdaftar menerima notifikasi.");
+        alert("✅ Berhasil! Perangkat terdaftar.");
         var btn = document.getElementById('btnNotif');
         if (btn) btn.style.display = 'none';
       } catch (err) {
@@ -55,17 +96,13 @@
   </script>
 
   <style>
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
       background-color: #f8fafc;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     #appFrame {
       width: 100%;
@@ -84,18 +121,13 @@
       padding: 12px 22px;
       font-size: 14px;
       font-weight: bold;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
       cursor: pointer;
       z-index: 9999999;
       transition: all 0.2s ease-in-out;
     }
-    #btnNotif:hover {
-      background-color: #115e59;
-      transform: translateY(-2px);
-    }
-    #btnNotif:active { 
-      transform: scale(0.96); 
-    }
+    #btnNotif:hover { background-color: #115e59; transform: translateY(-2px); }
+    #btnNotif:active { transform: scale(0.96); }
     #offlineBanner {
       display: none;
       position: fixed;
@@ -129,9 +161,7 @@
   <script>
     function checkConnection() {
       const banner = document.getElementById('offlineBanner');
-      if (banner) {
-        banner.style.display = navigator.onLine ? 'none' : 'block';
-      }
+      if (banner) banner.style.display = navigator.onLine ? 'none' : 'block';
     }
     window.addEventListener('online', checkConnection);
     window.addEventListener('offline', checkConnection);
