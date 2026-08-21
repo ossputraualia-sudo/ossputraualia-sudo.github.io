@@ -21,14 +21,23 @@
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
     var unreadCount = 0;
+    var deferredPrompt = null;
 
-    // --- FUNGSI BADGE NOTIFIKASI (APP BADGE API) ---
+    // Deteksi event install browser (Chrome/Edge/Android)
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      var btnInstall = document.getElementById('btnModalInstall');
+      if (btnInstall) btnInstall.style.display = 'block';
+    });
+
+    // Badge Notification API
     function pasangBadge(jumlah) {
       if ('setAppBadge' in navigator) {
         if (jumlah > 0) {
-          navigator.setAppBadge(jumlah).catch(function(e) { console.log('Badge error:', e); });
+          navigator.setAppBadge(jumlah).catch(function(e){ console.log(e); });
         } else {
-          navigator.clearAppBadge().catch(function(e) { console.log('Clear badge error:', e); });
+          navigator.clearAppBadge().catch(function(e){ console.log(e); });
         }
       }
     }
@@ -38,12 +47,9 @@
       pasangBadge(0);
     }
 
-    // Bersihkan badge saat aplikasi dibuka/difokuskan oleh pengguna
     window.addEventListener('focus', hapusBadge);
     document.addEventListener('visibilitychange', function() {
-      if (document.visibilityState === 'visible') {
-        hapusBadge();
-      }
+      if (document.visibilityState === 'visible') hapusBadge();
     });
 
     // Inisialisasi OneSignal
@@ -53,32 +59,47 @@
         appId: "e9c3d005-53b3-4bef-8721-dd6062e20559"
       });
 
-      // Jika ada notifikasi push yang masuk saat browser menyala, naikkan badge angka
       OneSignal.Notifications.addEventListener('foregroundWillDisplay', function() {
         unreadCount++;
         pasangBadge(unreadCount);
       });
 
-      // Sembunyikan tombol izin jika sudah berlangganan
-      const isPushSupported = OneSignal.Notifications.isPushSupported();
-      if (isPushSupported) {
-        const permission = OneSignal.Notifications.permission;
-        if (permission) {
-          var btn = document.getElementById('btnNotif');
-          if (btn) btn.style.display = 'none';
-        }
-      }
+      periksaStatusPengguna();
     });
 
-    // Menerima perintah update badge dari Apps Script iframe
-    window.addEventListener('message', function(event) {
-      if (event.data && event.data.type === 'SET_UNREAD_BADGE') {
-        var count = parseInt(event.data.count, 10) || 0;
-        pasangBadge(count);
-      }
-    });
+    // Periksa apakah pengguna sudah mengizinkan notifikasi & sudah standalone
+    function periksaStatusPengguna() {
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      var isNotifAllowed = (Notification.permission === 'granted');
+      var isDismissed = localStorage.getItem('pag_setup_done') === 'true';
 
-    async function mintaIzinNotif() {
+      // Update checklist di modal
+      var notifStatus = document.getElementById('statusNotif');
+      var installStatus = document.getElementById('statusInstall');
+
+      if (isNotifAllowed && notifStatus) {
+        notifStatus.innerHTML = '✅ Sudah Aktif';
+        notifStatus.className = 'status-badge done';
+        document.getElementById('btnModalNotif').disabled = true;
+        document.getElementById('btnModalNotif').innerText = '✅ Notifikasi Aktif';
+      }
+
+      if (isStandalone && installStatus) {
+        installStatus.innerHTML = '✅ Terpasang';
+        installStatus.className = 'status-badge done';
+        var btnInst = document.getElementById('btnModalInstall');
+        if (btnInst) btnInst.style.display = 'none';
+      }
+
+      // Jika sudah selesai atau sudah pernah diselesaikan, tutup modal
+      if ((isNotifAllowed && isStandalone) || (isNotifAllowed && isDismissed)) {
+        tutupModal();
+      } else {
+        document.getElementById('onboardingModal').style.display = 'flex';
+      }
+    }
+
+    async function triggerModalNotif() {
       try {
         if (!window.OneSignal) {
           alert("OneSignal belum siap atau diblokir ekstensi browser.");
@@ -86,13 +107,66 @@
         }
         await OneSignal.Notifications.requestPermission();
         await OneSignal.User.PushSubscription.optIn();
-        alert("✅ Berhasil! Perangkat terdaftar.");
-        var btn = document.getElementById('btnNotif');
-        if (btn) btn.style.display = 'none';
+        
+        var notifStatus = document.getElementById('statusNotif');
+        if (notifStatus) {
+          notifStatus.innerHTML = '✅ Sudah Aktif';
+          notifStatus.className = 'status-badge done';
+        }
+        document.getElementById('btnModalNotif').disabled = true;
+        document.getElementById('btnModalNotif').innerText = '✅ Notifikasi Aktif';
+        
+        cekKelengkapan();
       } catch (err) {
-        alert("Gagal mengaktifkan notifikasi: " + err.message);
+        alert("Izin notifikasi gagal: " + err.message);
       }
     }
+
+    async function triggerModalInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        var choiceResult = await deferredPrompt.userChoice;
+        if (choiceResult.outcome === 'accepted') {
+          var installStatus = document.getElementById('statusInstall');
+          if (installStatus) {
+            installStatus.innerHTML = '✅ Terpasang';
+            installStatus.className = 'status-badge done';
+          }
+          document.getElementById('btnModalInstall').style.display = 'none';
+        }
+        deferredPrompt = null;
+      } else {
+        // Panduan jika iOS/Safari atau browser tidak support prompt instan
+        alert("📲 Untuk meng-install:\n1. Klik menu titik tiga browser (atau tombol Bagikan di iPhone)\n2. Pilih 'Tambahkan ke Layar Utama' (Install App)");
+      }
+      cekKelengkapan();
+    }
+
+    function cekKelengkapan() {
+      if (Notification.permission === 'granted') {
+        document.getElementById('btnMasukApp').disabled = false;
+        document.getElementById('btnMasukApp').classList.add('ready');
+      }
+    }
+
+    function masukKeAplikasi() {
+      localStorage.setItem('pag_setup_done', 'true');
+      tutupModal();
+    }
+
+    function tutupModal() {
+      var modal = document.getElementById('onboardingModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    window.addEventListener('load', function() {
+      // Deteksi iOS Safari
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      if (isIOS) {
+        var hint = document.getElementById('iosHint');
+        if (hint) hint.style.display = 'block';
+      }
+    });
   </script>
 
   <style>
@@ -110,61 +184,181 @@
       border: none;
       display: block;
     }
-    #btnNotif {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background-color: #0f766e;
-      color: #ffffff;
-      border: 2px solid #ffffff;
-      border-radius: 50px;
-      padding: 12px 22px;
-      font-size: 14px;
-      font-weight: bold;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      cursor: pointer;
-      z-index: 9999999;
-      transition: all 0.2s ease-in-out;
-    }
-    #btnNotif:hover { background-color: #115e59; transform: translateY(-2px); }
-    #btnNotif:active { transform: scale(0.96); }
-    #offlineBanner {
+
+    /* MODAL OVERLAY STYLING */
+    #onboardingModal {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      background: #ef4444;
-      color: #ffffff;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 20px;
+      padding: 28px 24px;
       text-align: center;
-      padding: 10px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .modal-logo {
+      width: 72px;
+      height: 72px;
+      margin-bottom: 12px;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+    .modal-desc {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    /* STEP ITEM STYLING */
+    .step-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .step-info b {
+      font-size: 13px;
+      color: #0f172a;
+      display: block;
+    }
+    .step-info span {
+      font-size: 11px;
+      color: #64748b;
+    }
+    .status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 20px;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .status-badge.done {
+      background: #ccfbf1;
+      color: #0f766e;
+    }
+
+    /* BUTTONS */
+    .btn-action {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
       font-size: 13px;
       font-weight: bold;
-      z-index: 9999999;
+      cursor: pointer;
+      border: none;
+      margin-top: 6px;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #0f766e;
+      color: white;
+    }
+    .btn-primary:disabled {
+      background: #cbd5e1;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .btn-submit {
+      background: #94a3b8;
+      color: white;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    .btn-submit.ready {
+      background: #0f766e;
+      color: white;
+      box-shadow: 0 4px 14px rgba(15, 118, 110, 0.4);
+    }
+    #iosHint {
+      display: none;
+      font-size: 11px;
+      color: #0f766e;
+      margin-top: 8px;
     }
   </style>
 </head>
 <body>
 
-  <div id="offlineBanner">⚠️ Anda sedang offline. Sambungkan internet untuk mengelola data.</div>
+  <!-- POP-UP ONBOARDING MODAL -->
+  <div id="onboardingModal">
+    <div class="modal-card">
+      <img src="icon-192.png" alt="Logo PAG" class="modal-logo">
+      <h3 class="modal-title">Selamat Datang di PAG Docs</h3>
+      <p class="modal-desc">Untuk memastikan Anda menerima update tender dan masa berlaku dokumen tepat waktu, silakan selesaikan 2 langkah wajib berikut:</p>
 
-  <button id="btnNotif" onclick="mintaIzinNotif()">
-    🔔 Aktifkan Notifikasi
-  </button>
+      <!-- Step 1: Notifikasi -->
+      <div class="step-box">
+        <div class="step-info">
+          <b>1. Izin Push Notifikasi</b>
+          <span>Wajib untuk alarm jadwal & kadaluarsa</span>
+        </div>
+        <span id="statusNotif" class="status-badge">Wajib</span>
+      </div>
+      <button id="btnModalNotif" class="btn-action btn-primary" onclick="triggerModalNotif()">
+        🔔 Izinkan Notifikasi
+      </button>
 
+      <div style="height: 10px;"></div>
+
+      <!-- Step 2: Pasang PWA -->
+      <div class="step-box">
+        <div class="step-info">
+          <b>2. Pasang ke Layar Utama</b>
+          <span>Akses cepat & stabil seperti aplikasi HP</span>
+        </div>
+        <span id="statusInstall" class="status-badge">Wajib</span>
+      </div>
+      <button id="btnModalInstall" class="btn-action btn-secondary" onclick="triggerModalInstall()">
+        📲 Pasang Aplikasi (Install)
+      </button>
+      <div id="iosHint">💡 Pengguna iPhone/iPad: Tekan tombol <b>Bagikan (Share)</b> lalu pilih <b>"Tambahkan ke Layar Utama"</b>.</div>
+
+      <!-- Tombol Masuk -->
+      <button id="btnMasukApp" class="btn-action btn-submit" onclick="masukKeAplikasi()">
+        🚀 Lanjutkan Masuk ke Aplikasi
+      </button>
+    </div>
+  </div>
+
+  <!-- APLIKASI UTAMA (IFRAME APPS SCRIPT) -->
   <iframe 
     id="appFrame" 
     src="https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec" 
     allow="geolocation; microphone; camera; clipboard-write">
   </iframe>
 
-  <script>
-    function checkConnection() {
-      const banner = document.getElementById('offlineBanner');
-      if (banner) banner.style.display = navigator.onLine ? 'none' : 'block';
-    }
-    window.addEventListener('online', checkConnection);
-    window.addEventListener('offline', checkConnection);
-  </script>
 </body>
 </html>
