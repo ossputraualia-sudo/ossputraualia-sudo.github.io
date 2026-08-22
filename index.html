@@ -196,14 +196,13 @@
 </head>
 <body>
 
-  <!-- LAYAR SETUP & ONBOARDING (MUNCUL PERTAMA KALI) -->
+  <!-- LAYAR SETUP & ONBOARDING -->
   <div id="setupModal">
     <div class="setup-card">
       <div class="brand-badge">PAG</div>
       <h2 class="setup-title">PT. PUTRA AULIA GROUP</h2>
       <p class="setup-sub">Sistem Manajemen Dokumen Terpadu<br>Aktifkan fitur notifikasi & instal aplikasi untuk pengalaman terbaik.</p>
 
-      <!-- 1. NOTIFIKASI PUSH -->
       <div class="action-box">
         <div class="action-info">
           <h4>🔔 Notifikasi Real-Time</h4>
@@ -212,7 +211,6 @@
         <button id="btnNotif" class="btn-action btn-primary" onclick="aktifkanNotifikasi()">Aktifkan</button>
       </div>
 
-      <!-- 2. INSTALL PWA -->
       <div class="action-box">
         <div class="action-info">
           <h4>📲 Install Aplikasi</h4>
@@ -221,12 +219,10 @@
         <button id="btnInstall" class="btn-action btn-primary" onclick="installAplikasi()">Install</button>
       </div>
 
-      <!-- PETUNJUK KHUSUS IOS SAFARI -->
       <div id="iosGuide" class="ios-guide">
-        💡 <b>Pengguna iPhone/iPad:</b> Ketuk tombol <b>Bagikan (Share)</b> <span style="font-size:14px;">⎋</span> lalu pilih <b>"Tambah ke Layar Utama" (Add to Home Screen)</b> ➕.
+        💡 <b>Pengguna iPhone/iPad:</b> Ketuk tombol <b>Bagikan (Share)</b> <span style="font-size:14px;">⎋</span> lalu pilih <b>"Tambah ke Layar Utama"</b> ➕.
       </div>
 
-      <!-- 3. TOMBOL LANJUT KE PENDAFTARAN / LOGIN -->
       <button class="btn-start" onclick="bukaAplikasiUtama()">
         Lanjutkan ke Pendaftaran / Login ➔
       </button>
@@ -246,13 +242,11 @@
     var setupModal = document.getElementById('setupModal');
     var deferredInstallPrompt = null;
 
-    // Deteksi iOS Safari
     var isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     if (isIos && !window.navigator.standalone) {
       document.getElementById('iosGuide').style.display = 'block';
     }
 
-    // Tangkap Event Install PWA
     window.addEventListener('beforeinstallprompt', function(e) {
       e.preventDefault();
       deferredInstallPrompt = e;
@@ -263,7 +257,6 @@
       }
     });
 
-    // Periksa Status Izin Notifikasi Saat Ini
     function periksaStatusNotif() {
       if ('Notification' in window && Notification.permission === 'granted') {
         var btn = document.getElementById('btnNotif');
@@ -275,7 +268,6 @@
       }
     }
 
-    // Fungsi Aktifkan Notifikasi
     function aktifkanNotifikasi() {
       window.OneSignalDeferred.push(async function(OneSignal) {
         await OneSignal.Notifications.requestPermission();
@@ -283,7 +275,6 @@
       });
     }
 
-    // Fungsi Install PWA
     function installAplikasi() {
       if (deferredInstallPrompt) {
         deferredInstallPrompt.prompt();
@@ -305,7 +296,6 @@
       }
     }
 
-    // Masuk ke Halaman Login / Registrasi
     function bukaAplikasiUtama() {
       if (setupModal) {
         setupModal.style.opacity = '0';
@@ -315,7 +305,6 @@
       }
     }
 
-    // Sinkronisasi Hash URL
     function syncUrlToIframe() {
       var hash = window.location.hash || '';
       if (frame && APPS_SCRIPT_EXEC_URL) {
@@ -326,11 +315,32 @@
       }
     }
 
-    // Jembatan Data Login ke OneSignal
+    // --- FUNGSI UPDATE APP BADGE (IKON APLIKASI) ---
+    function updateAppBadge(unreadCount) {
+      if ('setAppBadge' in navigator) {
+        if (unreadCount > 0) {
+          navigator.setAppBadge(unreadCount).catch(function(err) {
+            console.log('Badge error:', err);
+          });
+        } else {
+          navigator.clearAppBadge().catch(function(err) {
+            console.log('Clear badge error:', err);
+          });
+        }
+      }
+    }
+
+    // Jembatan Data dari Iframe (Google Apps Script)
     window.addEventListener('message', function(event) {
       var data = event.data;
       if (!data || typeof data !== 'object') return;
 
+      // Tangkap perintah update jumlah badge dari sistem internal
+      if (data.type === 'UPDATE_BADGE') {
+        updateAppBadge(data.count || 0);
+      }
+
+      // Integrasi user ke OneSignal
       if (data.type === 'SET_ONESIGNAL_USER') {
         var role = String(data.role || 'user biasa').toLowerCase().trim();
         var email = String(data.email || '').trim().toLowerCase();
@@ -348,7 +358,16 @@
       }
     });
 
-    // Inisialisasi
+    // Tangkap notifikasi OneSignal yang masuk saat aplikasi terbuka
+    window.OneSignalDeferred.push(function(OneSignal) {
+      OneSignal.Notifications.addEventListener('foregroundWillDisplay', function(event) {
+        // Otomatis update PWA badge dengan estimasi +1 jika ada push notification baru masuk
+        if ('setAppBadge' in navigator) {
+          navigator.setAppBadge(1).catch(function(){}); 
+        }
+      });
+    });
+
     periksaStatusNotif();
     syncUrlToIframe();
     window.addEventListener('hashchange', syncUrlToIframe);
