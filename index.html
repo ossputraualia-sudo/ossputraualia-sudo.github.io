@@ -6,7 +6,7 @@
   <title>PAG Docs - PT. Putra Aulia Group</title>
   
   <!-- PWA & Mobile Web Meta -->
-  <meta name="theme-color" content="#0f766e">
+  <meta name="theme-color" content="#f1f5f9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="PAG Docs">
@@ -23,9 +23,7 @@
       await OneSignal.init({
         appId: "e9c3d005-53b3-4bef-8721-dd6062e20559",
         safari_web_id: "web.onesignal.auto.e9c3d005-53b3-4bef-8721-dd6062e20559",
-        notifyButton: {
-          enable: false
-        },
+        notifyButton: { enable: false },
         allowLocalhostAsSecureOrigin: true
       });
     });
@@ -35,62 +33,86 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       width: 100%; height: 100%; overflow: hidden;
-      background-color: #0f766e;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f1f5f9; /* Sesuai base app */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
     #appFrame {
-      width: 100%; height: 100%; border: none; display: block; background: #f1f5f9;
+      width: 100%; height: 100%; border: none; display: block; background: #f8fafc;
     }
 
-    /* ONBOARDING & SETUP SCREEN */
+    /* ONBOARDING & SETUP SCREEN (TEMA MICA/GLASS) */
     #setupModal {
       position: fixed; inset: 0;
-      background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
-      color: #ffffff; display: flex; flex-direction: column;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+      display: flex; flex-direction: column;
       align-items: center; justify-content: center; z-index: 9999;
       padding: 20px; overflow-y: auto; transition: opacity 0.4s ease, visibility 0.4s ease;
     }
+    
     .setup-card {
-      background: rgba(255, 255, 255, 0.98); color: #0f172a;
-      border-radius: 20px; padding: 28px 24px; max-width: 420px; width: 100%;
-      text-align: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-      animation: modalSlideUp 0.4s ease-out;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 20px 40px -10px rgba(13, 148, 136, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+      color: #0f172a;
+      border-radius: 24px; padding: 32px 24px; max-width: 420px; width: 100%;
+      text-align: center; animation: modalSlideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
+
     .brand-badge {
-      display: inline-block; background: #0f766e; color: #ffffff;
-      font-weight: 800; font-size: 20px; padding: 8px 16px; border-radius: 12px;
-      margin-bottom: 12px; letter-spacing: 1px;
+      display: inline-block; background: linear-gradient(135deg, #0d9488, #0f766e);
+      color: #ffffff; font-weight: 800; font-size: 20px; padding: 8px 16px;
+      border-radius: 12px; margin-bottom: 16px; letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(13, 148, 136, 0.3);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
-    .setup-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
-    .setup-sub { font-size: 13px; color: #64748b; margin-bottom: 22px; line-height: 1.4; }
+
+    .setup-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 6px; letter-spacing: -0.5px; }
+    .setup-sub { font-size: 13px; color: #475569; margin-bottom: 26px; line-height: 1.5; }
+    
     .action-box {
-      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;
-      padding: 14px; margin-bottom: 12px; text-align: left;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(203, 213, 225, 0.8);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+      border-radius: 16px; padding: 16px; margin-bottom: 14px; text-align: left;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
-    .action-info h4 { font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
-    .action-info p { font-size: 11px; color: #64748b; line-height: 1.3; }
+    
+    .action-info h4 { font-size: 13.5px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+    .action-info p { font-size: 11.5px; color: #64748b; line-height: 1.4; }
+    
     .btn-action {
-      padding: 9px 14px; border-radius: 10px; font-size: 12px; font-weight: 700;
+      padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700;
       cursor: pointer; border: none; white-space: nowrap; transition: all 0.2s;
     }
-    .btn-primary { background: #0f766e; color: #ffffff; }
-    .btn-primary:hover { background: #115e59; }
-    .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: default; }
+    
+    .btn-primary { 
+      background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff; 
+      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .btn-primary:hover { background: #0f766e; transform: translateY(-1px); }
+    
+    .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: default; box-shadow: none; }
+    
     .btn-start {
-      width: 100%; padding: 14px; margin-top: 10px; border-radius: 12px;
-      background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%); color: #ffffff;
+      width: 100%; padding: 14px; margin-top: 14px; border-radius: 14px;
+      background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff;
       font-size: 14px; font-weight: 700; border: none; cursor: pointer;
-      box-shadow: 0 4px 14px rgba(15, 118, 110, 0.3); transition: transform 0.2s;
+      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: all 0.2s;
     }
-    .btn-start:hover { transform: translateY(-2px); }
+    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13, 148, 136, 0.4); }
+    
     .ios-guide {
-      background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px; border-radius: 10px;
-      font-size: 11px; color: #1e40af; margin-bottom: 12px; text-align: left; display: none;
+      background: rgba(239, 246, 255, 0.8); border: 1px solid #bfdbfe; padding: 12px; border-radius: 12px;
+      font-size: 11.5px; color: #1e40af; margin-bottom: 14px; text-align: left; display: none; line-height: 1.4;
     }
+    
     @keyframes modalSlideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from { transform: translateY(30px) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
     }
   </style>
 </head>
@@ -141,7 +163,27 @@
     var frame = document.getElementById('appFrame');
     var setupModal = document.getElementById('setupModal');
     var deferredInstallPrompt = null;
-    var currentBadgeCount = 0; // PENYIMPAN JUMLAH BADGE GLOBAL
+    var currentBadgeCount = 0;
+
+    // =========================================================================
+    // LOGIKA AUTO-SKIP: DETEKSI JIKA SYARAT SUDAH TERPENUHI
+    // =========================================================================
+    function cekAutoSkip() {
+      // 1. Cek apakah dibuka dari Layar Utama (Standalone PWA)
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      // 2. Cek apakah Notifikasi sudah diizinkan
+      var isNotifGranted = ('Notification' in window && Notification.permission === 'granted');
+      // 3. Cek riwayat klik sebelumnya
+      var isSetupDone = localStorage.getItem('PAG_SETUP_DONE') === 'true';
+
+      // Jika (Terinstal & Notif Aktif) ATAU (User sudah pernah klik "Lanjutkan")
+      if ((isStandalone && isNotifGranted) || isSetupDone) {
+        if (setupModal) {
+          setupModal.style.display = 'none'; // Sembunyikan instan sebelum tampil
+        }
+      }
+    }
+    cekAutoSkip(); // Eksekusi langsung saat script dimuat
 
     var isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     if (isIos && !window.navigator.standalone) {
@@ -198,10 +240,14 @@
     }
 
     function bukaAplikasiUtama() {
+      // Simpan jejak agar tidak muncul lagi di masa depan
+      localStorage.setItem('PAG_SETUP_DONE', 'true');
+      
       if (setupModal) {
         setupModal.style.opacity = '0';
         setTimeout(function() {
           setupModal.style.visibility = 'hidden';
+          setupModal.style.display = 'none';
         }, 400);
       }
     }
@@ -216,46 +262,30 @@
       }
     }
 
-    // =========================================================================
-    // FUNGSI UPDATE APP BADGE (IKON APLIKASI & TAB BROWSER)
-    // =========================================================================
     function updateAppBadge(unreadCount) {
       currentBadgeCount = parseInt(unreadCount) || 0;
-
-      // 1. UPDATE TAB TITLE BROWSER (Pasti Muncul Walau Belum Diinstal)
       if (currentBadgeCount > 0) {
         document.title = '(' + currentBadgeCount + ') PAG Docs - PT. Putra Aulia Group';
       } else {
         document.title = 'PAG Docs - PT. Putra Aulia Group';
       }
-
-      // 2. UPDATE BADGE IKON APLIKASI PWA (Native OS)
       if ('setAppBadge' in navigator) {
         if (currentBadgeCount > 0) {
-          navigator.setAppBadge(currentBadgeCount).catch(function(err) {
-            console.log('Badge error:', err);
-          });
+          navigator.setAppBadge(currentBadgeCount).catch(function(e){});
         } else {
-          navigator.clearAppBadge().catch(function(err) {
-            console.log('Clear badge error:', err);
-          });
+          navigator.clearAppBadge().catch(function(e){});
         }
       }
     }
 
-    // =========================================================================
-    // LISTENER DATA DARI GOOGLE APPS SCRIPT
-    // =========================================================================
     window.addEventListener('message', function(event) {
       var data = event.data;
       if (!data || typeof data !== 'object') return;
 
-      // A. Menerima Jumlah Pesan Internal dari Apps Script (JS_Core)
       if (data.type === 'UPDATE_BADGE') {
         updateAppBadge(data.count || 0);
       }
 
-      // B. Menerima Data Login untuk OneSignal
       if (data.type === 'SET_ONESIGNAL_USER') {
         var role = String(data.role || 'user biasa').toLowerCase().trim();
         var email = String(data.email || '').trim().toLowerCase();
@@ -264,21 +294,14 @@
         window.OneSignalDeferred.push(async function(OneSignal) {
           if (email) await OneSignal.login(email);
           await OneSignal.User.addTags({
-            role: role,
-            nama: nama,
-            email: email,
-            app: 'PAG_DOCS'
+            role: role, nama: nama, email: email, app: 'PAG_DOCS'
           });
         });
       }
     });
 
-    // =========================================================================
-    // LISTENER ONESIGNAL UNTUK MENAMBAH BADGE JIKA ADA PUSH NOTIF BARU
-    // =========================================================================
     window.OneSignalDeferred.push(function(OneSignal) {
       OneSignal.Notifications.addEventListener('foregroundWillDisplay', function(event) {
-        // Tambahkan +1 ke jumlah notifikasi internal yang ada
         updateAppBadge(currentBadgeCount + 1);
       });
     });
@@ -289,9 +312,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('./OneSignalSDKWorker.js').catch(function(err) {
-          console.log('SW error:', err);
-        });
+        navigator.serviceWorker.register('./OneSignalSDKWorker.js').catch(function(err) {});
       });
     }
   </script>
