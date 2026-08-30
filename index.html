@@ -15,7 +15,7 @@
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
 
-  <!-- OneSignal Web Push SDK (v16+) -->
+<!-- OneSignal Web Push SDK (v16+) -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
     window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -25,6 +25,18 @@
         safari_web_id: "web.onesignal.auto.e9c3d005-53b3-4bef-8721-dd6062e20559",
         notifyButton: { enable: false },
         allowLocalhostAsSecureOrigin: true
+      });
+
+      // 🔔 Listener Klik Notifikasi (Otomatis Buka Menu Terkait di Iframe PWA)
+      OneSignal.Notifications.addEventListener('click', function(event) {
+        var notifUrl = event.notification.launchURL;
+        if (notifUrl && notifUrl.indexOf('#') > -1) {
+          var hash = notifUrl.substring(notifUrl.indexOf('#'));
+          window.location.hash = hash;
+          if (typeof syncUrlToIframe === 'function') {
+            syncUrlToIframe();
+          }
+        }
       });
     });
   </script>
