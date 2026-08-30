@@ -15,7 +15,7 @@
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
 
-<!-- OneSignal Web Push SDK (v16+) -->
+  <!-- OneSignal Web Push SDK (v16+) -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
     window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -45,7 +45,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       width: 100%; height: 100%; overflow: hidden;
-      background-color: #f1f5f9; /* Sesuai base app */
+      background-color: #f1f5f9;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
@@ -178,24 +178,20 @@
     var currentBadgeCount = 0;
 
     // =========================================================================
-    // LOGIKA AUTO-SKIP: DETEKSI JIKA SYARAT SUDAH TERPENUHI
+    // LOGIKA AUTO-SKIP ONBOARDING
     // =========================================================================
     function cekAutoSkip() {
-      // 1. Cek apakah dibuka dari Layar Utama (Standalone PWA)
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-      // 2. Cek apakah Notifikasi sudah diizinkan
       var isNotifGranted = ('Notification' in window && Notification.permission === 'granted');
-      // 3. Cek riwayat klik sebelumnya
       var isSetupDone = localStorage.getItem('PAG_SETUP_DONE') === 'true';
 
-      // Jika (Terinstal & Notif Aktif) ATAU (User sudah pernah klik "Lanjutkan")
       if ((isStandalone && isNotifGranted) || isSetupDone) {
         if (setupModal) {
-          setupModal.style.display = 'none'; // Sembunyikan instan sebelum tampil
+          setupModal.style.display = 'none';
         }
       }
     }
-    cekAutoSkip(); // Eksekusi langsung saat script dimuat
+    cekAutoSkip();
 
     var isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     if (isIos && !window.navigator.standalone) {
@@ -252,9 +248,7 @@
     }
 
     function bukaAplikasiUtama() {
-      // Simpan jejak agar tidak muncul lagi di masa depan
       localStorage.setItem('PAG_SETUP_DONE', 'true');
-      
       if (setupModal) {
         setupModal.style.opacity = '0';
         setTimeout(function() {
@@ -274,22 +268,34 @@
       }
     }
 
+    // =========================================================================
+    // APP BADGE MANAGEMENT (TASKBAR WINDOWS & IKON MOBILE)
+    // =========================================================================
     function updateAppBadge(unreadCount) {
       currentBadgeCount = parseInt(unreadCount) || 0;
       if (currentBadgeCount > 0) {
         document.title = '(' + currentBadgeCount + ') PT. Putra Aulia';
-      } else {
-        document.title = 'Putra Aulia';
-      }
-      if ('setAppBadge' in navigator) {
-        if (currentBadgeCount > 0) {
+        if ('setAppBadge' in navigator) {
           navigator.setAppBadge(currentBadgeCount).catch(function(e){});
-        } else {
+        }
+      } else {
+        document.title = 'PT. Putra Aulia Group';
+        if ('clearAppBadge' in navigator) {
           navigator.clearAppBadge().catch(function(e){});
         }
       }
     }
 
+    // Bersihkan badge Taskbar otomatis saat jendela aplikasi aktif / dibuka oleh user
+    window.addEventListener('focus', function() {
+      if ('clearAppBadge' in navigator) {
+        navigator.clearAppBadge().catch(function(e){});
+      }
+    });
+
+    // =========================================================================
+    // COMMUNICATION POSTMESSAGE DENGAN IFRAME GOOGLE APPS SCRIPT
+    // =========================================================================
     window.addEventListener('message', function(event) {
       var data = event.data;
       if (!data || typeof data !== 'object') return;
@@ -312,6 +318,7 @@
       }
     });
 
+    // Tambah angka badge saat ada push notifikasi masuk di foreground
     window.OneSignalDeferred.push(function(OneSignal) {
       OneSignal.Notifications.addEventListener('foregroundWillDisplay', function(event) {
         updateAppBadge(currentBadgeCount + 1);
@@ -322,6 +329,7 @@
     syncUrlToIframe();
     window.addEventListener('hashchange', syncUrlToIframe);
 
+    // Registrasi Service Worker OneSignal
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('./OneSignalSDKWorker.js').catch(function(err) {});
