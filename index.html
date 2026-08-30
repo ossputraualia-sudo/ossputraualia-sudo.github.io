@@ -27,7 +27,7 @@
         allowLocalhostAsSecureOrigin: true
       });
 
-      // 🔔 Listener Klik Notifikasi (Otomatis Buka Menu Terkait di Iframe PWA)
+      // Listener Klik Notifikasi (Deep Linking ke Menu Iframe)
       OneSignal.Notifications.addEventListener('click', function(event) {
         var notifUrl = event.notification.launchURL;
         if (notifUrl && notifUrl.indexOf('#') > -1) {
@@ -53,7 +53,6 @@
       width: 100%; height: 100%; border: none; display: block; background: #f8fafc;
     }
 
-    /* ONBOARDING & SETUP SCREEN (TEMA MICA/GLASS) */
     #setupModal {
       position: fixed; inset: 0;
       background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
@@ -63,7 +62,7 @@
     }
     
     .setup-card {
-      background: rgba(255, 255, 255, 0.65);
+      background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.6);
@@ -78,16 +77,14 @@
       color: #ffffff; font-weight: 800; font-size: 20px; padding: 8px 16px;
       border-radius: 12px; margin-bottom: 16px; letter-spacing: 1px;
       box-shadow: 0 4px 10px rgba(13, 148, 136, 0.3);
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
-    .setup-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 6px; letter-spacing: -0.5px; }
-    .setup-sub { font-size: 13px; color: #475569; margin-bottom: 26px; line-height: 1.5; }
+    .setup-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+    .setup-sub { font-size: 13px; color: #475569; margin-bottom: 24px; line-height: 1.5; }
     
     .action-box {
       background: rgba(255, 255, 255, 0.7);
       border: 1px solid rgba(203, 213, 225, 0.8);
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
       border-radius: 16px; padding: 16px; margin-bottom: 14px; text-align: left;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
@@ -102,20 +99,16 @@
     
     .btn-primary { 
       background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff; 
-      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3);
     }
-    .btn-primary:hover { background: #0f766e; transform: translateY(-1px); }
-    
-    .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: default; box-shadow: none; }
+    .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: default; }
     
     .btn-start {
       width: 100%; padding: 14px; margin-top: 14px; border-radius: 14px;
       background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff;
       font-size: 14px; font-weight: 700; border: none; cursor: pointer;
-      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
     }
-    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13, 148, 136, 0.4); }
     
     .ios-guide {
       background: rgba(239, 246, 255, 0.8); border: 1px solid #bfdbfe; padding: 12px; border-radius: 12px;
@@ -135,12 +128,12 @@
     <div class="setup-card">
       <div class="brand-badge">P.A.G</div>
       <h2 class="setup-title">PT. PUTRA AULIA GROUP</h2>
-      <p class="setup-sub">Aktifkan fitur notifikasi & instal aplikasi untuk pengalaman terbaik.</p>
+      <p class="setup-sub">Aktifkan notifikasi & instal aplikasi agar info update selalu masuk ke HP.</p>
 
       <div class="action-box">
         <div class="action-info">
           <h4>🔔 Notifikasi Real-Time</h4>
-          <p>Dapatkan info tender, dokumen, & persetujuan akun langsung di HP.</p>
+          <p id="notifDesc">Wajib diaktifkan untuk menerima info dokumen & tender.</p>
         </div>
         <button id="btnNotif" class="btn-action btn-primary" onclick="aktifkanNotifikasi()">Aktifkan</button>
       </div>
@@ -148,17 +141,17 @@
       <div class="action-box">
         <div class="action-info">
           <h4>📲 Install Aplikasi</h4>
-          <p>Pasang di Layar Utama HP agar cepat dibuka tanpa browser.</p>
+          <p>Pasang di Layar Depan HP agar cepat dibuka tanpa browser.</p>
         </div>
         <button id="btnInstall" class="btn-action btn-primary" onclick="installAplikasi()">Install</button>
       </div>
 
       <div id="iosGuide" class="ios-guide">
-        💡 <b>Pengguna iPhone/iPad:</b> Ketuk tombol <b>Bagikan (Share)</b> <span style="font-size:14px;">⎋</span> lalu pilih <b>"Tambah ke Layar Utama"</b> ➕.
+        💡 <b>Pengguna iPhone:</b> Ketuk tombol <b>Bagikan (Share)</b> ⎋ di Safari lalu pilih <b>"Tambah ke Layar Utama"</b> ➕.
       </div>
 
       <button class="btn-start" onclick="bukaAplikasiUtama()">
-        Lanjutkan ke Pendaftaran / Login ➔
+        Lanjutkan ke Aplikasi ➔
       </button>
     </div>
   </div>
@@ -177,18 +170,30 @@
     var deferredInstallPrompt = null;
     var currentBadgeCount = 0;
 
-    // =========================================================================
-    // LOGIKA AUTO-SKIP ONBOARDING
-    // =========================================================================
+    // Periksa status izin notifikasi secara akurat
+    function periksaStatusNotif() {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        var btn = document.getElementById('btnNotif');
+        var desc = document.getElementById('notifDesc');
+        if (btn) {
+          btn.textContent = 'Aktif ✔';
+          btn.className = 'btn-action btn-success';
+          btn.disabled = true;
+        }
+        if (desc) desc.textContent = 'Notifikasi sudah aktif di perangkat ini.';
+        return true;
+      }
+      return false;
+    }
+
+    // Auto-skip hanya jika izin notifikasi SUDAH DIIZINKAN
     function cekAutoSkip() {
-      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-      var isNotifGranted = ('Notification' in window && Notification.permission === 'granted');
+      var isNotifGranted = periksaStatusNotif();
       var isSetupDone = localStorage.getItem('PAG_SETUP_DONE') === 'true';
 
-      if ((isStandalone && isNotifGranted) || isSetupDone) {
-        if (setupModal) {
-          setupModal.style.display = 'none';
-        }
+      // Hanya auto-skip jika izin notifikasi memang sudah aktif
+      if (isNotifGranted && isSetupDone) {
+        if (setupModal) setupModal.style.display = 'none';
       }
     }
     cekAutoSkip();
@@ -207,17 +212,6 @@
         btn.className = 'btn-action btn-primary';
       }
     });
-
-    function periksaStatusNotif() {
-      if ('Notification' in window && Notification.permission === 'granted') {
-        var btn = document.getElementById('btnNotif');
-        if (btn) {
-          btn.textContent = 'Aktif ✔';
-          btn.className = 'btn-action btn-success';
-          btn.disabled = true;
-        }
-      }
-    }
 
     function aktifkanNotifikasi() {
       window.OneSignalDeferred.push(async function(OneSignal) {
@@ -241,13 +235,17 @@
           deferredInstallPrompt = null;
         });
       } else if (isIos) {
-        alert('Untuk menginstal di iPhone/iPad:\n1. Ketuk tombol Share (Bagikan) di Safari.\n2. Pilih "Add to Home Screen" (Tambah ke Layar Utama).');
+        alert('Untuk menginstal di iPhone:\n1. Ketuk tombol Share di Safari.\n2. Pilih "Add to Home Screen" (Tambah ke Layar Utama).');
       } else {
         alert('Aplikasi sudah terpasang atau buka menu browser lalu pilih "Instal Aplikasi" / "Tambahkan ke Layar Utama".');
       }
     }
 
     function bukaAplikasiUtama() {
+      if ('Notification' in window && Notification.permission !== 'granted') {
+        // Ingatkan user sekali lagi jika belum aktif
+        aktifkanNotifikasi();
+      }
       localStorage.setItem('PAG_SETUP_DONE', 'true');
       if (setupModal) {
         setupModal.style.opacity = '0';
@@ -268,9 +266,6 @@
       }
     }
 
-    // =========================================================================
-    // APP BADGE MANAGEMENT (TASKBAR WINDOWS & IKON MOBILE)
-    // =========================================================================
     function updateAppBadge(unreadCount) {
       currentBadgeCount = parseInt(unreadCount) || 0;
       if (currentBadgeCount > 0) {
@@ -286,16 +281,12 @@
       }
     }
 
-    // Bersihkan badge Taskbar otomatis saat jendela aplikasi aktif / dibuka oleh user
     window.addEventListener('focus', function() {
       if ('clearAppBadge' in navigator) {
         navigator.clearAppBadge().catch(function(e){});
       }
     });
 
-    // =========================================================================
-    // COMMUNICATION POSTMESSAGE DENGAN IFRAME GOOGLE APPS SCRIPT
-    // =========================================================================
     window.addEventListener('message', function(event) {
       var data = event.data;
       if (!data || typeof data !== 'object') return;
@@ -318,7 +309,6 @@
       }
     });
 
-    // Tambah angka badge saat ada push notifikasi masuk di foreground
     window.OneSignalDeferred.push(function(OneSignal) {
       OneSignal.Notifications.addEventListener('foregroundWillDisplay', function(event) {
         updateAppBadge(currentBadgeCount + 1);
@@ -328,13 +318,6 @@
     periksaStatusNotif();
     syncUrlToIframe();
     window.addEventListener('hashchange', syncUrlToIframe);
-
-    // Registrasi Service Worker OneSignal
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('./OneSignalSDKWorker.js').catch(function(err) {});
-      });
-    }
   </script>
 </body>
 </html>
