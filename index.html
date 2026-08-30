@@ -265,9 +265,9 @@
     function updateAppBadge(unreadCount) {
       currentBadgeCount = parseInt(unreadCount) || 0;
       if (currentBadgeCount > 0) {
-        document.title = '(' + currentBadgeCount + ') PAG Docs - PT. Putra Aulia Group';
+        document.title = '(' + currentBadgeCount + ') PT. Putra Aulia';
       } else {
-        document.title = 'PAG Docs - PT. Putra Aulia Group';
+        document.title = 'Putra Aulia';
       }
       if ('setAppBadge' in navigator) {
         if (currentBadgeCount > 0) {
@@ -294,7 +294,7 @@
         window.OneSignalDeferred.push(async function(OneSignal) {
           if (email) await OneSignal.login(email);
           await OneSignal.User.addTags({
-            role: role, nama: nama, email: email, app: 'PAG_DOCS'
+            role: role, nama: nama, email: email, app: 'PT. PA'
           });
         });
       }
