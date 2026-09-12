@@ -27,7 +27,9 @@
       isLoggedIn: false,
       currentUserId: null,
       currentRole: null,
-      notificationCount: 0
+      notificationCount: 0,
+      oneSignalReady: false,
+      OneSignalInstance: null
     };
 
     OneSignalDeferred.push(async function(OneSignal) {
@@ -42,6 +44,8 @@
         });
 
         window.PAG_ONESIGNAL_STATE.initialized = true;
+        window.PAG_ONESIGNAL_STATE.OneSignalInstance = OneSignal;
+        window.PAG_ONESIGNAL_STATE.oneSignalReady = true;
         console.log("[OneSignal] Inisialisasi berhasil ✓");
 
         /* ================================================================
@@ -311,6 +315,11 @@
       background: #ef4444; margin-right: 6px;
     }
     .status-indicator.active { background: #22c55e; }
+
+    .btn-action.loading {
+      opacity: 0.7;
+      cursor: wait !important;
+    }
   </style>
 </head>
 <body>
@@ -439,37 +448,94 @@
     });
 
     /* ================================================================
-     * AKTIFKAN NOTIFIKASI
+     * AKTIFKAN NOTIFIKASI - PERBAIKAN KRITIS
      * ================================================================ */
     function aktifkanNotifikasi(e) {
       if (e) e.stopPropagation();
       
       console.log('[PAG] Permintaan aktivasi notifikasi');
+      console.log('[PAG] OneSignal state:', window.PAG_ONESIGNAL_STATE);
+      
+      var btn = document.getElementById('btnNotif');
       
       if (!('Notification' in window)) {
         alert('Browser ini tidak mendukung notifikasi push.');
         return;
       }
 
-      if (window.OneSignalDeferred) {
-        window.OneSignalDeferred.push(async function(OneSignal) {
-          try {
-            console.log('[PAG] Request permission via OneSignal');
-            await OneSignal.Notifications.requestPermission();
-            console.log('[PAG] OneSignal permission granted');
-          } catch(err) {
-            console.log('[PAG] OneSignal permission error, fallback ke native');
-            Notification.requestPermission();
+      // UPDATE UI: Show loading state
+      if (btn) {
+        btn.textContent = '⏳ Memproses...';
+        btn.className = 'btn-action btn-primary loading';
+        btn.disabled = true;
+      }
+
+      // PERBAIKAN: Check langsung apakah OneSignal sudah siap
+      if (window.PAG_ONESIGNAL_STATE.oneSignalReady && window.PAG_ONESIGNAL_STATE.OneSignalInstance) {
+        console.log('[PAG] OneSignal sudah siap, request permission langsung');
+        handleNotificationPermission();
+      } else {
+        // FALLBACK: Tunggu OneSignal siap
+        console.log('[PAG] OneSignal belum siap, tunggu...');
+        var attempts = 0;
+        var checkInterval = setInterval(function() {
+          attempts++;
+          if (window.PAG_ONESIGNAL_STATE.oneSignalReady && window.PAG_ONESIGNAL_STATE.OneSignalInstance) {
+            clearInterval(checkInterval);
+            console.log('[PAG] OneSignal siap setelah', attempts, 'percobaan');
+            handleNotificationPermission();
+          } else if (attempts > 50) {
+            // Timeout setelah 5 detik, gunakan native API
+            clearInterval(checkInterval);
+            console.log('[PAG] Timeout menunggu OneSignal, fallback ke native API');
+            handleNativePermission();
           }
-          
+        }, 100);
+      }
+
+      function handleNotificationPermission() {
+        try {
+          var OneSignal = window.PAG_ONESIGNAL_STATE.OneSignalInstance;
+          if (!OneSignal) {
+            handleNativePermission();
+            return;
+          }
+
+          console.log('[PAG] Request permission via OneSignal');
+          OneSignal.Notifications.requestPermission().then(function() {
+            console.log('[PAG] OneSignal permission granted');
+            setTimeout(function() {
+              periksaStatusNotif();
+              if (btn) {
+                btn.textContent = 'Aktif ✔';
+                btn.className = 'btn-action btn-success';
+              }
+            }, 500);
+          }).catch(function(err) {
+            console.error('[PAG] OneSignal permission error:', err);
+            handleNativePermission();
+          });
+        } catch(err) {
+          console.error('[PAG] Error dengan OneSignal:', err);
+          handleNativePermission();
+        }
+      }
+
+      function handleNativePermission() {
+        console.log('[PAG] Fallback ke native Notification API');
+        Notification.requestPermission().then(function(permission) {
+          console.log('[PAG] Native permission result:', permission);
           setTimeout(function() {
             periksaStatusNotif();
+            if (btn && permission === 'granted') {
+              btn.textContent = 'Aktif ✔';
+              btn.className = 'btn-action btn-success';
+            } else if (btn) {
+              btn.textContent = 'Aktifkan';
+              btn.className = 'btn-action btn-primary';
+              btn.disabled = false;
+            }
           }, 500);
-        });
-      } else {
-        console.log('[PAG] Fallback ke native Notification API');
-        Notification.requestPermission().then(function() {
-          periksaStatusNotif();
         });
       }
     }
