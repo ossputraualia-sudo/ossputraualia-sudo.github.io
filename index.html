@@ -314,41 +314,60 @@
     }
 
     /* ================================================================
-     * FUNGSI UTAMA: AKTIFKAN NOTIFIKASI VIA ONESIGNAL LANGSUNG
+     * FUNGSI AKTIFKAN NOTIFIKASI DENGAN SAFETY TIMEOUT
      * ================================================================ */
     function aktifkanNotifikasi() {
       var btn = document.getElementById('btnNotif');
       var desc = document.getElementById('notifDesc');
 
+      // 1. Deteksi apakah browser mendukung notifikasi dasar
+      if (!('Notification' in window)) {
+        alert('❌ Browser ini tidak mendukung notifikasi push.');
+        return;
+      }
+
+      // 2. Cegah stuck dengan Safety Timeout 5 detik
       if (btn) {
         btn.textContent = 'Memproses...';
         btn.disabled = true;
       }
 
+      var timeoutId = setTimeout(function() {
+        if (btn && btn.textContent === 'Memproses...') {
+          btn.textContent = 'Coba Lagi';
+          btn.disabled = false;
+          alert('⚠️ Gagal terhubung ke server notifikasi!\n\nPastikan:\n1. Anda TIDAK menggunakan Mode Private/Incognito.\n2. Matikan AdBlocker jika aktif.');
+        }
+      }, 5000);
+
+      // 3. Jalankan request ke OneSignal
       OneSignalDeferred.push(async function(OneSignal) {
         try {
           console.log("[PAG] Meminta izin Push via OneSignal...");
           
-          // LANGKAH INI YANG AKAN MENDAFTARKAN DEVICE KE DASHBOARD
           await OneSignal.Notifications.requestPermission();
           
+          clearTimeout(timeoutId); // Batalkan timeout jika sukses merespon
+
           const optedIn = OneSignal.User.PushSubscription.optedIn;
           if (optedIn) {
             console.log("[PAG] ✓ Berhasil terdaftar ke OneSignal!");
             periksaStatusSubscription();
           } else {
-            console.warn("[PAG] Belum subscribe atau ditolak.");
+            console.warn("[PAG] Pengguna menolak izin atau menutup pop-up.");
             if (btn) {
               btn.textContent = 'Aktifkan';
               btn.disabled = false;
             }
           }
         } catch (err) {
+          clearTimeout(timeoutId);
           console.error("[PAG] Error request permission:", err);
           if (btn) {
             btn.textContent = 'Aktifkan';
             btn.disabled = false;
           }
+          alert('Terjadi kesalahan: ' + err.message);
         }
       });
     }
