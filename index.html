@@ -26,18 +26,57 @@
         allowLocalhostAsSecureOrigin: true
       });
 
-      // Menangkap User ID dari iframe Google Apps Script saat login berhasil
-      window.addEventListener('message', async function(event) {
-        if (event.data && event.data.type === 'PAG_LOGIN_SUCCESS' && event.data.userId) {
-          try {
-            console.log("Menghubungkan OneSignal dengan User ID:", event.data.userId);
-            await OneSignal.login(String(event.data.userId));
-          } catch (err) {
-            console.error("Gagal melakukan OneSignal login:", err);
+      // Helper untuk Sinkronisasi Identitas User & Tag Role ke OneSignal
+      window.pagSyncOneSignalUser = async function(userId, role) {
+        try {
+          if (userId) {
+            console.log("[OneSignal] Melakukan login user ID:", userId);
+            await OneSignal.login(String(userId));
           }
+          if (role) {
+            var formattedRole = String(role).toLowerCase().trim();
+            console.log("[OneSignal] Memasang Tag role:", formattedRole);
+            await OneSignal.User.addTag("role", formattedRole);
+          }
+        } catch (err) {
+          console.error("[OneSignal] Gagal sinkronisasi data user:", err);
+        }
+      };
+
+      // 1. OTOMATIS: Muat identitas terakhir dari localStorage saat aplikasi dibuka/direfresh
+      var cachedUserId = localStorage.getItem('PAG_USER_ID');
+      var cachedRole = localStorage.getItem('PAG_USER_ROLE');
+      if (cachedUserId) {
+        await window.pagSyncOneSignalUser(cachedUserId, cachedRole);
+      }
+
+      // 2. LISTENER: Tangkap komunikasi dari dalam iframe Google Apps Script
+      window.addEventListener('message', async function(event) {
+        if (!event.data) return;
+
+        // Saat login berhasil atau sesi dicek dari Apps Script
+        if (event.data.type === 'PAG_LOGIN_SUCCESS' || event.data.type === 'PAG_SESSION_READY') {
+          var uId = event.data.userId || event.data.id;
+          var uRole = event.data.role;
+
+          if (uId) localStorage.setItem('PAG_USER_ID', String(uId));
+          if (uRole) localStorage.setItem('PAG_USER_ROLE', String(uRole));
+
+          await window.pagSyncOneSignalUser(uId, uRole);
+        }
+
+        // Saat logout dilakukan dari Apps Script
+        if (event.data.type === 'PAG_LOGOUT') {
+          console.log("[OneSignal] Logout user");
+          localStorage.removeItem('PAG_USER_ID');
+          localStorage.removeItem('PAG_USER_ROLE');
+          try {
+            await OneSignal.logout();
+          } catch (eLogout) {}
         }
       });
 
+      // Handler klik notifikasi push agar membuka tab/hash yang sesuai di PWA
       OneSignal.Notifications.addEventListener('click', function(event) {
         var notifUrl = event.notification.launchURL;
         if (notifUrl && notifUrl.indexOf('#') > -1) {
@@ -64,7 +103,6 @@
       position: absolute; inset: 0; z-index: 1;
     }
 
-    /* Modal dengan z-index tinggi agar selalu di atas iframe */
     #setupModal {
       position: fixed; inset: 0;
       background: linear-gradient(135deg, rgba(248,250,252,0.95) 0%, rgba(226,232,240,0.95) 100%);
@@ -106,7 +144,6 @@
     .action-info h4 { font-size: 13.5px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
     .action-info p { font-size: 11.5px; color: #64748b; line-height: 1.4; }
     
-    /* Memastikan tombol dapat diklik secara independen */
     .btn-action {
       padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700;
       cursor: pointer !important; border: none; white-space: nowrap; transition: all 0.2s;
