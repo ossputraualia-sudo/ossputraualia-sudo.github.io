@@ -26,6 +26,18 @@
         allowLocalhostAsSecureOrigin: true
       });
 
+      // Menangkap User ID dari iframe Google Apps Script saat login berhasil
+      window.addEventListener('message', async function(event) {
+        if (event.data && event.data.type === 'PAG_LOGIN_SUCCESS' && event.data.userId) {
+          try {
+            console.log("Menghubungkan OneSignal dengan User ID:", event.data.userId);
+            await OneSignal.login(String(event.data.userId));
+          } catch (err) {
+            console.error("Gagal melakukan OneSignal login:", err);
+          }
+        }
+      });
+
       OneSignal.Notifications.addEventListener('click', function(event) {
         var notifUrl = event.notification.launchURL;
         if (notifUrl && notifUrl.indexOf('#') > -1) {
@@ -215,7 +227,6 @@
         return;
       }
 
-      // Fallback native permission request jika OneSignal belum siap
       if (window.OneSignalDeferred) {
         window.OneSignalDeferred.push(async function(OneSignal) {
           try {
