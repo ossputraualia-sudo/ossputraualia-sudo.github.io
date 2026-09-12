@@ -17,77 +17,212 @@
   <!-- OneSignal Web Push SDK (v16+) -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
+    /* ================================================================
+     * ONESIGNAL INITIALIZATION & USER SYNC
+     * ================================================================ */
+
     window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.PAG_ONESIGNAL_STATE = {
+      initialized: false,
+      isLoggedIn: false,
+      currentUserId: null,
+      currentRole: null,
+      notificationCount: 0
+    };
+
     OneSignalDeferred.push(async function(OneSignal) {
-      await OneSignal.init({
-        appId: "e9c3d005-53b3-4bef-8721-dd6062e20559",
-        safari_web_id: "web.onesignal.auto.e9c3d005-53b3-4bef-8721-dd6062e20559",
-        notifyButton: { enable: false },
-        allowLocalhostAsSecureOrigin: true
-      });
+      try {
+        console.log("[OneSignal] Menginisialisasi SDK...");
+        
+        await OneSignal.init({
+          appId: "e9c3d005-53b3-4bef-8721-dd6062e20559",
+          safari_web_id: "web.onesignal.auto.e9c3d005-53b3-4bef-8721-dd6062e20559",
+          notifyButton: { enable: false },
+          allowLocalhostAsSecureOrigin: true
+        });
 
-      // Helper untuk Sinkronisasi Identitas User & Tag Role ke OneSignal
-      window.pagSyncOneSignalUser = async function(userId, role) {
-        try {
-          if (userId) {
-            console.log("[OneSignal] Melakukan login user ID:", userId);
-            await OneSignal.login(String(userId));
-          }
-          if (role) {
-            var formattedRole = String(role).toLowerCase().trim();
-            console.log("[OneSignal] Memasang Tag role:", formattedRole);
-            await OneSignal.User.addTag("role", formattedRole);
-          }
-        } catch (err) {
-          console.error("[OneSignal] Gagal sinkronisasi data user:", err);
-        }
-      };
+        window.PAG_ONESIGNAL_STATE.initialized = true;
+        console.log("[OneSignal] Inisialisasi berhasil ✓");
 
-      // 1. OTOMATIS: Muat identitas terakhir dari localStorage saat aplikasi dibuka/direfresh
-      var cachedUserId = localStorage.getItem('PAG_USER_ID');
-      var cachedRole = localStorage.getItem('PAG_USER_ROLE');
-      if (cachedUserId) {
-        await window.pagSyncOneSignalUser(cachedUserId, cachedRole);
-      }
-
-      // 2. LISTENER: Tangkap komunikasi dari dalam iframe Google Apps Script
-      window.addEventListener('message', async function(event) {
-        if (!event.data) return;
-
-        // Saat login berhasil atau sesi dicek dari Apps Script
-        if (event.data.type === 'PAG_LOGIN_SUCCESS' || event.data.type === 'PAG_SESSION_READY') {
-          var uId = event.data.userId || event.data.id;
-          var uRole = event.data.role;
-
-          if (uId) localStorage.setItem('PAG_USER_ID', String(uId));
-          if (uRole) localStorage.setItem('PAG_USER_ROLE', String(uRole));
-
-          await window.pagSyncOneSignalUser(uId, uRole);
-        }
-
-        // Saat logout dilakukan dari Apps Script
-        if (event.data.type === 'PAG_LOGOUT') {
-          console.log("[OneSignal] Logout user");
-          localStorage.removeItem('PAG_USER_ID');
-          localStorage.removeItem('PAG_USER_ROLE');
+        /* ================================================================
+         * HELPER: Sinkronisasi Identitas User & Tag Role
+         * ================================================================ */
+        window.pagSyncOneSignalUser = async function(userId, role) {
           try {
-            await OneSignal.logout();
-          } catch (eLogout) {}
-        }
-      });
+            if (!userId) {
+              console.warn("[OneSignal] User ID kosong, melewati sinkronisasi");
+              return false;
+            }
 
-      // Handler klik notifikasi push agar membuka tab/hash yang sesuai di PWA
-      OneSignal.Notifications.addEventListener('click', function(event) {
-        var notifUrl = event.notification.launchURL;
-        if (notifUrl && notifUrl.indexOf('#') > -1) {
-          var hash = notifUrl.substring(notifUrl.indexOf('#'));
-          window.location.hash = hash;
-          if (typeof syncUrlToIframe === 'function') {
-            syncUrlToIframe();
+            const userIdStr = String(userId).trim();
+            console.log("[OneSignal] Sinkronisasi user ID:", userIdStr);
+
+            // Login user ke OneSignal
+            await OneSignal.login(userIdStr);
+            window.PAG_ONESIGNAL_STATE.isLoggedIn = true;
+            window.PAG_ONESIGNAL_STATE.currentUserId = userIdStr;
+
+            // Tambahkan tag role jika tersedia
+            if (role) {
+              const formattedRole = String(role).toLowerCase().trim();
+              console.log("[OneSignal] Memasang tag role:", formattedRole);
+              await OneSignal.User.addTag("role", formattedRole);
+              window.PAG_ONESIGNAL_STATE.currentRole = formattedRole;
+            }
+
+            console.log("[OneSignal] Sinkronisasi user berhasil ✓");
+            return true;
+
+          } catch (err) {
+            console.error("[OneSignal] Gagal sinkronisasi user:", err);
+            return false;
+          }
+        };
+
+        /* ================================================================
+         * HELPER: Update Badge Notifikasi
+         * ================================================================ */
+        window.pagUpdateNotificationBadge = async function(count) {
+          try {
+            const countNum = parseInt(count) || 0;
+            window.PAG_ONESIGNAL_STATE.notificationCount = countNum;
+
+            // Update badge di tab browser
+            if ('setAppBadge' in navigator) {
+              if (countNum > 0) {
+                await navigator.setAppBadge(countNum);
+              } else {
+                await navigator.clearAppBadge();
+              }
+              console.log("[Badge] Badge updated:", countNum);
+            }
+
+            // Emit custom event untuk UI components
+            window.dispatchEvent(new CustomEvent('PAG_BADGE_UPDATE', {
+              detail: { count: countNum }
+            }));
+
+          } catch (err) {
+            console.warn("[Badge] Gagal update badge:", err.message);
+          }
+        };
+
+        /* ================================================================
+         * STEP 1: RESTORE USER DARI LOCALSTORAGE
+         * ================================================================ */
+        const cachedUserId = localStorage.getItem('PAG_USER_ID');
+        const cachedRole = localStorage.getItem('PAG_USER_ROLE');
+        const cachedBadge = localStorage.getItem('PAG_NOTIFICATION_COUNT');
+
+        if (cachedUserId) {
+          console.log("[OneSignal] Restore user dari cache...");
+          await window.pagSyncOneSignalUser(cachedUserId, cachedRole);
+          if (cachedBadge) {
+            await window.pagUpdateNotificationBadge(cachedBadge);
           }
         }
-      });
+
+        /* ================================================================
+         * STEP 2: LISTENER KOMUNIKASI DARI APPS SCRIPT IFRAME
+         * ================================================================ */
+        window.addEventListener('message', async function(event) {
+          if (!event.data) return;
+
+          const msgType = event.data.type;
+          const msgData = event.data;
+
+          console.log("[PAG] Menerima pesan dari Apps Script:", msgType);
+
+          // LOGIN SUCCESS atau SESSION READY
+          if (msgType === 'PAG_LOGIN_SUCCESS' || msgType === 'PAG_SESSION_READY') {
+            const uId = msgData.userId || msgData.id;
+            const uRole = msgData.role;
+            const uNama = msgData.nama;
+
+            if (uId) {
+              localStorage.setItem('PAG_USER_ID', String(uId));
+              if (uRole) localStorage.setItem('PAG_USER_ROLE', String(uRole));
+              if (uNama) localStorage.setItem('PAG_USER_NAMA', String(uNama));
+
+              console.log("[PAG] Login berhasil, sinkronisasi OneSignal...");
+              await window.pagSyncOneSignalUser(uId, uRole);
+            }
+          }
+
+          // UPDATE BADGE NOTIFIKASI
+          if (msgType === 'PAG_BADGE_UPDATE') {
+            const count = msgData.count || 0;
+            console.log("[PAG] Update badge notifikasi:", count);
+            await window.pagUpdateNotificationBadge(count);
+          }
+
+          // LOGOUT
+          if (msgType === 'PAG_LOGOUT') {
+            console.log("[PAG] Logout user, clearing OneSignal...");
+            localStorage.removeItem('PAG_USER_ID');
+            localStorage.removeItem('PAG_USER_ROLE');
+            localStorage.removeItem('PAG_USER_NAMA');
+            localStorage.removeItem('PAG_NOTIFICATION_COUNT');
+
+            try {
+              await OneSignal.logout();
+            } catch (eLogout) {
+              console.warn("[OneSignal] Error saat logout:", eLogout);
+            }
+
+            window.PAG_ONESIGNAL_STATE.isLoggedIn = false;
+            window.PAG_ONESIGNAL_STATE.currentUserId = null;
+            window.PAG_ONESIGNAL_STATE.currentRole = null;
+
+            await window.pagUpdateNotificationBadge(0);
+          }
+
+          // SYNC ERROR LOGGING
+          if (msgType === 'PAG_ERROR_LOG') {
+            console.error("[PAG ERROR]", msgData.message, msgData.data);
+          }
+        });
+
+        /* ================================================================
+         * STEP 3: NOTIFIKASI PUSH CLICK HANDLER
+         * ================================================================ */
+        OneSignal.Notifications.addEventListener('click', function(event) {
+          console.log("[OneSignal] Notifikasi diklik:", event);
+          
+          const notification = event.notification;
+          const notifUrl = notification.launchURL;
+
+          if (notifUrl && notifUrl.indexOf('#') > -1) {
+            const hash = notifUrl.substring(notifUrl.indexOf('#'));
+            console.log("[OneSignal] Navigate ke hash:", hash);
+            
+            window.location.hash = hash;
+            
+            // Sync hash ke iframe
+            if (typeof syncUrlToIframe === 'function') {
+              syncUrlToIframe();
+            }
+          }
+        });
+
+        /* ================================================================
+         * STEP 4: NOTIFIKASI DITERIMA HANDLER
+         * ================================================================ */
+        OneSignal.Notifications.addEventListener('foreground', function(event) {
+          console.log("[OneSignal] Notifikasi diterima di foreground:", event);
+          
+          // Increment badge count
+          const currentCount = window.PAG_ONESIGNAL_STATE.notificationCount || 0;
+          window.pagUpdateNotificationBadge(currentCount + 1);
+        });
+
+        console.log("[OneSignal] Setup komplit ✓");
+
+      } catch (initErr) {
+        console.error("[OneSignal] Error inisialisasi:", initErr);
+      }
     });
+
   </script>
 
   <style>
@@ -155,6 +290,8 @@
       box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3);
     }
     .btn-primary:active { transform: scale(0.95); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed !important; }
+    
     .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: default !important; }
     
     .btn-start {
@@ -168,6 +305,12 @@
       background: rgba(239, 246, 255, 0.8); border: 1px solid #bfdbfe; padding: 12px; border-radius: 12px;
       font-size: 11.5px; color: #1e40af; margin-bottom: 14px; text-align: left; display: none; line-height: 1.4;
     }
+
+    .status-indicator {
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      background: #ef4444; margin-right: 6px;
+    }
+    .status-indicator.active { background: #22c55e; }
   </style>
 </head>
 <body>
@@ -181,7 +324,7 @@
 
       <div class="action-box">
         <div class="action-info">
-          <h4>🔔 Notifikasi Real-Time</h4>
+          <h4><span class="status-indicator"></span>🔔 Notifikasi Real-Time</h4>
           <p id="notifDesc">Wajib diaktifkan untuk menerima info dokumen & tender.</p>
         </div>
         <button id="btnNotif" type="button" class="btn-action btn-primary" onclick="aktifkanNotifikasi(event)">Aktifkan</button>
@@ -189,7 +332,7 @@
 
       <div class="action-box">
         <div class="action-info">
-          <h4>📲 Install Aplikasi</h4>
+          <h4><span class="status-indicator"></span>📲 Install Aplikasi</h4>
           <p id="installDesc">Pasang di Layar Depan HP agar cepat dibuka tanpa browser.</p>
         </div>
         <button id="btnInstall" type="button" class="btn-action btn-primary" onclick="installAplikasi(event)">Install</button>
@@ -213,52 +356,96 @@
   ></iframe>
 
   <script>
+    /* ================================================================
+     * GLOBAL CONFIG & STATE
+     * ================================================================ */
     var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
     var frame = document.getElementById('appFrame');
     var setupModal = document.getElementById('setupModal');
     var deferredInstallPrompt = null;
+    var isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
+    /* ================================================================
+     * PEMERIKSAAN STATUS NOTIFIKASI
+     * ================================================================ */
     function periksaStatusNotif() {
       if ('Notification' in window && Notification.permission === 'granted') {
         var btn = document.getElementById('btnNotif');
         var desc = document.getElementById('notifDesc');
+        var indicators = document.querySelectorAll('.status-indicator');
+        
         if (btn) {
           btn.textContent = 'Aktif ✔';
           btn.className = 'btn-action btn-success';
           btn.disabled = true;
         }
-        if (desc) desc.textContent = 'Notifikasi sudah aktif di perangkat ini.';
+        if (desc) {
+          desc.textContent = 'Notifikasi sudah aktif di perangkat ini.';
+        }
+        if (indicators.length > 0) {
+          indicators[0].classList.add('active');
+        }
+        
+        console.log('[PAG] Status notifikasi: AKTIF');
         return true;
       }
+      
+      console.log('[PAG] Status notifikasi: TIDAK AKTIF');
       return false;
     }
 
+    /* ================================================================
+     * AUTO-SKIP SETUP JIKA SEMUA SUDAH SELESAI
+     * ================================================================ */
     function cekAutoSkip() {
       var isNotifGranted = periksaStatusNotif();
       var isSetupDone = localStorage.getItem('PAG_SETUP_DONE') === 'true';
-      if (isNotifGranted && isSetupDone) {
-        if (setupModal) setupModal.style.display = 'none';
+      var isLoggedIn = localStorage.getItem('PAG_USER_ID');
+      
+      if (isNotifGranted && isSetupDone && isLoggedIn) {
+        console.log('[PAG] Auto-skip: Semua setup selesai');
+        if (setupModal) {
+          setupModal.style.display = 'none';
+        }
       }
     }
-    cekAutoSkip();
 
-    var isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    /* ================================================================
+     * CEK PLATFORM & SETUP AWAL
+     * ================================================================ */
     if (isIos && !window.navigator.standalone) {
       document.getElementById('iosGuide').style.display = 'block';
+      console.log('[PAG] Platform: iOS (PWA tidak ter-install)');
+    } else if (isIos && window.navigator.standalone) {
+      console.log('[PAG] Platform: iOS (PWA ter-install)');
+    } else {
+      console.log('[PAG] Platform: Android/Desktop');
     }
 
+    /* ================================================================
+     * INSTALL PROMPT LISTENER
+     * ================================================================ */
     window.addEventListener('beforeinstallprompt', function(e) {
       e.preventDefault();
       deferredInstallPrompt = e;
+      console.log('[PAG] beforeinstallprompt event diterima');
+      
       var btn = document.getElementById('btnInstall');
       if (btn) {
         btn.textContent = 'Install';
         btn.className = 'btn-action btn-primary';
+        btn.disabled = false;
       }
     });
 
+    /* ================================================================
+     * AKTIFKAN NOTIFIKASI
+     * ================================================================ */
     function aktifkanNotifikasi(e) {
       if (e) e.stopPropagation();
+      
+      console.log('[PAG] Permintaan aktivasi notifikasi');
+      
       if (!('Notification' in window)) {
         alert('Browser ini tidak mendukung notifikasi push.');
         return;
@@ -267,31 +454,48 @@
       if (window.OneSignalDeferred) {
         window.OneSignalDeferred.push(async function(OneSignal) {
           try {
+            console.log('[PAG] Request permission via OneSignal');
             await OneSignal.Notifications.requestPermission();
+            console.log('[PAG] OneSignal permission granted');
           } catch(err) {
+            console.log('[PAG] OneSignal permission error, fallback ke native');
             Notification.requestPermission();
           }
-          periksaStatusNotif();
+          
+          setTimeout(function() {
+            periksaStatusNotif();
+          }, 500);
         });
       } else {
+        console.log('[PAG] Fallback ke native Notification API');
         Notification.requestPermission().then(function() {
           periksaStatusNotif();
         });
       }
     }
 
+    /* ================================================================
+     * INSTALL APLIKASI
+     * ================================================================ */
     function installAplikasi(e) {
       if (e) e.stopPropagation();
+      
+      console.log('[PAG] Install aplikasi diminta');
+      
       if (deferredInstallPrompt) {
+        console.log('[PAG] Showing install prompt');
         deferredInstallPrompt.prompt();
         deferredInstallPrompt.userChoice.then(function(choiceResult) {
           if (choiceResult.outcome === 'accepted') {
+            console.log('[PAG] User accepted install');
             var btn = document.getElementById('btnInstall');
             if (btn) {
               btn.textContent = 'Terpasang ✔';
               btn.className = 'btn-action btn-success';
               btn.disabled = true;
             }
+          } else {
+            console.log('[PAG] User declined install');
           }
           deferredInstallPrompt = null;
         });
@@ -302,9 +506,15 @@
       }
     }
 
+    /* ================================================================
+     * BUKA APLIKASI UTAMA
+     * ================================================================ */
     function bukaAplikasiUtama(e) {
       if (e) e.stopPropagation();
+      
+      console.log('[PAG] Membuka aplikasi utama');
       localStorage.setItem('PAG_SETUP_DONE', 'true');
+      
       if (setupModal) {
         setupModal.style.opacity = '0';
         setTimeout(function() {
@@ -314,19 +524,37 @@
       }
     }
 
+    /* ================================================================
+     * SINKRONISASI URL KE IFRAME
+     * ================================================================ */
     function syncUrlToIframe() {
       var hash = window.location.hash || '';
       if (frame && APPS_SCRIPT_EXEC_URL) {
         var targetUrl = APPS_SCRIPT_EXEC_URL + (hash ? hash : '');
         if (!frame.src || frame.src.indexOf(APPS_SCRIPT_EXEC_URL) === -1) {
           frame.src = targetUrl;
+          console.log('[PAG] Sync iframe URL: ' + hash);
         }
       }
     }
 
+    /* ================================================================
+     * LISTENER: BADGE UPDATE DARI NOTIFIKASI
+     * ================================================================ */
+    window.addEventListener('PAG_BADGE_UPDATE', function(event) {
+      const count = event.detail.count || 0;
+      console.log('[PAG] Badge update event: ' + count);
+    });
+
+    /* ================================================================
+     * INIT
+     * ================================================================ */
+    console.log('[PAG] === Initialization ===');
     periksaStatusNotif();
+    cekAutoSkip();
     syncUrlToIframe();
     window.addEventListener('hashchange', syncUrlToIframe);
+    console.log('[PAG] Setup completed');
   </script>
 </body>
 </html>
