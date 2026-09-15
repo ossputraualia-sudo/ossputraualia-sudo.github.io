@@ -21,7 +21,6 @@
     window.PAG_ONESIGNAL_STATE = {
       initialized: false,
       isLoggedIn: false,
-      currentUserId: null,
       currentRole: null,
       notificationCount: 0
     };
@@ -49,12 +48,11 @@
           periksaStatusSubscription();
         });
 
-        // Pulihkan sesi jika ada cache user login
-        const cachedUserId = localStorage.getItem('PAG_USER_ID');
+        // Pulihkan role dari cache lokal jika ada
         const cachedRole = localStorage.getItem('PAG_USER_ROLE');
-        if (cachedUserId) {
-          console.log("[OneSignal] 📦 Restore user dari cache:", cachedUserId);
-          window.pagSyncOneSignalUser(cachedUserId, cachedRole);
+        if (cachedRole) {
+          console.log("[OneSignal] 📦 Memasang kembali Tag Role dari cache:", cachedRole);
+          window.pagSetDeviceRole(cachedRole);
         }
 
         // Handler klik notifikasi push
@@ -73,26 +71,19 @@
     });
 
     /* ================================================================
-     * SINKRONISASI USER KE ONESIGNAL
+     * MEMASANG TAG ROLE KE PERANGKAT (TANPA EXTERNAL ID)
      * ================================================================ */
-    window.pagSyncOneSignalUser = async function(userId, role) {
-      if (!userId) return;
+    window.pagSetDeviceRole = async function(role) {
+      if (!role) return;
       try {
-        const uId = String(userId).trim();
-        console.log("[OneSignal] 🔄 Menghubungkan ID User:", uId);
+        const r = String(role).toLowerCase().trim();
+        console.log("[OneSignal] 🏷️ Memasang Tag Role ke Perangkat:", r);
         
-        await OneSignal.login(uId);
-        window.PAG_ONESIGNAL_STATE.isLoggedIn = true;
-        window.PAG_ONESIGNAL_STATE.currentUserId = uId;
-
-        if (role) {
-          const r = String(role).toLowerCase().trim();
-          console.log("[OneSignal] 🏷️ Memasang Tag Role:", r);
-          await OneSignal.User.addTag("role", r);
-          window.PAG_ONESIGNAL_STATE.currentRole = r;
-        }
+        // Menggunakan Tag OneSignal agar bisa difilter saat kirim push notifikasi role
+        await OneSignal.User.addTag("role", r);
+        window.PAG_ONESIGNAL_STATE.currentRole = r;
       } catch (e) {
-        console.error("[OneSignal] Gagal login user:", e);
+        console.error("[OneSignal] Gagal memasang tag role:", e);
       }
     };
 
@@ -103,33 +94,29 @@
       if (!event.data) return;
       let data = event.data;
 
-      // Handle jika data dikirim dalam bentuk string JSON
       if (typeof data === 'string') {
         try { data = JSON.parse(data); } catch(e) { return; }
       }
 
-      // Login / Sesi Aktif
+      // Menangkap sinyal login sukses atau siap sesi dari dalam Apps Script
       if (data.type === 'PAG_LOGIN_SUCCESS' || data.type === 'PAG_SESSION_READY') {
-        const uId = data.userId || data.id;
         const uRole = data.role;
         const uNama = data.nama;
 
-        if (uId) {
-          localStorage.setItem('PAG_USER_ID', String(uId));
-          if (uRole) localStorage.setItem('PAG_USER_ROLE', String(uRole));
+        if (uRole) {
+          localStorage.setItem('PAG_USER_ROLE', String(uRole));
           if (uNama) localStorage.setItem('PAG_USER_NAMA', String(uNama));
-          await window.pagSyncOneSignalUser(uId, uRole);
+          await window.pagSetDeviceRole(uRole);
         }
       }
 
       // Logout
       if (data.type === 'PAG_LOGOUT') {
-        console.log("[OneSignal] User logout");
-        localStorage.removeItem('PAG_USER_ID');
+        console.log("[OneSignal] User logout - menghapus cache role");
         localStorage.removeItem('PAG_USER_ROLE');
         localStorage.removeItem('PAG_USER_NAMA');
         OneSignalDeferred.push(async function(OneSignal) {
-          await OneSignal.logout();
+          await OneSignal.User.removeTag("role");
         });
       }
     });
@@ -142,8 +129,6 @@
         const isPushSupported = OneSignal.Notifications.isPushSupported();
         const permission = Notification.permission;
         const isOptedIn = OneSignal.User.PushSubscription.optedIn;
-
-        console.log("[Status] Push Supported:", isPushSupported, "| Permission:", permission, "| OptedIn:", isOptedIn);
 
         if (permission === 'granted' && isOptedIn) {
           var btn = document.getElementById('btnNotif');
@@ -178,7 +163,6 @@
       width: 100%; height: 100%; border: none; display: block; background: #f8fafc;
       position: absolute; inset: 0; z-index: 1;
     }
-
     #setupModal {
       position: fixed; inset: 0;
       background: linear-gradient(135deg, rgba(248,250,252,0.95) 0%, rgba(226,232,240,0.95) 100%);
@@ -186,107 +170,50 @@
       align-items: center; justify-content: center; z-index: 999999;
       padding: 20px; overflow-y: auto; transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    
     .setup-card {
       background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 0 20px 40px -10px rgba(13, 148, 136, 0.15);
-      color: #0f172a;
       border-radius: 24px; padding: 32px 24px; max-width: 420px; width: 100%;
       text-align: center; position: relative;
     }
-
     .brand-badge {
       display: inline-block; background: linear-gradient(135deg, #0d9488, #0f766e);
       color: #ffffff; font-weight: 800; font-size: 20px; padding: 8px 16px;
       border-radius: 12px; margin-bottom: 16px; letter-spacing: 1px;
     }
-
-    .setup-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
-    .setup-sub { font-size: 13px; color: #475569; margin-bottom: 24px; line-height: 1.5; }
-    
     .action-box {
-      background: #ffffff;
-      border: 1px solid rgba(203, 213, 225, 0.8);
+      background: #ffffff; border: 1px solid rgba(203, 213, 225, 0.8);
       border-radius: 16px; padding: 16px; margin-bottom: 14px; text-align: left;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
-    
-    .action-info { flex: 1; }
-    .action-info h4 { font-size: 13.5px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
-    .action-info p { font-size: 11.5px; color: #64748b; line-height: 1.4; }
-    
-    .btn-action {
-      padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700;
-      cursor: pointer; border: none; white-space: nowrap; transition: all 0.2s;
-    }
-    
-    .btn-primary { 
-      background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff; 
-      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3);
-    }
-    .btn-primary:active { transform: scale(0.95); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-    
+    .btn-action { padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; }
+    .btn-primary { background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff; }
     .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: default; }
-    
-    .btn-start {
-      width: 100%; padding: 14px; margin-top: 14px; border-radius: 14px;
-      background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff;
-      font-size: 14px; font-weight: 700; border: none; cursor: pointer;
-      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
-    }
-    
-    .status-indicator {
-      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-      background: #ef4444; margin-right: 6px;
-    }
+    .status-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-right: 6px; }
     .status-indicator.active { background: #22c55e; }
-
-    .ios-guide {
-      background: #eff6ff; border: 1px solid #bfdbfe; padding: 12px; border-radius: 12px;
-      font-size: 11.5px; color: #1e40af; margin-bottom: 14px; text-align: left; display: none; line-height: 1.4;
-    }
   </style>
 </head>
 <body>
 
-  <!-- LAYAR SETUP ONBOARDING -->
   <div id="setupModal">
     <div class="setup-card">
       <div class="brand-badge">P.A.G</div>
-      <h2 class="setup-title">PT. PUTRA AULIA GROUP</h2>
-      <p class="setup-sub">Aktifkan notifikasi dan install aplikasi untuk memantau dokumen & tender.</p>
+      <h2>PT. PUTRA AULIA GROUP</h2>
+      <p style="font-size:13px; color:#475569; margin-bottom:24px;">Aktifkan notifikasi dan install aplikasi untuk memantau dokumen & tender.</p>
 
       <div class="action-box" id="notifBox">
-        <div class="action-info">
-          <h4><span class="status-indicator"></span>🔔 Notifikasi Real-Time</h4>
-          <p id="notifDesc">Wajib diaktifkan agar update dokumen masuk ke perangkat.</p>
+        <div>
+          <h4 style="font-size:13.5px; font-weight:700;"><span class="status-indicator"></span>🔔 Notifikasi Real-Time</h4>
+          <p style="font-size:11.5px; color:#64748b;" id="notifDesc">Wajib diaktifkan agar update dokumen masuk ke perangkat.</p>
         </div>
         <button id="btnNotif" type="button" class="btn-action btn-primary" onclick="aktifkanNotifikasi()">Aktifkan</button>
       </div>
 
-      <div class="action-box" id="installBox">
-        <div class="action-info">
-          <h4><span class="status-indicator"></span>📲 Install Aplikasi</h4>
-          <p id="installDesc">Pasang di Layar Utama agar cepat dibuka seperti aplikasi native.</p>
-        </div>
-        <button id="btnInstall" type="button" class="btn-action btn-primary" onclick="installAplikasi()">Install</button>
-      </div>
-
-      <div id="iosGuide" class="ios-guide">
-        💡 <b>Pengguna iPhone:</b> Ketuk tombol <b>Bagikan (Share)</b> ⎋ di Safari lalu pilih <b>"Tambah ke Layar Utama"</b> ➕.
-      </div>
-
-      <button type="button" class="btn-start" onclick="bukaAplikasiUtama()">
+      <button type="button" style="width:100%; padding:14px; border-radius:14px; background:#0d9488; color:#fff; font-weight:700; border:none; cursor:pointer;" onclick="bukaAplikasiUtama()">
         Lanjutkan ke Aplikasi ➔
       </button>
     </div>
   </div>
 
-  <!-- IFRAME APPS SCRIPT -->
   <iframe 
     id="appFrame" 
     src="https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec" 
@@ -297,139 +224,35 @@
     var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
     var frame = document.getElementById('appFrame');
     var setupModal = document.getElementById('setupModal');
-    var deferredInstallPrompt = null;
-    var isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    // Registrasi PWA Service Worker yang berdampingan aman dengan OneSignal
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/OneSignalSDKWorker.js').catch(function(e) {
-          console.warn('[SW] Registration notice:', e.message);
-        });
+        navigator.serviceWorker.register('/OneSignalSDKWorker.js').catch(function(e) {});
       });
     }
 
-    if (isIos && !window.navigator.standalone) {
-      document.getElementById('iosGuide').style.display = 'block';
-    }
-
-    /* ================================================================
-     * FUNGSI AKTIFKAN NOTIFIKASI DENGAN SAFETY TIMEOUT
-     * ================================================================ */
     function aktifkanNotifikasi() {
-      var btn = document.getElementById('btnNotif');
-      var desc = document.getElementById('notifDesc');
-
-      // 1. Deteksi apakah browser mendukung notifikasi dasar
-      if (!('Notification' in window)) {
-        alert('❌ Browser ini tidak mendukung notifikasi push.');
-        return;
-      }
-
-      // 2. Cegah stuck dengan Safety Timeout 5 detik
-      if (btn) {
-        btn.textContent = 'Memproses...';
-        btn.disabled = true;
-      }
-
-      var timeoutId = setTimeout(function() {
-        if (btn && btn.textContent === 'Memproses...') {
-          btn.textContent = 'Coba Lagi';
-          btn.disabled = false;
-          alert('⚠️ Gagal terhubung ke server notifikasi!\n\nPastikan:\n1. Anda TIDAK menggunakan Mode Private/Incognito.\n2. Matikan AdBlocker jika aktif.');
-        }
-      }, 5000);
-
-      // 3. Jalankan request ke OneSignal
       OneSignalDeferred.push(async function(OneSignal) {
         try {
-          console.log("[PAG] Meminta izin Push via OneSignal...");
-          
           await OneSignal.Notifications.requestPermission();
-          
-          clearTimeout(timeoutId); // Batalkan timeout jika sukses merespon
-
-          const optedIn = OneSignal.User.PushSubscription.optedIn;
-          if (optedIn) {
-            console.log("[PAG] ✓ Berhasil terdaftar ke OneSignal!");
-            periksaStatusSubscription();
-          } else {
-            console.warn("[PAG] Pengguna menolak izin atau menutup pop-up.");
-            if (btn) {
-              btn.textContent = 'Aktifkan';
-              btn.disabled = false;
-            }
-          }
-        } catch (err) {
-          clearTimeout(timeoutId);
-          console.error("[PAG] Error request permission:", err);
-          if (btn) {
-            btn.textContent = 'Aktifkan';
-            btn.disabled = false;
-          }
-          alert('Terjadi kesalahan: ' + err.message);
-        }
+          periksaStatusSubscription();
+        } catch (err) {}
       });
     }
 
-    /* ================================================================
-     * INSTALL PWA
-     * ================================================================ */
-    window.addEventListener('beforeinstallprompt', function(e) {
-      e.preventDefault();
-      deferredInstallPrompt = e;
-      var btn = document.getElementById('btnInstall');
-      if (btn) btn.disabled = false;
-    });
-
-    function installAplikasi() {
-      if (deferredInstallPrompt) {
-        deferredInstallPrompt.prompt();
-        deferredInstallPrompt.userChoice.then(function(res) {
-          if (res.outcome === 'accepted') {
-            var btn = document.getElementById('btnInstall');
-            if (btn) {
-              btn.textContent = 'Terpasang ✔';
-              btn.className = 'btn-action btn-success';
-              btn.disabled = true;
-            }
-          }
-          deferredInstallPrompt = null;
-        });
-      } else {
-        alert('Gunakan menu browser (titik tiga) lalu pilih "Instal Aplikasi" atau "Tambahkan ke Layar Utama".');
-      }
-    }
-
-    /* ================================================================
-     * BUKA APLIKASI
-     * ================================================================ */
     function bukaAplikasiUtama() {
       localStorage.setItem('PAG_SETUP_DONE', 'true');
-      if (setupModal) {
-        setupModal.style.opacity = '0';
-        setTimeout(function() {
-          setupModal.style.display = 'none';
-        }, 300);
-      }
+      if (setupModal) setupModal.style.display = 'none';
     }
 
-    function cekAutoSkip() {
-      if (localStorage.getItem('PAG_SETUP_DONE') === 'true') {
-        if (setupModal) setupModal.style.display = 'none';
-      }
+    if (localStorage.getItem('PAG_SETUP_DONE') === 'true') {
+      if (setupModal) setupModal.style.display = 'none';
     }
 
-    function syncUrlToIframe() {
+    window.addEventListener('hashchange', function() {
       var hash = window.location.hash || '';
-      if (frame && hash) {
-        frame.src = APPS_SCRIPT_EXEC_URL + hash;
-      }
-    }
-
-    // Eksekusi Awal
-    cekAutoSkip();
-    window.addEventListener('hashchange', syncUrlToIframe);
+      if (frame && hash) frame.src = APPS_SCRIPT_EXEC_URL + hash;
+    });
   </script>
 </body>
 </html>
