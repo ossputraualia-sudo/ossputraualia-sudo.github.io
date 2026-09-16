@@ -1,13 +1,16 @@
-// sw.js - PENERIMA SINYAL SAAT APLIKASI TERTUTUP MATI
+// ================================================================
+// sw.js - SERVICE WORKER DENGAN DUKUNGAN POP-UP WINDOWS / EXCEL
+// ================================================================
+
 self.addEventListener('install', function(event) {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', function(event) {
-  event.waitUntil(clients.claim());
+  event.waitUntil(self.clients.claim());
 });
 
-// ⚡ DIBANGUNKAN OLEH WINDOWS/GOOGLE SAAT PWA DITUTUP
+// ⚡ DIBANGUNKAN OLEH SISTEM OPERASI SAAT APLIKASI DI-MINIMIZE / TUTUP
 self.addEventListener('push', function(event) {
   var data = {};
   if (event.data) {
@@ -18,16 +21,22 @@ self.addEventListener('push', function(event) {
     }
   }
 
-  var judul = data.judul || '🔔 Pemberitahuan Baru';
-  var pesan = data.pesan || 'Ada pembaruan dokumen atau tender baru.';
-  var targetUrl = data.link || data.url || '/';
+  var judul = data.judul || '🔔 Pemberitahuan P.A.G';
+  var pesan = data.pesan || 'Ada pembaruan tender atau dokumen baru.';
+  var targetUrl = data.link || data.url || 'https://ossputraualia-sudo.github.io/';
+
+  // Buat URL icon absolut agar Windows tidak gagal memuat gambar
+  var iconUrl = self.location.origin + '/icon-192.png';
 
   var options = {
     body: pesan,
-    icon: 'icon-192.png',
-    badge: 'icon-192.png',
-    vibrate: [200, 100, 200],
-    requireInteraction: true, // Banner tetap tampil di layar sampai diklik
+    icon: iconUrl,
+    badge: iconUrl,
+    tag: 'pag-toast-' + Date.now(), // ⚡ Tag dinamis agar Windows tidak menganggap pesan duplikat
+    renotify: true,                 // ⚡ Paksa Windows membunyikan bel & memunculkan banner baru
+    requireInteraction: true,       // ⚡ Banner TETAP MELAYANG di layar sampai diklik/disilang
+    silent: false,
+    vibrate: [300, 100, 300],
     data: { url: targetUrl }
   };
 
@@ -36,21 +45,27 @@ self.addEventListener('push', function(event) {
   );
 });
 
-// Saat banner diklik di layar desktop
+// Saat banner di layar desktop Windows diklik oleh pengguna
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   var targetUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+      // Jika tab/jendela PWA sudah ada di taskbar, langsung buka & fokuskan
       for (var i = 0; i < clientList.length; i++) {
         var client = clientList[i];
         if ('focus' in client) {
-          return client.focus();
+          client.focus();
+          if ('navigate' in client) {
+            client.navigate(targetUrl);
+          }
+          return;
         }
       }
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
+      // Jika PWA tertutup penuh, buka jendela baru
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl);
       }
     })
   );
