@@ -47,36 +47,26 @@ self.addEventListener('push', function(event) {
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async function(clientList) {
       
-      // 🔴 FITUR 2: BUAT BADGE ANGKA DI TASKBAR WINDOWS & ICON HP
+      // 🔴 1. PASANG BADGE ANGKA DI TASKBAR WINDOWS & ICON HP
       if ('setAppBadge' in navigator) {
         try {
-          // Tambahkan badge angka di icon aplikasi
           var count = (typeof data.count === 'number') ? data.count : 1;
           await navigator.setAppBadge(count);
         } catch (eBadge) {}
       }
 
-      // 🧠 FITUR 1: CEK APAKAH APLIKASI SEDANG AKTIF DILIHAT USER
+      // 🧠 2. ⚡ PERBAIKAN: HANYA CEK APAKAH PWA SEDANG AKTIF DIFOKUSKAN
       var isAppFocused = clientList.some(function(client) {
-        return client.focused || client.visibilityState === 'visible';
+        return client.focused === true; // Hanya anggap aktif jika user sedang mengetik di dalam PWA
       });
 
-      // A. JIKA APLIKASI SEDANG DIBUKA & DILIHAT:
+      // A. JIKA USER SEDANG AKTIF DI DALAM PWA:
       if (isAppFocused) {
-        // Beritahu jendela internal untuk memunculkan banner hijau WhatsApp saja
-        clientList.forEach(function(client) {
-          client.postMessage({
-            type: 'SHOW_INTERNAL_BANNER',
-            judul: judul,
-            pesan: pesan,
-            url: targetUrl
-          });
-        });
-        // ⚡ SELESAI! Jangan munculkan spanduk hitam Windows agar tidak dobel.
+        // Jangan munculkan spanduk hitam Windows (cukup kartu hijau internal saja)
         return;
       }
 
-      // B. JIKA APLIKASI TERTUTUP / DI-MINIMIZE / ANDA DI EXCEL:
+      // B. JIKA SEDANG DI EXCEL / MINIMIZE / LAYAR TERKUNCI:
       // ⚡ MUNCULKAN SPANDUK HITAM RESMI WINDOWS & ANDROID!
       return self.registration.showNotification(judul, options);
     })
@@ -124,7 +114,6 @@ self.addEventListener('notificationclick', function(event) {
 self.addEventListener('message', function(event) {
   if (!event.data) return;
 
-  // Jika aplikasi mengirim sinyal update badge (misal: ada 3 pesan belum dibaca)
   if (event.data.type === 'UPDATE_BADGE' && 'setAppBadge' in navigator) {
     try {
       var unreadCount = Number(event.data.count || 0);
@@ -136,7 +125,6 @@ self.addEventListener('message', function(event) {
     } catch (e) {}
   }
 
-  // Jika semua notifikasi sudah ditandai dibaca
   if (event.data.type === 'CLEAR_BADGE' && 'clearAppBadge' in navigator) {
     try {
       navigator.clearAppBadge();
