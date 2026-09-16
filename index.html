@@ -14,147 +14,6 @@
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
 
-  <!-- OneSignal Web Push SDK (v16+) -->
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-  <script>
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.PAG_ONESIGNAL_STATE = {
-      initialized: false,
-      isLoggedIn: false,
-      currentRole: null,
-      notificationCount: 0
-    };
-
-    OneSignalDeferred.push(async function(OneSignal) {
-  await OneSignal.init({
-    appId: "09896d31-da53-45e4-8d8a-1262879e5c74",
-    safari_web_id: "web.onesignal.auto.e9c3d005-53b3-4bef-8721-dd6062e20559",
-    notifyButton: { enable: false },
-    allowLocalhostAsSecureOrigin: true
-  });
-
-  // ⚡ Otomatis pasang tag superuser/role saat SDK siap
-  const cachedRole = localStorage.getItem('PAG_USER_ROLE') || 'superuser';
-  try {
-    await OneSignal.User.addTag("role", String(cachedRole).toLowerCase().trim());
-    console.log("[OneSignal] 🏷️ Tag Role Otomatis Terpasang:", cachedRole);
-  } catch (e) {}
-
-  periksaStatusSubscription();
-  });
-
-        window.PAG_ONESIGNAL_STATE.initialized = true;
-        console.log("[OneSignal] ✓ SDK Berhasil Terpasang");
-
-        // Periksa status subscription saat ini
-        periksaStatusSubscription();
-
-        // Pantau perubahan status izin & subscription (realtime)
-        OneSignal.User.PushSubscription.addEventListener("change", function(event) {
-          console.log("[OneSignal] Status subscription berubah:", event);
-          periksaStatusSubscription();
-        });
-
-        // Pulihkan role dari cache lokal jika ada
-        const cachedRole = localStorage.getItem('PAG_USER_ROLE');
-        if (cachedRole) {
-          console.log("[OneSignal] 📦 Memasang kembali Tag Role dari cache:", cachedRole);
-          window.pagSetDeviceRole(cachedRole);
-        }
-
-        // Handler klik notifikasi push
-        OneSignal.Notifications.addEventListener('click', function(event) {
-          const notifUrl = event.notification.launchURL;
-          if (notifUrl && notifUrl.includes('#')) {
-            const hash = notifUrl.substring(notifUrl.indexOf('#'));
-            window.location.hash = hash;
-            syncUrlToIframe();
-          }
-        });
-
-      } catch (err) {
-        console.error("[OneSignal] ✗ Inisialisasi Gagal:", err);
-      }
-      });
-
-    /* ================================================================
-     * MEMASANG TAG ROLE KE PERANGKAT (TANPA EXTERNAL ID)
-     * ================================================================ */
-    window.pagSetDeviceRole = async function(role) {
-      if (!role) return;
-      try {
-        const r = String(role).toLowerCase().trim();
-        console.log("[OneSignal] 🏷️ Memasang Tag Role ke Perangkat:", r);
-        
-        // Menggunakan Tag OneSignal agar bisa difilter saat kirim push notifikasi role
-        await OneSignal.User.addTag("role", r);
-        window.PAG_ONESIGNAL_STATE.currentRole = r;
-      } catch (e) {
-        console.error("[OneSignal] Gagal memasang tag role:", e);
-      }
-    };
-
-    /* ================================================================
-     * LISTENER POSTMESSAGE DARI GOOGLE APPS SCRIPT IFRAME
-     * ================================================================ */
-    window.addEventListener('message', async function(event) {
-  if (!event.data) return;
-  let data = event.data;
-
-  if (typeof data === 'string') {
-    try { data = JSON.parse(data); } catch(e) { return; }
-  }
-
-  if (data.type === 'PAG_LOGIN_SUCCESS' || data.type === 'PAG_SESSION_READY') {
-    const uRole = data.role || 'superuser';
-    localStorage.setItem('PAG_USER_ROLE', uRole);
-    if (window.pagSetDeviceRole) {
-      await window.pagSetDeviceRole(uRole);
-    }
-  }
-});
-
-      // Logout
-      if (data.type === 'PAG_LOGOUT') {
-        console.log("[OneSignal] User logout - menghapus cache role");
-        localStorage.removeItem('PAG_USER_ROLE');
-        localStorage.removeItem('PAG_USER_NAMA');
-        OneSignalDeferred.push(async function(OneSignal) {
-          await OneSignal.User.removeTag("role");
-        });
-      }
-    });
-
-    /* ================================================================
-     * FUNGSI UPDATE TAMPILAN JIKA SUDAH AKTIF
-     * ================================================================ */
-    function periksaStatusSubscription() {
-      OneSignalDeferred.push(function(OneSignal) {
-        const isPushSupported = OneSignal.Notifications.isPushSupported();
-        const permission = Notification.permission;
-        const isOptedIn = OneSignal.User.PushSubscription.optedIn;
-
-        if (permission === 'granted' && isOptedIn) {
-          var btn = document.getElementById('btnNotif');
-          var desc = document.getElementById('notifDesc');
-          var indicator = document.querySelector('#notifBox .status-indicator');
-
-          if (btn) {
-            btn.textContent = 'Aktif ✔';
-            btn.className = 'btn-action btn-success';
-            btn.disabled = true;
-          }
-          if (desc) {
-            desc.textContent = 'Notifikasi push sudah aktif di perangkat ini.';
-          }
-          if (indicator) {
-            indicator.classList.add('active');
-          }
-        }
-      });
-    }
-  </script>
-
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -177,7 +36,7 @@
     .setup-card {
       background: rgba(255, 255, 255, 0.95);
       border-radius: 24px; padding: 32px 24px; max-width: 420px; width: 100%;
-      text-align: center; position: relative;
+      text-align: center; position: relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
     }
     .brand-badge {
       display: inline-block; background: linear-gradient(135deg, #0d9488, #0f766e);
@@ -189,8 +48,9 @@
       border-radius: 16px; padding: 16px; margin-bottom: 14px; text-align: left;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
-    .btn-action { padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; }
+    .btn-action { padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
     .btn-primary { background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff; }
+    .btn-primary:hover { opacity: 0.9; }
     .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: default; }
     .status-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-right: 6px; }
     .status-indicator.active { background: #22c55e; }
@@ -198,15 +58,16 @@
 </head>
 <body>
 
+  <!-- MODAL SETUP PERTAMA KALI -->
   <div id="setupModal">
     <div class="setup-card">
       <div class="brand-badge">P.A.G</div>
       <h2>PT. PUTRA AULIA GROUP</h2>
-      <p style="font-size:13px; color:#475569; margin-bottom:24px;">Aktifkan notifikasi dan install aplikasi untuk memantau dokumen & tender.</p>
+      <p style="font-size:13px; color:#475569; margin-bottom:24px;">Aktifkan notifikasi untuk memantau radar tender & dokumen kadaluarsa secara realtime.</p>
 
       <div class="action-box" id="notifBox">
         <div>
-          <h4 style="font-size:13.5px; font-weight:700;"><span class="status-indicator"></span>🔔 Notifikasi Real-Time</h4>
+          <h4 style="font-size:13.5px; font-weight:700;"><span class="status-indicator" id="notifIndicator"></span>🔔 Notifikasi Real-Time</h4>
           <p style="font-size:11.5px; color:#64748b;" id="notifDesc">Wajib diaktifkan agar update dokumen masuk ke perangkat.</p>
         </div>
         <button id="btnNotif" type="button" class="btn-action btn-primary" onclick="aktifkanNotifikasi()">Aktifkan</button>
@@ -218,6 +79,7 @@
     </div>
   </div>
 
+  <!-- IFRAME APLIKASI UTAMA GOOGLE APPS SCRIPT -->
   <iframe 
     id="appFrame" 
     src="https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec" 
@@ -229,21 +91,114 @@
     var frame = document.getElementById('appFrame');
     var setupModal = document.getElementById('setupModal');
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/OneSignalSDKWorker.js').catch(function(e) {});
-      });
+    /* ================================================================
+     * 1. NATIVE NOTIFICATION ENGINE (PENGGANTI ONESIGNAL)
+     * ================================================================ */
+    function periksaStatusSubscription() {
+      if (!('Notification' in window)) {
+        var desc = document.getElementById('notifDesc');
+        if (desc) desc.textContent = 'Browser ini tidak mendukung notifikasi sistem.';
+        return;
+      }
+
+      if (Notification.permission === 'granted') {
+        var btn = document.getElementById('btnNotif');
+        var desc = document.getElementById('notifDesc');
+        var indicator = document.getElementById('notifIndicator');
+
+        if (btn) {
+          btn.textContent = 'Aktif ✔';
+          btn.className = 'btn-action btn-success';
+          btn.disabled = true;
+        }
+        if (desc) {
+          desc.textContent = 'Notifikasi push native aktif di perangkat ini.';
+        }
+        if (indicator) {
+          indicator.classList.add('active');
+        }
+      }
     }
 
-    function aktifkanNotifikasi() {
-      OneSignalDeferred.push(async function(OneSignal) {
-        try {
-          await OneSignal.Notifications.requestPermission();
-          periksaStatusSubscription();
-        } catch (err) {}
-      });
+    async function aktifkanNotifikasi() {
+      if (!('Notification' in window)) {
+        alert('Perangkat/browser Anda tidak mendukung notifikasi desktop.');
+        return;
+      }
+
+      try {
+        const permission = await Notification.requestPermission();
+        periksaStatusSubscription();
+        if (permission === 'granted') {
+          tampilkanNotifikasiNative(
+            "🔔 Notifikasi P.A.G Docs Aktif",
+            "Perangkat ini siap menerima pemberitahuan radar tender & dokumen.",
+            "#dashboard"
+          );
+        }
+      } catch (err) {
+        console.error("Gagal meminta izin notifikasi:", err);
+      }
     }
 
+    function tampilkanNotifikasiNative(judul, pesan, targetUrl) {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+      try {
+        var iconUrl = 'icon-192.png';
+        var options = {
+          body: pesan || 'Pemberitahuan baru dari sistem PAG Docs.',
+          icon: iconUrl,
+          badge: iconUrl,
+          vibrate: [200, 100, 200],
+          data: { url: targetUrl || '#' }
+        };
+
+        var notif = new Notification(judul || 'P.A.G Docs', options);
+        notif.onclick = function(e) {
+          e.preventDefault();
+          window.focus();
+          if (targetUrl && targetUrl !== '#') {
+            var cleanHash = targetUrl.startsWith('#') ? targetUrl : '#' + targetUrl;
+            window.location.hash = cleanHash;
+            if (frame) frame.src = APPS_SCRIPT_EXEC_URL + cleanHash;
+          }
+          notif.close();
+        };
+      } catch (e) {
+        console.warn('Gagal memunculkan banner notifikasi:', e);
+      }
+    }
+
+    /* ================================================================
+     * 2. BRIDGE LISTENER (MENERIMA NOTIFIKASI DARI DALAM IFRAME)
+     * ================================================================ */
+    window.addEventListener('message', function(event) {
+      if (!event.data) return;
+      var data = event.data;
+
+      if (typeof data === 'string') {
+        try { data = JSON.parse(data); } catch(e) { return; }
+      }
+
+      // Jika iframe mengirim permintaan pop-up notifikasi OS
+      if (data.type === 'SHOW_OS_NOTIFICATION') {
+        tampilkanNotifikasiNative(data.judul, data.pesan, data.url);
+      }
+
+      // Sinkronisasi badge judul tab browser
+      if (data.type === 'UPDATE_BADGE' && typeof data.count === 'number') {
+        if (data.count > 0) {
+          document.title = '(' + data.count + ') PT. Putra Aulia Group';
+        } else {
+          document.title = 'PT. Putra Aulia Group';
+        }
+      }
+    });
+
+    /* ================================================================
+     * 3. KONTROL TAMPILAN & HASH ROUTER
+     * ================================================================ */
     function bukaAplikasiUtama() {
       localStorage.setItem('PAG_SETUP_DONE', 'true');
       if (setupModal) setupModal.style.display = 'none';
@@ -252,6 +207,9 @@
     if (localStorage.getItem('PAG_SETUP_DONE') === 'true') {
       if (setupModal) setupModal.style.display = 'none';
     }
+
+    // Periksa izin saat halaman dimuat
+    periksaStatusSubscription();
 
     window.addEventListener('hashchange', function() {
       var hash = window.location.hash || '';
