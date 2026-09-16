@@ -26,15 +26,22 @@
     };
 
     OneSignalDeferred.push(async function(OneSignal) {
-      console.log("[OneSignal] 🚀 Menginisialisasi SDK v16...");
-      
-      try {
-        await OneSignal.init({
-          appId: "09896d31-da53-45e4-8d8a-1262879e5c74",
-          safari_web_id: "web.onesignal.auto.e9c3d005-53b3-4bef-8721-dd6062e20559",
-          notifyButton: { enable: false },
-          allowLocalhostAsSecureOrigin: true
-        });
+  await OneSignal.init({
+    appId: "09896d31-da53-45e4-8d8a-1262879e5c74",
+    safari_web_id: "web.onesignal.auto.e9c3d005-53b3-4bef-8721-dd6062e20559",
+    notifyButton: { enable: false },
+    allowLocalhostAsSecureOrigin: true
+  });
+
+  // ⚡ Otomatis pasang tag superuser/role saat SDK siap
+  const cachedRole = localStorage.getItem('PAG_USER_ROLE') || 'superuser';
+  try {
+    await OneSignal.User.addTag("role", String(cachedRole).toLowerCase().trim());
+    console.log("[OneSignal] 🏷️ Tag Role Otomatis Terpasang:", cachedRole);
+  } catch (e) {}
+
+  periksaStatusSubscription();
+  });
 
         window.PAG_ONESIGNAL_STATE.initialized = true;
         console.log("[OneSignal] ✓ SDK Berhasil Terpasang");
