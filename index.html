@@ -50,7 +50,7 @@
     }
     .btn-action { padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; }
     .btn-primary { background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff; }
-    .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: default; }
+    .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: pointer; }
     .status-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-right: 6px; }
     .status-indicator.active { background: #22c55e; }
   </style>
@@ -85,6 +85,8 @@
 
   <script>
     var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
+    
+    // ⚡ KUNCI VAPID BARU RESMI
     var VAPID_PUBLIC_KEY = "BFmbNUOxV304wqekMka5EzEwv7sAapDLaPzlDBN2M-fcbSX9osQvksqcMyBzYYXkls3Cz3o06ZIDz7xsvnzpl-Q";
     var SB_URL = "https://qywqxcvnlehmiqrkpwdd.supabase.co";
     var SB_KEY = "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
@@ -103,39 +105,42 @@
       return outputArray;
     }
 
-    // 1. Registrasi Service Worker Native
+    // Registrasi Service Worker Native & Auto-Sync
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js').then(function() {
           cekStatusSub();
+          // Jika izin sudah pernah diberikan, otomatis daftarkan ulang token baru ke Supabase
+          if (Notification.permission === 'granted') {
+            daftarkanWebPushDevice();
+          }
         });
       });
     }
 
-    // 2. Fungsi Daftarkan Token ke Database Supabase (Dengan Role & User ID Valid)
+    // ⚡ FUNGSI DAFTARKAN TOKEN DENGAN AUTO-UNSUBSCRIBE KUNCI LAMA
     async function daftarkanWebPushDevice(targetRole, targetUserId) {
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        alert('Browser ini tidak mendukung Native Web Push.');
-        return;
-      }
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
 
       try {
-        // Minta izin resmi browser/OS
         var permission = await Notification.requestPermission();
-        if (permission !== 'granted') {
-          alert('Izin notifikasi belum diizinkan di browser Anda.');
-          return;
-        }
+        if (permission !== 'granted') return;
 
         var reg = await navigator.serviceWorker.ready;
         var sub = await reg.pushManager.getSubscription();
 
-        if (!sub) {
-          sub = await reg.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-          });
+        // ⚡ HAPUS TOKEN LAMA DARI MEMORI BROWSER AGAR KUNCI LAMA MUSNAH
+        if (sub) {
+          try { 
+            await sub.unsubscribe(); 
+          } catch (eUnsub) {}
         }
+
+        // BUAT TOKEN BARU DENGAN KUNCI BARU BFmbNU...
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+        });
 
         var subJson = sub.toJSON();
         var currentRole = (targetRole || localStorage.getItem('PAG_USER_ROLE') || 'superuser').toLowerCase().trim();
@@ -150,7 +155,7 @@
           updated_at: new Date().toISOString()
         };
 
-        // Simpan / Update ke Supabase
+        // Kirim token baru ke Supabase
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
           method: 'POST',
           headers: {
@@ -163,13 +168,7 @@
         });
 
         cekStatusSub();
-
-        // Tes langsung banner OS Windows
-        picuBannerResmiWindows(
-          '🔔 Notifikasi Windows Aktif!',
-          'Aplikasi siap mengirimkan info tender saat Anda membuka Excel.',
-          '#'
-        );
+        console.log("✅ Laptop Berhasil Terdaftar dengan Kunci Baru!");
 
       } catch (err) {
         console.error('Web Push Error:', err);
@@ -177,54 +176,44 @@
     }
 
     function cekStatusSub() {
-      if ('serviceWorker' in navigator && 'PushManager' in window) {
-        navigator.serviceWorker.ready.then(function(reg) {
-          reg.pushManager.getSubscription().then(function(sub) {
-            if (sub && Notification.permission === 'granted') {
-              var btn = document.getElementById('btnNotif');
-              var desc = document.getElementById('notifDesc');
-              var indicator = document.getElementById('notifIndicator');
-              if (btn) { btn.textContent = 'Aktif ✔'; btn.className = 'btn-action btn-success'; btn.disabled = true; }
-              if (desc) { desc.textContent = 'Notifikasi Windows aktif (tetap tembus walau aplikasi di-minimize).'; }
-              if (indicator) { indicator.classList.add('active'); }
-            }
-          });
-        });
+      var btn = document.getElementById('btnNotif');
+      var desc = document.getElementById('notifDesc');
+      var indicator = document.getElementById('notifIndicator');
+
+      if (Notification.permission === 'granted') {
+        if (btn) { 
+          btn.textContent = 'Aktif ✔'; 
+          btn.className = 'btn-action btn-success'; 
+          btn.disabled = false; 
+        }
+        if (desc) { desc.textContent = 'Notifikasi Windows aktif (tembus ke Excel saat di-minimize/close).'; }
+        if (indicator) { indicator.classList.add('active'); }
       }
     }
 
-    /* ================================================================
-     * ⚡ 3. PICU BANNER RESMI WINDOWS (POP-UP DI ATAS EXCEL/WORD)
-     * ================================================================ */
+    // Jembatan Penampil Banner Windows
     function picuBannerResmiWindows(judul, pesan, targetUrl) {
       if (!('Notification' in window) || Notification.permission !== 'granted') return;
 
       var iconUrl = new URL('icon-192.png', window.location.origin).href;
-
       var options = {
-        body: pesan || 'Ada pembaruan dokumen atau tender baru.',
+        body: pesan || '',
         icon: iconUrl,
         badge: iconUrl,
         data: { url: targetUrl || '#' },
-        tag: 'pag-os-' + Date.now(), // Tag dinamis agar tidak ditelan Windows
-        renotify: true,              // Paksa bunyi & muncul ulang
-        requireInteraction: true     // Tetap melayang di Windows sampai diklik
+        tag: 'pag-os-' + Date.now(),
+        renotify: true,
+        requireInteraction: true
       };
 
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(function(reg) {
           reg.showNotification(judul || 'P.A.G Docs', options);
-        }).catch(function() {
-          new Notification(judul || 'P.A.G Docs', options);
         });
-      } else {
-        new Notification(judul || 'P.A.G Docs', options);
       }
     }
 
-    /* ================================================================
-     * ⚡ 4. JEMBATAN PINTAR DARI DALAM IFRAME KE INDUK WINDOWS
-     * ================================================================ */
+    // Tangkap sinyal dari dalam iframe Apps Script
     window.addEventListener('message', function(event) {
       if (!event.data) return;
       var data = event.data;
@@ -232,25 +221,14 @@
         try { data = JSON.parse(data); } catch(e) { return; }
       }
 
-      // A. Jika iframe memerintahkan memunculkan banner Windows
       if (data.type === 'SHOW_OS_NOTIFICATION') {
         picuBannerResmiWindows(data.judul, data.pesan, data.url);
       }
 
-      // B. Update Angka di Tab Browser
-      if (data.type === 'UPDATE_BADGE' && typeof data.count === 'number') {
-        document.title = (data.count > 0 ? '(' + data.count + ') ' : '') + 'PT. Putra Aulia Group';
-      }
-
-      // C. ⚡ SINKRONISASI ROLE USER DARI GOOGLE APPS SCRIPT
       if (data.type === 'SYNC_USER_SESSION' && data.role) {
         localStorage.setItem('PAG_USER_ROLE', data.role);
         if (data.userId) localStorage.setItem('PAG_USER_ID', data.userId);
-        
-        // Perbarui pendaftaran push di Supabase dengan role yang sebenarnya
-        if (Notification.permission === 'granted') {
-          daftarkanWebPushDevice(data.role, data.userId);
-        }
+        daftarkanWebPushDevice(data.role, data.userId);
       }
     });
 
@@ -259,7 +237,6 @@
       if (setupModal) setupModal.style.display = 'none';
     }
 
-    // Jika pengguna sudah pernah membuka aplikasi, sembunyikan modal langsung
     if (localStorage.getItem('PAG_SETUP_DONE') === 'true') {
       if (setupModal) setupModal.style.display = 'none';
     }
@@ -267,12 +244,7 @@
     window.addEventListener('hashchange', function() {
       var hash = window.location.hash || '';
       if (frame && hash) {
-        // Teruskan hash ke dalam iframe tanpa me-reload paksa
-        try {
-          frame.contentWindow.location.hash = hash;
-        } catch (e) {
-          frame.src = APPS_SCRIPT_EXEC_URL + hash;
-        }
+        try { frame.contentWindow.location.hash = hash; } catch (e) { frame.src = APPS_SCRIPT_EXEC_URL + hash; }
       }
     });
   </script>
