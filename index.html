@@ -106,13 +106,27 @@
   <script>
     var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
     
+    // ⚡ KUNCI RESMI
+    var VAPID_PUBLIC_KEY = "BFmbNUOxV304wqekMka5EzEwv7sAapDLaPzlDBN2M-fcbSX9osQvksqcMyBzYYXkls3Cz3o06ZIDz7xsvnzpl-Q".trim();
+    var SB_URL = "https://qywqxcvnlehmiqrkpwdd.supabase.co";
+    var SB_KEY = "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
+
     var overlay = document.getElementById('lockScreenOverlay');
     var lockCard = document.getElementById('lockCard');
     var frame = document.getElementById('appFrame');
+    var _isRegistering = false;
 
-    /* =========================================================
-     * ⚡ PENGUJI STATUS IZIN & PENGUNCI KEAMANAN (KEBAL BLOCK)
-     * ========================================================= */
+    function urlBase64ToUint8Array(base64String) {
+      var padding = '='.repeat((4 - base64String.length % 4) % 4);
+      var base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+      var rawData = window.atob(base64);
+      var outputArray = new Uint8Array(rawData.length);
+      for (var i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+
     function periksaIzinDanKunciSistem() {
       if (!('Notification' in window)) {
         bukaAplikasi();
@@ -121,21 +135,19 @@
 
       var status = Notification.permission;
 
-      // 1. JIKA DIIZINKAN: BUKA APLIKASI SEKETIKA
       if (status === 'granted') {
         bukaAplikasi();
+        sembuhkanDanDaftarkanToken();
         return;
       }
 
-      // 2. JIKA BELUM DIIZINKAN: KUNCI TOTAL
       overlay.style.display = 'flex';
 
-      // Jika sengaja di-Block: Tampilkan Panduan Buka Gembok
       if (status === 'denied') {
         lockCard.innerHTML = 
           '<div class="badge-icon blocked">⛔</div>' +
           '<h2 class="lock-title">AKSES SISTEM DIBEKUKAN</h2>' +
-          '<p class="lock-desc">Aplikasi mendeteksi <b>Notifikasi Latar Belakang DIBLOKIR</b> pada perangkat ini. Demi kepatuhan jadwal tender SPSE dan dokumen perusahaan, Anda <b>WAJIB</b> membuka izin notifikasi untuk menggunakan aplikasi ini.</p>' +
+          '<p class="lock-desc">Aplikasi mendeteksi <b>Notifikasi Latar Belakang DIBLOKIR</b> pada perangkat ini. Anda <b>WAJIB</b> membuka izin notifikasi untuk menggunakan sistem ini.</p>' +
           
           '<div class="unblock-guide">' +
             '<div style="font-weight:800; font-size:12.5px; color:#0f766e; margin-bottom:12px; text-transform:uppercase;">👉 Cara Membuka Blokir:</div>' +
@@ -152,13 +164,11 @@
           '<button type="button" class="btn-main btn-blue" onclick="window.location.reload()">' +
             '🔄 Saya Sudah Mengizinkan (Buka Akses)' +
           '</button>';
-      } 
-      // Jika belum memilih: Minta izin
-      else {
+      } else {
         lockCard.innerHTML = 
           '<div class="badge-icon prompt">🔔</div>' +
           '<h2 class="lock-title">AKTIFKAN NOTIFIKASI KANTOR</h2>' +
-          '<p class="lock-desc">Diperlukan izin notifikasi agar info tender dan dokumen kadaluarsa tetap melompat ke layar saat Anda membuka <b>Microsoft Excel / Word</b>.</p>' +
+          '<p class="lock-desc">Diperlukan izin notifikasi agar info tender dan dokumen kadaluarsa tetap melompat ke layar saat Anda membuka <b>Microsoft Excel / HP di kantong</b>.</p>' +
           
           '<button type="button" class="btn-main btn-teal" onclick="mintaIzinSekarang()">' +
             '🔔 Izinkan & Masuk ke Sistem' +
@@ -170,6 +180,7 @@
       var perm = await Notification.requestPermission();
       if (perm === 'granted') {
         bukaAplikasi();
+        sembuhkanDanDaftarkanToken(null, null, true); // true = pemicu klik manual
       } else {
         periksaIzinDanKunciSistem();
       }
@@ -179,7 +190,6 @@
       overlay.style.display = 'none';
     }
 
-    // Deteksi otomatis jika user membuka gembok di URL bar
     if ('permissions' in navigator) {
       navigator.permissions.query({ name: 'notifications' }).then(function(p) {
         p.onchange = function() {
@@ -189,27 +199,79 @@
     }
 
     /* =========================================================
-     * ⚡ JALUR TEMBUS WINDOWS & EXCEL (100% PASTI MELOMPAT)
+     * ⚡ DAFTARKAN PERANGKAT (MULTI-DEVICE ANTI-SALING HAPUS)
      * ========================================================= */
-    function picuBannerResmiWindows(judul, pesan, targetUrl) {
-      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    async function sembuhkanDanDaftarkanToken(targetRole, targetUserId, isManualClick) {
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+      if (Notification.permission !== 'granted') return;
+      if (_isRegistering) return;
+      _isRegistering = true;
 
-      var iconUrl = new URL('icon-192.png', window.location.origin).href;
-      var options = {
-        body: pesan || '',
-        icon: iconUrl,
-        badge: iconUrl,
-        data: { url: targetUrl || '#' },
-        tag: 'pag-os-' + Date.now(),
-        renotify: true,
-        requireInteraction: true,
-        actions: [{ action: 'tutup', title: '✕ Tutup' }]
-      };
+      try {
+        var reg = await navigator.serviceWorker.ready;
+        var sub = await reg.pushManager.getSubscription();
 
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.ready.then(function(reg) {
-          reg.showNotification(judul || 'P.A.G Docs', options);
+        if (sub) {
+          try { await sub.unsubscribe(); } catch(e) {}
+        }
+
+        // Minta token baru dari Google FCM
+        var subscribeOptions = { userVisibleOnly: true };
+        try {
+          subscribeOptions.applicationServerKey = VAPID_PUBLIC_KEY;
+          sub = await reg.pushManager.subscribe(subscribeOptions);
+        } catch (eStr) {
+          subscribeOptions.applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+          sub = await reg.pushManager.subscribe(subscribeOptions);
+        }
+
+        var subJson = sub.toJSON();
+        var currentRole = (targetRole || localStorage.getItem('PAG_USER_ROLE') || 'superuser').toLowerCase().trim();
+
+        // ⚡ DETEKSI NAMA PERANGKAT (AGAR TERLIHAT JELAS DI SUPABASE)
+        var isAndroid = /Android/i.test(navigator.userAgent);
+        var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        var labelPerangkat = isAndroid ? "HP Android" : (isIOS ? "iPhone iOS" : "Laptop / PC Windows");
+
+        var payload = {
+          role: currentRole,
+          user_id: labelPerangkat, // ⚡ NAMA PERANGKAT TERTULIS DI SINI!
+          endpoint: subJson.endpoint,
+          keys_p256dh: subJson.keys.p256dh,
+          keys_auth: subJson.keys.auth,
+          updated_at: new Date().toISOString()
+        };
+
+        // ⚡ HAPUS HANYA PERANGKAT INI SAJA (BERDASARKAN ENDPOINT), BUKAN MENGHAPUS SEMUA!
+        if (subJson && subJson.endpoint) {
+          await fetch(SB_URL + '/rest/v1/web_push_subscriptions?endpoint=eq.' + encodeURIComponent(subJson.endpoint), {
+            method: 'DELETE',
+            headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+          });
+        }
+
+        // SIMPAN DATA PERANGKAT INI
+        await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
+          method: 'POST',
+          headers: {
+            'apikey': SB_KEY,
+            'Authorization': 'Bearer ' + SB_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
         });
+
+        console.log("✅ Terdaftar di Supabase:", labelPerangkat);
+
+        // Jika staf mengklik dari HP, beri tahu pop-up sukses
+        if (isManualClick || isAndroid) {
+          alert("✅ Berhasil! " + labelPerangkat + " Anda resmi terdaftar untuk menerima notifikasi.");
+        }
+
+      } catch (err) {
+        console.error('Pendaftaran Gagal:', err);
+      } finally {
+        _isRegistering = false;
       }
     }
 
@@ -221,7 +283,6 @@
       });
     }
 
-    // Tangkap sinyal notifikasi dari dalam sistem Apps Script
     window.addEventListener('message', function(event) {
       if (!event.data) return;
       var data = event.data;
@@ -229,9 +290,9 @@
         try { data = JSON.parse(data); } catch(e) { return; }
       }
 
-      // ⚡ BEGITU ADA PESAN MASUK: LANGSUNG TEMBAKKAN KE WINDOWS
-      if (data.type === 'SHOW_OS_NOTIFICATION') {
-        picuBannerResmiWindows(data.judul, data.pesan, data.url);
+      if (data.type === 'SYNC_USER_SESSION' && data.role) {
+        localStorage.setItem('PAG_USER_ROLE', data.role);
+        sembuhkanDanDaftarkanToken(data.role);
       }
     });
 
