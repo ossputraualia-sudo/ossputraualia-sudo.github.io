@@ -106,8 +106,8 @@
   <script>
     var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
     
-    // ⚡ KUNCI RESMI SEPASANG YANG SUDAH TERVERIFIKASI
-    var VAPID_PUBLIC_KEY = "BFmbNUOxV304wqekMka5EzEwv7sAapDLaPzlDBN2M-fcbSX9osQvksqcMyBzYYXkls3Cz3o06ZIDz7xsvnzpl-Q";
+    // ⚡ KUNCI RESMI SEPASANG
+    var VAPID_PUBLIC_KEY = "BFmbNUOxV304wqekMka5EzEwv7sAapDLaPzlDBN2M-fcbSX9osQvksqcMyBzYYXkls3Cz3o06ZIDz7xsvnzpl-Q".trim();
     var SB_URL = "https://qywqxcvnlehmiqrkpwdd.supabase.co";
     var SB_KEY = "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
 
@@ -202,7 +202,7 @@
     }
 
     /* =========================================================
-     * 🩺 LOGIKA PENYEMBUH OTOMATIS (AUTO UNSUBSCRIBE ZOMBI)
+     * 🩺 PENDAFTARAN SEGAR MURNI (MEMAKSA GOOGLE MEMBUAT TOKEN BARU)
      * ========================================================= */
     async function sembuhkanDanDaftarkanToken(targetRole, targetUserId) {
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
@@ -214,21 +214,23 @@
         var reg = await navigator.serviceWorker.ready;
         var sub = await reg.pushManager.getSubscription();
 
-        // ⚡ SELALU BUANG TOKEN LAMA AGAR TIDAK ADA ZOMBI
+        // ⚡ BUANG TOKEN LAMA (ABAIKAN ERROR JIKA TOKEN SUDAH DICABUT CHROME)
         if (sub) {
           try {
             await sub.unsubscribe();
-            sub = null;
           } catch(e) {}
         }
+        // ⚡ WAJIB PAKSA NULL DI LUAR TRY-CATCH AGAR BROWSER TIDAK MENGAMBIL TOKEN ZOMBI
+        sub = null;
 
-        // BUAT TOKEN BARU SEGAR DENGAN KUNCI SAH KITA
-        sub = await reg.pushManager.subscribe({
+        // ⚡ MINTA SUBSCRIPTION MURNI DENGAN KUNCI SAH
+        var appServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+        var freshSub = await reg.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+          applicationServerKey: appServerKey
         });
 
-        var subJson = sub.toJSON();
+        var subJson = freshSub.toJSON();
         var currentRole = (targetRole || localStorage.getItem('PAG_USER_ROLE') || 'superuser').toLowerCase().trim();
         var currentUserId = targetUserId || localStorage.getItem('PAG_USER_ID') || '';
 
@@ -241,13 +243,13 @@
           updated_at: new Date().toISOString()
         };
 
-        // Bersihkan token lama di Supabase
+        // Hapus data lama di Supabase untuk role ini
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions?role=eq.' + currentRole, {
           method: 'DELETE',
           headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
         });
 
-        // Simpan token baru murni
+        // Masukkan token segar yang sah
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
           method: 'POST',
           headers: {
@@ -258,10 +260,10 @@
           body: JSON.stringify(payload)
         });
 
-        console.log("✅ Token segar berhasil didaftarkan ke Supabase!");
+        console.log("✅ Token segar murni berhasil disimpan ke Supabase!");
 
       } catch (err) {
-        console.error('Push Reg Error:', err);
+        console.error('Pendaftaran Gagal:', err);
       } finally {
         _isRegistering = false;
       }
