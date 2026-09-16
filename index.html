@@ -86,13 +86,14 @@
   <script>
     var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
     
-    // ⚡ KUNCI VAPID BARU RESMI
+    // ⚡ KUNCI RESMI SEPASANG DENGAN SUPABASE
     var VAPID_PUBLIC_KEY = "BFmbNUOxV304wqekMka5EzEwv7sAapDLaPzlDBN2M-fcbSX9osQvksqcMyBzYYXkls3Cz3o06ZIDz7xsvnzpl-Q";
     var SB_URL = "https://qywqxcvnlehmiqrkpwdd.supabase.co";
     var SB_KEY = "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
 
     var frame = document.getElementById('appFrame');
     var setupModal = document.getElementById('setupModal');
+    var _isRegistering = false;
 
     function urlBase64ToUint8Array(base64String) {
       var padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -105,42 +106,48 @@
       return outputArray;
     }
 
-    // Registrasi Service Worker Native & Auto-Sync
+    // Registrasi Service Worker Native
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js').then(function() {
           cekStatusSub();
-          // Jika izin sudah pernah diberikan, otomatis daftarkan ulang token baru ke Supabase
-          if (Notification.permission === 'granted') {
-            daftarkanWebPushDevice();
-          }
         });
       });
     }
 
-    // ⚡ FUNGSI DAFTARKAN TOKEN DENGAN AUTO-UNSUBSCRIBE KUNCI LAMA
+    // ⚡ PENDAFTARAN PINTAR (ANTI-DOBEL & ANTI-MATI)
     async function daftarkanWebPushDevice(targetRole, targetUserId) {
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+      if (_isRegistering) return; // Mencegah 2 panggilan bertabrakan
+      _isRegistering = true;
 
       try {
         var permission = await Notification.requestPermission();
-        if (permission !== 'granted') return;
+        if (permission !== 'granted') {
+          _isRegistering = false;
+          return;
+        }
 
         var reg = await navigator.serviceWorker.ready;
         var sub = await reg.pushManager.getSubscription();
 
-        // ⚡ HAPUS TOKEN LAMA DARI MEMORI BROWSER AGAR KUNCI LAMA MUSNAH
-        if (sub) {
-          try { 
-            await sub.unsubscribe(); 
-          } catch (eUnsub) {}
+        // Hanya unsubscribe jika kunci browser berbeda dengan kunci resmi kita
+        var currentSavedKey = localStorage.getItem('PAG_VAPID_ACTIVE_KEY');
+        if (sub && currentSavedKey !== VAPID_PUBLIC_KEY) {
+          try {
+            await sub.unsubscribe();
+            sub = null;
+          } catch(e) {}
         }
 
-        // BUAT TOKEN BARU DENGAN KUNCI BARU BFmbNU...
-        sub = await reg.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-        });
+        // Buat subscription murni jika belum ada
+        if (!sub) {
+          sub = await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+          });
+          localStorage.setItem('PAG_VAPID_ACTIVE_KEY', VAPID_PUBLIC_KEY);
+        }
 
         var subJson = sub.toJSON();
         var currentRole = (targetRole || localStorage.getItem('PAG_USER_ROLE') || 'superuser').toLowerCase().trim();
@@ -155,23 +162,33 @@
           updated_at: new Date().toISOString()
         };
 
-        // Kirim token baru ke Supabase
+        // ⚡ BERSIHKAN TOKEN LAMA DI SUPABASE AGAR TIDAK MENUMPUK (ANTI-DOBEL)
+        await fetch(SB_URL + '/rest/v1/web_push_subscriptions?role=eq.' + currentRole, {
+          method: 'DELETE',
+          headers: {
+            'apikey': SB_KEY,
+            'Authorization': 'Bearer ' + SB_KEY
+          }
+        });
+
+        // MASUKKAN TOKEN TUNGGAL YANG HIDUP DAN SAH
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
           method: 'POST',
           headers: {
             'apikey': SB_KEY,
             'Authorization': 'Bearer ' + SB_KEY,
-            'Content-Type': 'application/json',
-            'Prefer': 'resolution=merge-duplicates'
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
         });
 
         cekStatusSub();
-        console.log("✅ Laptop Berhasil Terdaftar dengan Kunci Baru!");
+        console.log("✅ Pendaftaran tunggal sukses ke Supabase!");
 
       } catch (err) {
         console.error('Web Push Error:', err);
+      } finally {
+        _isRegistering = false;
       }
     }
 
@@ -184,7 +201,7 @@
         if (btn) { 
           btn.textContent = 'Aktif ✔'; 
           btn.className = 'btn-action btn-success'; 
-          btn.disabled = false; 
+          btn.disabled = false; // Tetap aktif agar bisa diklik ulang jika butuh sinkron
         }
         if (desc) { desc.textContent = 'Notifikasi Windows aktif (tembus ke Excel saat di-minimize/close).'; }
         if (indicator) { indicator.classList.add('active'); }
@@ -213,7 +230,7 @@
       }
     }
 
-    // Tangkap sinyal dari dalam iframe Apps Script
+    // Tangkap sinyal sesi login dari dalam iframe Apps Script
     window.addEventListener('message', function(event) {
       if (!event.data) return;
       var data = event.data;
