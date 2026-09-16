@@ -1,5 +1,5 @@
 // ================================================================
-// sw.js - SERVICE WORKER UTAMA (STABIL & TEMBUS EXCEL 100%)
+// sw.js - SERVICE WORKER KEBAL & RINGKAS (PAG DOCS)
 // PT. PUTRA AULIA GROUP
 // ================================================================
 
@@ -11,20 +11,15 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(self.clients.claim());
 });
 
-// ⚡ 1. TERIMA PUSH DARI SERVER (LANGSUNG TEMBAK SPANDUK HITAM RESMI)
+// ⚡ 1. JIKA ADA PUSH DARI SERVER (FALLBACK)
 self.addEventListener('push', function(event) {
   var data = {};
-  
   if (event.data) {
-    try {
-      data = event.data.json();
-    } catch(e) {
-      data = { judul: 'P.A.G Docs', pesan: event.data.text() };
-    }
+    try { data = event.data.json(); } catch(e) { data = { judul: 'P.A.G Docs', pesan: event.data.text() }; }
   }
 
-  var judul = data.judul || data.title || '🔔 Pemberitahuan P.A.G';
-  var pesan = data.pesan || data.body || data.message || 'Ada pembaruan dokumen atau tender baru.';
+  var judul = data.judul || '🔔 Pemberitahuan P.A.G';
+  var pesan = data.pesan || '';
   var rawLink = data.link || data.url || '/';
 
   var targetUrl = new URL(rawLink, self.location.origin).href;
@@ -36,40 +31,30 @@ self.addEventListener('push', function(event) {
     badge: iconUrl,
     tag: 'pag-toast-' + Date.now(),
     renotify: true,
-    requireInteraction: true, // Banner melayang permanen sampai diklik
-    silent: false,
-    vibrate: [300, 100, 300],
-    data: { 
-      url: targetUrl 
-    }
+    requireInteraction: true,
+    data: { url: targetUrl },
+    actions: [{ action: 'tutup', title: '✕ Tutup' }]
   };
 
-  // ⚡ EKSEKUSI LANGSUNG TANPA PENGHALANG!
-  var aksi = [
-    self.registration.showNotification(judul, options)
-  ];
-
-  // Pasang badge angka di HP/Windows secara aman
-  if ('setAppBadge' in navigator) {
-    aksi.push(navigator.setAppBadge(1).catch(function() {}));
-  }
-
-  event.waitUntil(Promise.all(aksi));
+  event.waitUntil(self.registration.showNotification(judul, options));
 });
 
-// ⚡ 2. KETIKA BANNER DIKLIK DI WINDOWS ATAU HP
+// ⚡ 2. KETIKA SPANDUK DIKLIK ATAU DITUTUP
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
-  // Bersihkan badge
+  // Bersihkan badge angka di taskbar
   if ('clearAppBadge' in navigator) {
     navigator.clearAppBadge().catch(function() {});
   }
 
-  var rawUrl = (event.notification.data && event.notification.data.url) 
-    ? event.notification.data.url 
-    : '/';
-  
+  // ⚡ JIKA STAF KLIK TOMBOL "✕ TUTUP": Cukup tutup spanduk, JANGAN buka aplikasi!
+  if (event.action === 'tutup') {
+    return;
+  }
+
+  // JIKA BADAN SPANDUK YANG DIKLIK: Buka aplikasi dan angkat ke depan Excel
+  var rawUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/';
   var targetUrl = new URL(rawUrl, self.location.origin).href;
 
   event.waitUntil(
