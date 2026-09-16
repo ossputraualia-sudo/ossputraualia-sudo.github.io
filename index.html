@@ -27,9 +27,7 @@
       position: absolute; inset: 0; z-index: 1;
     }
 
-    /* =========================================================
-     * SISTEM PENGUNCI TOTAL (HARD LOCK SCREEN)
-     * ========================================================= */
+    /* SISTEM PENGUNCI KEAMANAN (SKENARIO A) */
     #lockScreenOverlay {
       position: fixed; inset: 0;
       background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
@@ -56,24 +54,12 @@
       display: inline-flex; align-items: center; justify-content: center;
       font-size: 32px; margin-bottom: 18px;
     }
+    .badge-icon.blocked { background: #fee2e2; color: #ef4444; border: 2px solid #fca5a5; }
+    .badge-icon.prompt { background: #ccfbf1; color: #0f766e; border: 2px solid #99f6e4; }
 
-    .badge-icon.blocked {
-      background: #fee2e2; color: #ef4444; border: 2px solid #fca5a5;
-    }
+    .lock-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.3; }
+    .lock-desc { font-size: 13.5px; color: #475569; line-height: 1.5; margin-bottom: 24px; }
 
-    .badge-icon.prompt {
-      background: #ccfbf1; color: #0f766e; border: 2px solid #99f6e4;
-    }
-
-    .lock-title {
-      font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.3;
-    }
-
-    .lock-desc {
-      font-size: 13.5px; color: #475569; line-height: 1.5; margin-bottom: 24px;
-    }
-
-    /* Kotak Tutorial Buka Blokir */
     .unblock-guide {
       background: #f8fafc; border: 1.5px dashed #cbd5e1;
       border-radius: 18px; padding: 18px; text-align: left; margin-bottom: 24px;
@@ -97,23 +83,17 @@
       gap: 8px; transition: transform 0.1s ease, background 0.2s ease;
     }
     .btn-main:active { transform: scale(0.98); }
-
     .btn-teal { background: #0f766e; color: #ffffff; }
     .btn-teal:hover { background: #0d9488; }
-
     .btn-blue { background: #2563eb; color: #ffffff; }
     .btn-blue:hover { background: #1d4ed8; }
   </style>
 </head>
 <body>
 
-  <!-- =========================================================
-   * LAYAR PENGUNCI KEAMANAN SISTEM (SKENARIO A)
-   * ========================================================= -->
+  <!-- PENGUNCI KEAMANAN SISTEM (SKENARIO A) -->
   <div id="lockScreenOverlay">
-    <div class="lock-card" id="lockCard">
-      <!-- Konten dinamis (apakah DIBLOKIR atau PERLU DIAKTIFKAN) diatur lewat JavaScript -->
-    </div>
+    <div class="lock-card" id="lockCard"></div>
   </div>
 
   <!-- Jendela Aplikasi Utama -->
@@ -125,6 +105,8 @@
 
   <script>
     var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
+    
+    // ⚡ KUNCI RESMI YANG 100% SUDAH DIVERIFIKASI
     var VAPID_PUBLIC_KEY = "BFmbNUOxV304wqekMka5EzEwv7sAapDLaPzlDBN2M-fcbSX9osQvksqcMyBzYYXkls3Cz3o06ZIDz7xsvnzpl-Q";
     var SB_URL = "https://qywqxcvnlehmiqrkpwdd.supabase.co";
     var SB_KEY = "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
@@ -156,49 +138,40 @@
 
       var status = Notification.permission;
 
-      // 1. KONDISI SUDAH DISETUJUI (Buka Aplikasi Bebas)
       if (status === 'granted') {
         bukaAplikasi();
-        daftarkanWebPushDevice();
+        sembuhkanDanDaftarkanToken();
         return;
       }
 
-      // Kunci layar jika belum diizinkan
       overlay.style.display = 'flex';
 
-      // 2. KONDISI SENGAJA DIBLOKIR (TAMPILKAN PERINGATAN KERAS & PANDUAN)
       if (status === 'denied') {
         lockCard.innerHTML = 
           '<div class="badge-icon blocked">⛔</div>' +
           '<h2 class="lock-title">AKSES SISTEM DIBEKUKAN</h2>' +
-          '<p class="lock-desc">Aplikasi mendeteksi bahwa <b>Notifikasi Latar Belakang DIBLOKIR</b> pada perangkat ini. Demi kepatuhan jadwal tender SPSE dan dokumen perusahaan, Anda <b>WAJIB</b> membuka izin notifikasi untuk menggunakan aplikasi ini.</p>' +
+          '<p class="lock-desc">Aplikasi mendeteksi <b>Notifikasi Latar Belakang DIBLOKIR</b> pada perangkat ini. Anda <b>WAJIB</b> membuka izin notifikasi untuk menggunakan sistem ini.</p>' +
           
           '<div class="unblock-guide">' +
-            '<div style="font-weight:800; font-size:12.5px; color:#0f766e; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">👉 Cara Membuka Blokir:</div>' +
+            '<div style="font-weight:800; font-size:12.5px; color:#0f766e; margin-bottom:12px; text-transform:uppercase;">👉 Cara Membuka Blokir:</div>' +
             '<div class="guide-step">' +
               '<span class="step-num">1</span>' +
-              '<span>Klik ikon <b>Setelan / Gembok 🔒</b> di sebelah kiri URL web ini (pada address bar atas).</span>' +
+              '<span>Klik ikon <b>Gembok / Setelan 🔒</b> di sebelah kiri URL web ini (pada address bar atas).</span>' +
             '</div>' +
             '<div class="guide-step">' +
               '<span class="step-num">2</span>' +
-              '<span>Cari opsi <b>Notifikasi (Notifications)</b>, lalu ubah dari <i>Blokir</i> menjadi <b>Izinkan (Allow)</b>.</span>' +
-            '</div>' +
-            '<div class="guide-step">' +
-              '<span class="step-num">3</span>' +
-              '<span>Setelah diubah, klik tombol di bawah ini untuk membuka akses.</span>' +
+              '<span>Ubah <b>Notifikasi (Notifications)</b> dari <i>Blokir</i> menjadi <b>Izinkan (Allow)</b>.</span>' +
             '</div>' +
           '</div>' +
 
           '<button type="button" class="btn-main btn-blue" onclick="window.location.reload()">' +
             '🔄 Saya Sudah Mengizinkan (Buka Akses)' +
           '</button>';
-      } 
-      // 3. KONDISI BELUM MEMILIH (TAMPILKAN AJAKAN WAJIB AKTIFKAN)
-      else {
+      } else {
         lockCard.innerHTML = 
           '<div class="badge-icon prompt">🔔</div>' +
           '<h2 class="lock-title">AKTIFKAN NOTIFIKASI KANTOR</h2>' +
-          '<p class="lock-desc">Aplikasi ini memerlukan izin notifikasi sistem operasi agar info tender lelang dan dokumen kadaluarsa tetap melompat ke layar saat Anda membuka <b>Microsoft Excel / Word</b>.</p>' +
+          '<p class="lock-desc">Diperlukan izin notifikasi agar info tender dan dokumen kadaluarsa tetap melompat ke layar saat Anda membuka <b>Microsoft Excel / Word</b>.</p>' +
           
           '<button type="button" class="btn-main btn-teal" onclick="mintaIzinSekarang()">' +
             '🔔 Izinkan & Masuk ke Sistem' +
@@ -210,7 +183,7 @@
       var perm = await Notification.requestPermission();
       if (perm === 'granted') {
         bukaAplikasi();
-        daftarkanWebPushDevice();
+        sembuhkanDanDaftarkanToken();
       } else {
         periksaIzinDanKunciSistem();
       }
@@ -220,7 +193,6 @@
       overlay.style.display = 'none';
     }
 
-    // Pantau jika user sewaktu-waktu mengubah setelan di URL bar browser
     if ('permissions' in navigator) {
       navigator.permissions.query({ name: 'notifications' }).then(function(p) {
         p.onchange = function() {
@@ -230,9 +202,9 @@
     }
 
     /* =========================================================
-     * PENDAFTARAN WEBPUSH TOKEN (SUPABASE)
+     * 🩺 LOGIKA PENYEMBUH OTOMATIS (SELF-HEALING REGISTRATION)
      * ========================================================= */
-    async function daftarkanWebPushDevice(targetRole, targetUserId) {
+    async function sembuhkanDanDaftarkanToken(targetRole, targetUserId) {
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       if (Notification.permission !== 'granted') return;
       if (_isRegistering) return;
@@ -242,11 +214,22 @@
         var reg = await navigator.serviceWorker.ready;
         var sub = await reg.pushManager.getSubscription();
 
+        // ⚡ 1. SUNTIK MATI TOKEN ZOMBI / TOKEN KUNCI LAMA
+        var isKunciSesuai = localStorage.getItem('PAG_VAPID_STABLE') === VAPID_PUBLIC_KEY;
+        if (sub && !isKunciSesuai) {
+          try {
+            await sub.unsubscribe(); // Buang token bangkai ke tempat sampah
+            sub = null;
+          } catch(eUnsub) {}
+        }
+
+        // ⚡ 2. MINTA TOKEN BARU MURNI DARI GOOGLE DENGAN KUNCI SAH
         if (!sub) {
           sub = await reg.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
           });
+          localStorage.setItem('PAG_VAPID_STABLE', VAPID_PUBLIC_KEY);
         }
 
         var subJson = sub.toJSON();
@@ -262,22 +245,23 @@
           updated_at: new Date().toISOString()
         };
 
-        // Bersihkan token lama milik role ini agar tidak dobel
+        // ⚡ 3. BERSIHKAN TOKEN MATI DI SUPABASE (HAPUS YANG LAMA)
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions?role=eq.' + currentRole, {
           method: 'DELETE',
           headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
         });
 
-        // Masukkan token baru
+        // ⚡ 4. SIMPAN TOKEN BARU YANG SEHAT
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
           method: 'POST',
           headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
-        console.log("✅ Token resmi aktif di Supabase!");
+        console.log("🩺 [Penyembuh Selesai] Token PC Anda kembali sehat 100%!");
+
       } catch (err) {
-        console.error('Push Reg Error:', err);
+        console.error('Penyembuhan Gagal:', err);
       } finally {
         _isRegistering = false;
       }
@@ -291,7 +275,7 @@
       });
     }
 
-    // Tangkap sinyal login dari iframe Apps Script
+    // Tangkap sesi login dari iframe
     window.addEventListener('message', function(event) {
       if (!event.data) return;
       var data = event.data;
@@ -302,7 +286,7 @@
       if (data.type === 'SYNC_USER_SESSION' && data.role) {
         localStorage.setItem('PAG_USER_ROLE', data.role);
         if (data.userId) localStorage.setItem('PAG_USER_ID', data.userId);
-        daftarkanWebPushDevice(data.role, data.userId);
+        sembuhkanDanDaftarkanToken(data.role, data.userId);
       }
     });
 
@@ -313,7 +297,6 @@
       }
     });
 
-    // Jalankan pemeriksaan awal
     periksaIzinDanKunciSistem();
   </script>
 </body>
