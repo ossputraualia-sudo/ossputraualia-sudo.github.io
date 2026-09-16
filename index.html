@@ -91,24 +91,21 @@
      * LISTENER POSTMESSAGE DARI GOOGLE APPS SCRIPT IFRAME
      * ================================================================ */
     window.addEventListener('message', async function(event) {
-      if (!event.data) return;
-      let data = event.data;
+  if (!event.data) return;
+  let data = event.data;
 
-      if (typeof data === 'string') {
-        try { data = JSON.parse(data); } catch(e) { return; }
-      }
+  if (typeof data === 'string') {
+    try { data = JSON.parse(data); } catch(e) { return; }
+  }
 
-      // Menangkap sinyal login sukses atau siap sesi dari dalam Apps Script
-      if (data.type === 'PAG_LOGIN_SUCCESS' || data.type === 'PAG_SESSION_READY') {
-        const uRole = data.role;
-        const uNama = data.nama;
-
-        if (uRole) {
-          localStorage.setItem('PAG_USER_ROLE', String(uRole));
-          if (uNama) localStorage.setItem('PAG_USER_NAMA', String(uNama));
-          await window.pagSetDeviceRole(uRole);
-        }
-      }
+  if (data.type === 'PAG_LOGIN_SUCCESS' || data.type === 'PAG_SESSION_READY') {
+    const uRole = data.role || 'superuser';
+    localStorage.setItem('PAG_USER_ROLE', uRole);
+    if (window.pagSetDeviceRole) {
+      await window.pagSetDeviceRole(uRole);
+    }
+  }
+});
 
       // Logout
       if (data.type === 'PAG_LOGOUT') {
