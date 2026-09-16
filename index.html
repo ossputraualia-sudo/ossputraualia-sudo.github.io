@@ -106,7 +106,7 @@
   <script>
     var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
     
-    // ⚡ KUNCI RESMI YANG 100% SUDAH DIVERIFIKASI
+    // ⚡ KUNCI RESMI SEPASANG YANG SUDAH TERVERIFIKASI
     var VAPID_PUBLIC_KEY = "BFmbNUOxV304wqekMka5EzEwv7sAapDLaPzlDBN2M-fcbSX9osQvksqcMyBzYYXkls3Cz3o06ZIDz7xsvnzpl-Q";
     var SB_URL = "https://qywqxcvnlehmiqrkpwdd.supabase.co";
     var SB_KEY = "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
@@ -202,7 +202,7 @@
     }
 
     /* =========================================================
-     * 🩺 LOGIKA PENYEMBUH OTOMATIS (SELF-HEALING REGISTRATION)
+     * 🩺 LOGIKA PENYEMBUH OTOMATIS (AUTO UNSUBSCRIBE ZOMBI)
      * ========================================================= */
     async function sembuhkanDanDaftarkanToken(targetRole, targetUserId) {
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
@@ -214,23 +214,19 @@
         var reg = await navigator.serviceWorker.ready;
         var sub = await reg.pushManager.getSubscription();
 
-        // ⚡ 1. SUNTIK MATI TOKEN ZOMBI / TOKEN KUNCI LAMA
-        var isKunciSesuai = localStorage.getItem('PAG_VAPID_STABLE') === VAPID_PUBLIC_KEY;
-        if (sub && !isKunciSesuai) {
+        // ⚡ SELALU BUANG TOKEN LAMA AGAR TIDAK ADA ZOMBI
+        if (sub) {
           try {
-            await sub.unsubscribe(); // Buang token bangkai ke tempat sampah
+            await sub.unsubscribe();
             sub = null;
-          } catch(eUnsub) {}
+          } catch(e) {}
         }
 
-        // ⚡ 2. MINTA TOKEN BARU MURNI DARI GOOGLE DENGAN KUNCI SAH
-        if (!sub) {
-          sub = await reg.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-          });
-          localStorage.setItem('PAG_VAPID_STABLE', VAPID_PUBLIC_KEY);
-        }
+        // BUAT TOKEN BARU SEGAR DENGAN KUNCI SAH KITA
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+        });
 
         var subJson = sub.toJSON();
         var currentRole = (targetRole || localStorage.getItem('PAG_USER_ROLE') || 'superuser').toLowerCase().trim();
@@ -245,23 +241,27 @@
           updated_at: new Date().toISOString()
         };
 
-        // ⚡ 3. BERSIHKAN TOKEN MATI DI SUPABASE (HAPUS YANG LAMA)
+        // Bersihkan token lama di Supabase
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions?role=eq.' + currentRole, {
           method: 'DELETE',
           headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
         });
 
-        // ⚡ 4. SIMPAN TOKEN BARU YANG SEHAT
+        // Simpan token baru murni
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
           method: 'POST',
-          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+          headers: {
+            'apikey': SB_KEY,
+            'Authorization': 'Bearer ' + SB_KEY,
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify(payload)
         });
 
-        console.log("🩺 [Penyembuh Selesai] Token PC Anda kembali sehat 100%!");
+        console.log("✅ Token segar berhasil didaftarkan ke Supabase!");
 
       } catch (err) {
-        console.error('Penyembuhan Gagal:', err);
+        console.error('Push Reg Error:', err);
       } finally {
         _isRegistering = false;
       }
