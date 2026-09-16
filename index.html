@@ -19,7 +19,7 @@
     html, body {
       width: 100%; height: 100%; overflow: hidden;
       background-color: #f1f5f9;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
     #appFrame {
@@ -31,24 +31,24 @@
       background: linear-gradient(135deg, rgba(248,250,252,0.95) 0%, rgba(226,232,240,0.95) 100%);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center; z-index: 999999;
-      padding: 20px; overflow-y: auto; transition: opacity 0.3s ease, visibility 0.3s ease;
+      padding: 20px; overflow-y: auto;
     }
     .setup-card {
       background: rgba(255, 255, 255, 0.95);
       border-radius: 24px; padding: 32px 24px; max-width: 420px; width: 100%;
-      text-align: center; position: relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
     }
     .brand-badge {
       display: inline-block; background: linear-gradient(135deg, #0d9488, #0f766e);
       color: #ffffff; font-weight: 800; font-size: 20px; padding: 8px 16px;
-      border-radius: 12px; margin-bottom: 16px; letter-spacing: 1px;
+      border-radius: 12px; margin-bottom: 16px;
     }
     .action-box {
       background: #ffffff; border: 1px solid rgba(203, 213, 225, 0.8);
       border-radius: 16px; padding: 16px; margin-bottom: 14px; text-align: left;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
-    .btn-action { padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-action { padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; }
     .btn-primary { background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: #ffffff; }
     .btn-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; cursor: default; }
     .status-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-right: 6px; }
@@ -57,19 +57,18 @@
 </head>
 <body>
 
-  <!-- MODAL IZIN NOTIFIKASI -->
   <div id="setupModal">
     <div class="setup-card">
       <div class="brand-badge">P.A.G</div>
       <h2>PT. PUTRA AULIA GROUP</h2>
-      <p style="font-size:13px; color:#475569; margin-bottom:24px;">Aktifkan notifikasi untuk memantau radar tender & dokumen di desktop.</p>
+      <p style="font-size:13px; color:#475569; margin-bottom:24px;">Aktifkan notifikasi untuk menerima update tender walaupun aplikasi ditutup.</p>
 
-      <div class="action-box" id="notifBox">
+      <div class="action-box">
         <div>
-          <h4 style="font-size:13.5px; font-weight:700;"><span class="status-indicator" id="notifIndicator"></span>🔔 Notifikasi Desktop</h4>
-          <p style="font-size:11.5px; color:#64748b;" id="notifDesc">Muncul seperti pop-up WhatsApp di pojok kanan bawah desktop.</p>
+          <h4 style="font-size:13.5px; font-weight:700;"><span class="status-indicator" id="notifIndicator"></span>🔔 Notifikasi Latar Belakang</h4>
+          <p style="font-size:11.5px; color:#64748b;" id="notifDesc">Tetap menerima info saat laptop sedang membuka Excel/Word.</p>
         </div>
-        <button id="btnNotif" type="button" class="btn-action btn-primary" onclick="aktifkanNotifikasi()">Aktifkan</button>
+        <button id="btnNotif" type="button" class="btn-action btn-primary" onclick="daftarkanWebPushDevice()">Aktifkan</button>
       </div>
 
       <button type="button" style="width:100%; padding:14px; border-radius:14px; background:#0d9488; color:#fff; font-weight:700; border:none; cursor:pointer;" onclick="bukaAplikasiUtama()">
@@ -78,7 +77,6 @@
     </div>
   </div>
 
-  <!-- IFRAME APLIKASI UTAMA GOOGLE APPS SCRIPT -->
   <iframe 
     id="appFrame" 
     src="https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec" 
@@ -88,15 +86,12 @@
   <script>
     var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
     var VAPID_PUBLIC_KEY = "BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U";
-    
-    // Konfigurasi Supabase REST Langsung
     var SB_URL = "https://qywqxcvnlehmiqrkpwdd.supabase.co";
     var SB_KEY = "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
 
     var frame = document.getElementById('appFrame');
     var setupModal = document.getElementById('setupModal');
 
-    // Helper konversi Public Key
     function urlBase64ToUint8Array(base64String) {
       var padding = '='.repeat((4 - base64String.length % 4) % 4);
       var base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
@@ -108,18 +103,17 @@
       return outputArray;
     }
 
-    // 1. Daftarkan Service Worker
+    // 1. Registrasi Service Worker Native
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').then(function(reg) {
-          console.log('✅ Service Worker Native VAPID Siap.');
-          periksaStatusSubscription();
+        navigator.serviceWorker.register('sw.js').then(function() {
+          cekStatusSub();
         });
       });
     }
 
-    // 2. Fungsi Mendaftar Web Push (Tembus Saat Ditutup)
-    async function aktifkanNotifikasi() {
+    // 2. Fungsi Daftarkan Token ke Database Supabase
+    async function daftarkanWebPushDevice() {
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         alert('Browser ini tidak mendukung Native Web Push.');
         return;
@@ -136,7 +130,6 @@
           });
         }
 
-        // Simpan Subscription ke Supabase
         var subJson = sub.toJSON();
         var cachedRole = localStorage.getItem('PAG_USER_ROLE') || 'superuser';
         var payload = {
@@ -147,6 +140,7 @@
           updated_at: new Date().toISOString()
         };
 
+        // Kirim ke tabel web_push_subscriptions di Supabase
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
           method: 'POST',
           headers: {
@@ -158,16 +152,15 @@
           body: JSON.stringify(payload)
         });
 
-        periksaStatusSubscription();
-        alert('✅ Notifikasi Desktop Latar Belakang Aktif! Notifikasi akan tetap masuk walau aplikasi ditutup.');
+        cekStatusSub();
+        alert('✅ Sukses! Laptop Anda resmi terdaftar menerima notifikasi latar belakang.');
       } catch (err) {
-        console.error('Gagal berlangganan push:', err);
-        alert('Gagal mengaktifkan notifikasi: ' + err.message);
+        alert('Izin notifikasi diperlukan: ' + err.message);
       }
     }
 
-    function periksaStatusSubscription() {
-      if ('serviceWorker' in navigator) {
+    function cekStatusSub() {
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
         navigator.serviceWorker.ready.then(function(reg) {
           reg.pushManager.getSubscription().then(function(sub) {
             if (sub && Notification.permission === 'granted') {
@@ -175,7 +168,7 @@
               var desc = document.getElementById('notifDesc');
               var indicator = document.getElementById('notifIndicator');
               if (btn) { btn.textContent = 'Aktif ✔'; btn.className = 'btn-action btn-success'; btn.disabled = true; }
-              if (desc) { desc.textContent = 'Web Push aktif (tetap masuk walau aplikasi ditutup).'; }
+              if (desc) { desc.textContent = 'Notifikasi aktif (tetap tembus walau aplikasi ditutup).'; }
               if (indicator) { indicator.classList.add('active'); }
             }
           });
@@ -188,7 +181,8 @@
       if (setupModal) setupModal.style.display = 'none';
     }
 
-    if (localStorage.getItem('PAG_SETUP_DONE') === 'true') {
+    // Jika sudah pernah disetup dan izin sudah aktif, langsung sembunyikan modal
+    if (localStorage.getItem('PAG_SETUP_DONE') === 'true' && Notification.permission === 'granted') {
       if (setupModal) setupModal.style.display = 'none';
     }
 
