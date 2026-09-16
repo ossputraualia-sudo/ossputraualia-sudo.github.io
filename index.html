@@ -140,7 +140,6 @@
           updated_at: new Date().toISOString()
         };
 
-        // Kirim ke tabel web_push_subscriptions di Supabase
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
           method: 'POST',
           headers: {
@@ -153,7 +152,7 @@
         });
 
         cekStatusSub();
-        alert('✅ Sukses! Laptop Anda resmi terdaftar menerima notifikasi latar belakang.');
+        alert('✅ Sukses! Laptop Anda resmi terdaftar.');
       } catch (err) {
         alert('Izin notifikasi diperlukan: ' + err.message);
       }
@@ -168,7 +167,7 @@
               var desc = document.getElementById('notifDesc');
               var indicator = document.getElementById('notifIndicator');
               if (btn) { btn.textContent = 'Aktif ✔'; btn.className = 'btn-action btn-success'; btn.disabled = true; }
-              if (desc) { desc.textContent = 'Notifikasi aktif (tetap tembus walau aplikasi ditutup).'; }
+              if (desc) { desc.textContent = 'Notifikasi Windows aktif (tetap tembus walau aplikasi ditutup).'; }
               if (indicator) { indicator.classList.add('active'); }
             }
           });
@@ -176,12 +175,55 @@
       }
     }
 
+    /* ================================================================
+     * ⚡ 3. JEMBATAN PENTING: TEMBAKKAN LANGSUNG KE BANNER RESMI WINDOWS
+     * (Inilah yang membuat notifikasi melompat keluar ke atas Excel!)
+     * ================================================================ */
+    function picuBannerResmiWindows(judul, pesan, targetUrl) {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+      var options = {
+        body: pesan || 'Ada update dokumen atau tender baru.',
+        icon: 'icon-192.png',
+        badge: 'icon-192.png',
+        data: { url: targetUrl || '#' },
+        requireInteraction: true // Tetap melayang di Windows sampai diklik
+      };
+
+      // Tembakkan lewat Service Worker agar tampil di luar browser
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(function(reg) {
+          reg.showNotification(judul || 'P.A.G Docs', options);
+        }).catch(function() {
+          new Notification(judul || 'P.A.G Docs', options);
+        });
+      } else {
+        new Notification(judul || 'P.A.G Docs', options);
+      }
+    }
+
+    // ⚡ 4. TANGKAP SINYAL DARI DALAM IFRAME SAAT JENDELA MINIMIZE
+    window.addEventListener('message', function(event) {
+      if (!event.data) return;
+      var data = event.data;
+      if (typeof data === 'string') {
+        try { data = JSON.parse(data); } catch(e) { return; }
+      }
+
+      if (data.type === 'SHOW_OS_NOTIFICATION') {
+        picuBannerResmiWindows(data.judul, data.pesan, data.url);
+      }
+
+      if (data.type === 'UPDATE_BADGE' && typeof data.count === 'number') {
+        document.title = (data.count > 0 ? '(' + data.count + ') ' : '') + 'PT. Putra Aulia Group';
+      }
+    });
+
     function bukaAplikasiUtama() {
       localStorage.setItem('PAG_SETUP_DONE', 'true');
       if (setupModal) setupModal.style.display = 'none';
     }
 
-    // Jika sudah pernah disetup dan izin sudah aktif, langsung sembunyikan modal
     if (localStorage.getItem('PAG_SETUP_DONE') === 'true' && Notification.permission === 'granted') {
       if (setupModal) setupModal.style.display = 'none';
     }
