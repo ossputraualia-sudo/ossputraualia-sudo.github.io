@@ -1,4 +1,4 @@
-// sw.js - NATIVE WEB PUSH LISTENER (Bisa menerima saat aplikasi mati)
+// sw.js - PENERIMA SINYAL SAAT APLIKASI TERTUTUP MATI
 self.addEventListener('install', function(event) {
   self.skipWaiting();
 });
@@ -7,7 +7,7 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(clients.claim());
 });
 
-// ⚡ 1. EVENT PUSH: Menerima sinyal saat PWA ditutup total
+// ⚡ DIBANGUNKAN OLEH WINDOWS/GOOGLE SAAT PWA DITUTUP
 self.addEventListener('push', function(event) {
   var data = {};
   if (event.data) {
@@ -19,7 +19,7 @@ self.addEventListener('push', function(event) {
   }
 
   var judul = data.judul || '🔔 Pemberitahuan Baru';
-  var pesan = data.pesan || 'Ada pembaruan dokumen / tender baru.';
+  var pesan = data.pesan || 'Ada pembaruan dokumen atau tender baru.';
   var targetUrl = data.link || data.url || '/';
 
   var options = {
@@ -36,7 +36,7 @@ self.addEventListener('push', function(event) {
   );
 });
 
-// ⚡ 2. EVENT KLIK: Saat banner di-klik, buka browser & arahkan ke modul
+// Saat banner diklik di layar desktop
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   var targetUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/';
@@ -46,7 +46,6 @@ self.addEventListener('notificationclick', function(event) {
       for (var i = 0; i < clientList.length; i++) {
         var client = clientList[i];
         if ('focus' in client) {
-          client.navigate(targetUrl);
           return client.focus();
         }
       }
