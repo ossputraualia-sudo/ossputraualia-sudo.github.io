@@ -68,7 +68,7 @@
       <div class="action-box" id="notifBox">
         <div>
           <h4 style="font-size:13.5px; font-weight:700;"><span class="status-indicator" id="notifIndicator"></span>🔔 Notifikasi Real-Time</h4>
-          <p style="font-size:11.5px; color:#64748b;" id="notifDesc">Wajib diaktifkan agar update dokumen masuk ke perangkat.</p>
+          <p style="font-size:11.5px; color:#64748b;" id="notifDesc">Wajib diaktifkan agar update dokumen masuk ke desktop.</p>
         </div>
         <button id="btnNotif" type="button" class="btn-action btn-primary" onclick="aktifkanNotifikasi()">Aktifkan</button>
       </div>
@@ -92,7 +92,66 @@
     var setupModal = document.getElementById('setupModal');
 
     /* ================================================================
-     * 1. NATIVE NOTIFICATION ENGINE (PENGGANTI ONESIGNAL)
+     * 1. DAFTARKAN SERVICE WORKER NATIVE (WHATSAPP WEB ENGINE)
+     * ================================================================ */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw.js').then(function(reg) {
+          console.log('✅ Service Worker Windows Banner Aktif:', reg.scope);
+        }).catch(function(err) {
+          console.warn('Service Worker registrasi:', err);
+        });
+      });
+    }
+
+    /* ================================================================
+     * 2. TAMPILKAN BANNER RESMI WINDOWS (PERSIS NOTIFIKASI WA DESKTOP)
+     * ================================================================ */
+    function tampilkanNotifikasiNative(judul, pesan, targetUrl) {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+      var iconUrl = 'icon-192.png';
+      var options = {
+        body: pesan || 'Pemberitahuan baru dari sistem PAG Docs.',
+        icon: iconUrl,
+        badge: iconUrl,
+        vibrate: [200, 100, 200],
+        tag: 'pag-docs-' + new Date().getTime(),
+        renotify: true,
+        requireInteraction: true, // 👈 Banner tetap mengambang di layar sampai diklik (seperti WhatsApp)
+        data: { url: targetUrl || '#' }
+      };
+
+      // Tampilkan banner lewat Service Worker agar melompat keluar dari browser ke desktop Windows
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(function(reg) {
+          reg.showNotification(judul || 'P.A.G Docs', options);
+        }).catch(function() {
+          bukaNotifFallback(judul, options, targetUrl);
+        });
+      } else {
+        bukaNotifFallback(judul, options, targetUrl);
+      }
+    }
+
+    function bukaNotifFallback(judul, options, targetUrl) {
+      try {
+        var notif = new Notification(judul || 'P.A.G Docs', options);
+        notif.onclick = function(e) {
+          e.preventDefault();
+          window.focus();
+          if (targetUrl && targetUrl !== '#') {
+            var cleanHash = targetUrl.startsWith('#') ? targetUrl : '#' + targetUrl;
+            window.location.hash = cleanHash;
+            if (frame) frame.src = APPS_SCRIPT_EXEC_URL + cleanHash;
+          }
+          notif.close();
+        };
+      } catch(e) {}
+    }
+
+    /* ================================================================
+     * 3. IZIN NOTIFIKASI BROWSER
      * ================================================================ */
     function periksaStatusSubscription() {
       if (!('Notification' in window)) {
@@ -112,7 +171,7 @@
           btn.disabled = true;
         }
         if (desc) {
-          desc.textContent = 'Notifikasi push native aktif di perangkat ini.';
+          desc.textContent = 'Notifikasi Windows/Desktop aktif di perangkat ini.';
         }
         if (indicator) {
           indicator.classList.add('active');
@@ -131,8 +190,8 @@
         periksaStatusSubscription();
         if (permission === 'granted') {
           tampilkanNotifikasiNative(
-            "🔔 Notifikasi P.A.G Docs Aktif",
-            "Perangkat ini siap menerima pemberitahuan radar tender & dokumen.",
+            "🔔 Notifikasi Desktop Aktif",
+            "Notifikasi akan muncul di pojok kanan bawah seperti pesan WhatsApp.",
             "#dashboard"
           );
         }
@@ -141,37 +200,8 @@
       }
     }
 
-    function tampilkanNotifikasiNative(judul, pesan, targetUrl) {
-      if (!('Notification' in window) || Notification.permission !== 'granted') return;
-
-      try {
-        var iconUrl = 'icon-192.png';
-        var options = {
-          body: pesan || 'Pemberitahuan baru dari sistem PAG Docs.',
-          icon: iconUrl,
-          badge: iconUrl,
-          vibrate: [200, 100, 200],
-          data: { url: targetUrl || '#' }
-        };
-
-        var notif = new Notification(judul || 'P.A.G Docs', options);
-        notif.onclick = function(e) {
-          e.preventDefault();
-          window.focus();
-          if (targetUrl && targetUrl !== '#') {
-            var cleanHash = targetUrl.startsWith('#') ? targetUrl : '#' + targetUrl;
-            window.location.hash = cleanHash;
-            if (frame) frame.src = APPS_SCRIPT_EXEC_URL + cleanHash;
-          }
-          notif.close();
-        };
-      } catch (e) {
-        console.warn('Gagal memunculkan banner notifikasi:', e);
-      }
-    }
-
     /* ================================================================
-     * 2. BRIDGE LISTENER (MENERIMA NOTIFIKASI DARI DALAM IFRAME)
+     * 4. BRIDGE LISTENER (MENERIMA NOTIFIKASI DARI GOOGLE APPS SCRIPT)
      * ================================================================ */
     window.addEventListener('message', function(event) {
       if (!event.data) return;
@@ -181,12 +211,12 @@
         try { data = JSON.parse(data); } catch(e) { return; }
       }
 
-      // Jika iframe mengirim permintaan pop-up notifikasi OS
+      // Memunculkan banner desktop saat iframe mengirim sinyal
       if (data.type === 'SHOW_OS_NOTIFICATION') {
         tampilkanNotifikasiNative(data.judul, data.pesan, data.url);
       }
 
-      // Sinkronisasi badge judul tab browser
+      // Sinkronisasi badge angka di judul tab browser
       if (data.type === 'UPDATE_BADGE' && typeof data.count === 'number') {
         if (data.count > 0) {
           document.title = '(' + data.count + ') PT. Putra Aulia Group';
@@ -197,7 +227,7 @@
     });
 
     /* ================================================================
-     * 3. KONTROL TAMPILAN & HASH ROUTER
+     * 5. KONTROL TAMPILAN & HASH ROUTER
      * ================================================================ */
     function bukaAplikasiUtama() {
       localStorage.setItem('PAG_SETUP_DONE', 'true');
@@ -208,7 +238,7 @@
       if (setupModal) setupModal.style.display = 'none';
     }
 
-    // Periksa izin saat halaman dimuat
+    // Periksa status izin saat halaman pertama kali dibuka
     periksaStatusSubscription();
 
     window.addEventListener('hashchange', function() {
