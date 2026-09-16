@@ -1,4 +1,4 @@
-// Service Worker Native PAG Docs (WhatsApp-style Notification)
+// sw.js - Service Worker Native untuk Notifikasi Gaya WhatsApp
 self.addEventListener('install', function(event) {
   self.skipWaiting();
 });
@@ -7,7 +7,6 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(clients.claim());
 });
 
-// Ketika banner notifikasi Windows diklik
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   var targetUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/';
