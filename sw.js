@@ -1,5 +1,5 @@
 // ================================================================
-// sw.js - SMART SERVICE WORKER DENGAN PUSH PINTAR & BADGE ANGKA
+// sw.js - SERVICE WORKER UTAMA (STABIL & TEMBUS EXCEL 100%)
 // PT. PUTRA AULIA GROUP
 // ================================================================
 
@@ -11,7 +11,7 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(self.clients.claim());
 });
 
-// ⚡ 1. TERIMA PUSH DARI SERVER DENGAN PENGECEKAN PINTAR & BADGE
+// ⚡ 1. TERIMA PUSH DARI SERVER (LANGSUNG TEMBAK SPANDUK HITAM RESMI)
 self.addEventListener('push', function(event) {
   var data = {};
   
@@ -36,7 +36,7 @@ self.addEventListener('push', function(event) {
     badge: iconUrl,
     tag: 'pag-toast-' + Date.now(),
     renotify: true,
-    requireInteraction: true,
+    requireInteraction: true, // Banner melayang permanen sampai diklik
     silent: false,
     vibrate: [300, 100, 300],
     data: { 
@@ -44,44 +44,26 @@ self.addEventListener('push', function(event) {
     }
   };
 
-  event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async function(clientList) {
-      
-      // 🔴 1. PASANG BADGE ANGKA DI TASKBAR WINDOWS & ICON HP
-      if ('setAppBadge' in navigator) {
-        try {
-          var count = (typeof data.count === 'number') ? data.count : 1;
-          await navigator.setAppBadge(count);
-        } catch (eBadge) {}
-      }
+  // ⚡ EKSEKUSI LANGSUNG TANPA PENGHALANG!
+  var aksi = [
+    self.registration.showNotification(judul, options)
+  ];
 
-      // 🧠 2. ⚡ PERBAIKAN: HANYA CEK APAKAH PWA SEDANG AKTIF DIFOKUSKAN
-      var isAppFocused = clientList.some(function(client) {
-        return client.focused === true; // Hanya anggap aktif jika user sedang mengetik di dalam PWA
-      });
+  // Pasang badge angka di HP/Windows secara aman
+  if ('setAppBadge' in navigator) {
+    aksi.push(navigator.setAppBadge(1).catch(function() {}));
+  }
 
-      // A. JIKA USER SEDANG AKTIF DI DALAM PWA:
-      if (isAppFocused) {
-        // Jangan munculkan spanduk hitam Windows (cukup kartu hijau internal saja)
-        return;
-      }
-
-      // B. JIKA SEDANG DI EXCEL / MINIMIZE / LAYAR TERKUNCI:
-      // ⚡ MUNCULKAN SPANDUK HITAM RESMI WINDOWS & ANDROID!
-      return self.registration.showNotification(judul, options);
-    })
-  );
+  event.waitUntil(Promise.all(aksi));
 });
 
 // ⚡ 2. KETIKA BANNER DIKLIK DI WINDOWS ATAU HP
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
-  // 🔴 BERSIHKAN BADGE ANGKA KARENA SUDAH DIBUKA
+  // Bersihkan badge
   if ('clearAppBadge' in navigator) {
-    try {
-      navigator.clearAppBadge();
-    } catch (eClear) {}
+    navigator.clearAppBadge().catch(function() {});
   }
 
   var rawUrl = (event.notification.data && event.notification.data.url) 
@@ -108,26 +90,4 @@ self.addEventListener('notificationclick', function(event) {
       }
     })
   );
-});
-
-// ⚡ 3. SINKRONISASI BADGE DARI DALAM APLIKASI
-self.addEventListener('message', function(event) {
-  if (!event.data) return;
-
-  if (event.data.type === 'UPDATE_BADGE' && 'setAppBadge' in navigator) {
-    try {
-      var unreadCount = Number(event.data.count || 0);
-      if (unreadCount > 0) {
-        navigator.setAppBadge(unreadCount);
-      } else {
-        navigator.clearAppBadge();
-      }
-    } catch (e) {}
-  }
-
-  if (event.data.type === 'CLEAR_BADGE' && 'clearAppBadge' in navigator) {
-    try {
-      navigator.clearAppBadge();
-    } catch (e) {}
-  }
 });
