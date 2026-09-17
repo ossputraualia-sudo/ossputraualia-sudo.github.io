@@ -212,8 +212,6 @@
     async function daftarkanPerangkatTunggal(targetRole) {
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       if (Notification.permission !== 'granted') return;
-      
-      // ⚡ KUNCI PENGAMAN 2: CEGAH EKSEKUSI DOBEL
       if (_sedangMendaftar) return;
       _sedangMendaftar = true;
 
@@ -221,7 +219,6 @@
         var reg = await navigator.serviceWorker.ready;
         var sub = await reg.pushManager.getSubscription();
 
-        // ⚡ KUNCI PENGAMAN 3: REUSE SUBSCRIPTION JIKA SUDAH ADA
         if (!sub) {
           sub = await reg.pushManager.subscribe({
             userVisibleOnly: true,
@@ -230,29 +227,29 @@
         }
 
         var subJson = sub.toJSON();
-        var currentRole = (targetRole || localStorage.getItem('PAG_USER_ROLE') || 'superuser').toLowerCase().trim();
 
+        // ⚡ GEMBOK ANTI-GANDA: JIKA SUDAH PERNAH DISIMPAN, JANGAN POST KE-2 KALI!
+        if (localStorage.getItem('PAG_SAVED_ENDPOINT') === subJson.endpoint) {
+          console.log("Perangkat ini sudah tersimpan di Supabase, batalkan pengiriman ganda.");
+          return;
+        }
+
+        var currentRole = (targetRole || localStorage.getItem('PAG_USER_ROLE') || 'superuser').toLowerCase().trim();
         var isAndroid = /Android/i.test(navigator.userAgent);
         var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
         var labelPerangkat = (isAndroid ? "HP Android" : (isIOS ? "iPhone iOS" : "Laptop / PC Windows")) + " [" + DEVICE_ID + "]";
 
         var payload = {
           role: currentRole,
-          user_id: labelPerangkat, // Berisi Nama + Device ID Unik
+          user_id: labelPerangkat,
           endpoint: subJson.endpoint,
           keys_p256dh: subJson.keys.p256dh,
           keys_auth: subJson.keys.auth,
           updated_at: new Date().toISOString()
         };
 
-        // ⚡ HAPUS HANYA BARIS LAMA MILIK DEVICE ID INI (ANTI-DOBEL)
-        await fetch(SB_URL + '/rest/v1/web_push_subscriptions?user_id=eq.' + encodeURIComponent(labelPerangkat), {
-          method: 'DELETE',
-          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
-        });
-
-        // SIMPAN HANYA 1 BARIS TUNGGAL YANG HIDUP
-        await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
+        // Simpan 1 baris tunggal ke Supabase
+        var res = await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
           method: 'POST',
           headers: {
             'apikey': SB_KEY,
@@ -262,7 +259,11 @@
           body: JSON.stringify(payload)
         });
 
-        console.log("✅ Pendaftaran tunggal sukses:", labelPerangkat);
+        // ⚡ Kunci di memori bahwa endpoint ini sudah resmi tersimpan
+        if (res.ok) {
+          localStorage.setItem('PAG_SAVED_ENDPOINT', subJson.endpoint);
+          console.log("✅ Pendaftaran tunggal sukses:", labelPerangkat);
+        }
 
       } catch (err) {
         console.error('Pendaftaran Gagal:', err);
