@@ -35,20 +35,17 @@
     content="PAG Docs"
   >
 
-  <title>
-    PAG Docs
-  </title>
+  <title>PAG Docs</title>
 
 
   <!-- ======================================================
-       MANIFEST
+       PWA
        ====================================================== -->
 
   <link
     rel="manifest"
     href="./manifest.json"
   >
-
 
   <link
     rel="icon"
@@ -62,7 +59,6 @@
     * {
       box-sizing: border-box;
     }
-
 
     html,
     body {
@@ -86,9 +82,15 @@
     }
 
 
+    /* ======================================================
+       APPLICATION FRAME
+       ====================================================== */
+
     #appFrame {
 
-      display: block;
+      position: fixed;
+
+      inset: 0;
 
       width: 100%;
 
@@ -97,14 +99,22 @@
       border: 0;
 
       background: #ffffff;
+
+      display: none;
+    }
+
+
+    #appFrame.active {
+
+      display: block;
     }
 
 
     /* ======================================================
-       NOTIFICATION PERMISSION GATE
+       LOCK SCREEN
        ====================================================== */
 
-    #lockScreenOverlay {
+    #appLock {
 
       position: fixed;
 
@@ -112,53 +122,53 @@
 
       z-index: 999999;
 
-      display: flex;
+      display: none;
 
       align-items: center;
 
       justify-content: center;
 
-      background:
-        rgba(255,255,255,.96);
-
       padding: 24px;
+
+      background:
+        #ffffff;
     }
 
 
-    #lockScreenOverlay.hidden {
+    #appLock.active {
 
-      display: none;
+      display: flex;
     }
 
 
-    .permission-card {
+    .lock-card {
 
-      width: min(
-        430px,
-        100%
-      );
+      width:
+        min(420px, 100%);
 
-      padding: 28px;
+      padding: 30px 26px;
+
+      text-align: center;
 
       border-radius: 20px;
 
-      background: #ffffff;
+      background:
+        #ffffff;
 
       box-shadow:
-        0 20px 60px
-        rgba(0,0,0,.14);
-
-      text-align: center;
+        0 18px 55px
+        rgba(0,0,0,.13);
     }
 
 
-    .permission-icon {
+    .lock-icon {
 
-      width: 64px;
+      width: 68px;
 
-      height: 64px;
+      height: 68px;
 
-      margin: 0 auto 18px;
+      margin:
+        0 auto 18px;
 
       border-radius: 18px;
 
@@ -168,39 +178,43 @@
 
       justify-content: center;
 
-      background: #0f766e;
+      background:
+        #0f766e;
 
-      color: white;
+      color:
+        #ffffff;
 
-      font-size: 28px;
+      font-size: 30px;
     }
 
 
-    .permission-card h2 {
+    .lock-card h1 {
 
       margin:
         0 0 10px;
 
       font-size: 21px;
 
-      color: #111827;
+      color:
+        #111827;
     }
 
 
-    .permission-card p {
+    .lock-card p {
 
       margin:
         0 0 22px;
 
-      line-height: 1.55;
-
-      color: #6b7280;
+      color:
+        #6b7280;
 
       font-size: 14px;
+
+      line-height: 1.55;
     }
 
 
-    #notificationPermissionButton {
+    #enableNotificationButton {
 
       width: 100%;
 
@@ -208,131 +222,103 @@
 
       border-radius: 12px;
 
-      padding: 13px 18px;
+      padding: 14px 18px;
 
-      background: #0f766e;
+      background:
+        #0f766e;
 
-      color: white;
+      color:
+        #ffffff;
 
       font-size: 14px;
 
-      font-weight: 600;
+      font-weight: 700;
 
       cursor: pointer;
     }
 
 
-    #notificationPermissionButton:hover {
+    #enableNotificationButton:disabled {
 
-      opacity: .92;
+      opacity: .65;
+
+      cursor:
+        not-allowed;
     }
 
 
-    #notificationContinueButton {
+    #lockStatus {
 
-      margin-top: 10px;
+      margin-top: 13px;
 
-      width: 100%;
+      min-height: 18px;
 
-      border: 0;
+      font-size: 12px;
 
-      background: transparent;
-
-      color: #6b7280;
-
-      padding: 10px;
-
-      cursor: pointer;
+      color:
+        #6b7280;
     }
 
 
     /* ======================================================
-       INTERNAL BANNER
+       DENIED MESSAGE
        ====================================================== */
 
-    #pagNotificationBanner {
-
-      position: fixed;
-
-      top: 16px;
-
-      right: 16px;
-
-      z-index: 999998;
-
-      width: min(
-        380px,
-        calc(100vw - 32px)
-      );
-
-      padding: 15px 16px;
-
-      border-radius: 14px;
-
-      background: #ffffff;
-
-      box-shadow:
-        0 12px 40px
-        rgba(0,0,0,.18);
-
-      border-left:
-        4px solid #0f766e;
+    #blockedHelp {
 
       display: none;
 
-      cursor: pointer;
+      margin-top: 15px;
+
+      padding: 12px;
+
+      border-radius: 10px;
+
+      background:
+        #f3f4f6;
+
+      color:
+        #4b5563;
+
+      font-size: 12px;
+
+      line-height: 1.5;
     }
 
 
-    #pagNotificationBanner.show {
+    #blockedHelp.active {
 
       display: block;
-
-      animation:
-        pagBannerIn
-        .22s ease-out;
     }
 
 
-    .pag-banner-title {
+    /* ======================================================
+       SMALL STATUS
+       ====================================================== */
 
-      font-weight: 700;
+    #pushStatus {
 
-      font-size: 14px;
+      position: fixed;
 
-      color: #111827;
+      left: 10px;
 
-      margin-bottom: 5px;
-    }
+      bottom: 8px;
 
+      z-index: 999998;
 
-    .pag-banner-body {
+      padding: 4px 7px;
 
-      font-size: 13px;
+      border-radius: 5px;
 
-      line-height: 1.45;
+      background:
+        rgba(0,0,0,.06);
 
-      color: #4b5563;
-    }
+      color:
+        rgba(0,0,0,.35);
 
+      font-size: 9px;
 
-    @keyframes pagBannerIn {
-
-      from {
-
-        opacity: 0;
-
-        transform:
-          translateY(-10px);
-      }
-
-      to {
-
-        opacity: 1;
-
-        transform:
-          translateY(0);
-      }
+      display: none;
     }
 
   </style>
@@ -344,7 +330,7 @@
 
 
   <!-- ======================================================
-       MAIN APP
+       MAIN PAG DOCS
        ====================================================== -->
 
   <iframe
@@ -363,81 +349,77 @@
 
 
   <!-- ======================================================
-       PERMISSION GATE
+       APPLICATION LOCK
        ====================================================== -->
 
-  <div
-    id="lockScreenOverlay"
-    class="hidden"
+  <section
+    id="appLock"
+    aria-modal="true"
+    role="dialog"
   >
 
-    <div class="permission-card">
+    <div class="lock-card">
 
-      <div class="permission-icon">
+      <div class="lock-icon">
         🔔
       </div>
 
-      <h2>
-        Aktifkan Notifikasi PAG Docs
-      </h2>
 
-      <p>
-        Izinkan notifikasi agar Anda tetap menerima
-        informasi PAG Docs walaupun aplikasi sedang
-        tidak dibuka.
+      <h1>
+        Notifikasi Wajib Aktif
+      </h1>
+
+
+      <p id="lockDescription">
+        PAG Docs memerlukan notifikasi browser
+        agar informasi penting tetap dapat diterima
+        ketika aplikasi dibuka, diminimalkan,
+        maupun ditutup.
       </p>
 
+
       <button
-        id="notificationPermissionButton"
+        id="enableNotificationButton"
         type="button"
       >
         Aktifkan Notifikasi
       </button>
 
-      <button
-        id="notificationContinueButton"
-        type="button"
+
+      <div id="lockStatus"></div>
+
+
+      <div
+        id="blockedHelp"
       >
-        Lanjut tanpa notifikasi
-      </button>
+        Notifikasi saat ini diblokir oleh browser.
+        Buka pengaturan izin notifikasi untuk situs
+        PAG Docs, ubah menjadi <b>Allow / Izinkan</b>,
+        kemudian buka kembali aplikasi.
+      </div>
 
     </div>
 
-  </div>
-
-
-  <!-- ======================================================
-       INTERNAL BANNER
-       ====================================================== -->
-
-  <div
-    id="pagNotificationBanner"
-    role="status"
-    aria-live="polite"
-  >
-
-    <div
-      class="pag-banner-title"
-      id="pagBannerTitle"
-    >
-      PAG Docs
-    </div>
-
-    <div
-      class="pag-banner-body"
-      id="pagBannerBody"
-    >
-      Ada informasi baru.
-    </div>
-
-  </div>
+  </section>
 
 
 <script>
 
 /* ============================================================
- * PAG DOCS PUSH CLIENT
- * VERSION: PAG-PUSH-V4
+ * PAG DOCS
+ * NOTIFICATION GATE + WEB PUSH
+ *
+ * VERSION: PAG-PUSH-V5
+ *
+ * ARSITEKTUR:
+ *
+ * Browser/OS Notification = SATU-SATUNYA notification
+ *
+ * Tidak ada:
+ * - HTML notification banner
+ * - HTML toast
+ * - notification popup buatan sendiri
+ *
  * ============================================================ */
 
 (() => {
@@ -462,7 +444,7 @@
 
 
   const SB_KEY =
-    "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
+    "sb_publishable_Trk4jYT3kN93sFtmWO6Tg_-ps4vYLq";
 
 
   const SW_PATH =
@@ -470,7 +452,7 @@
 
 
   const SW_VERSION =
-    "PAG-PUSH-V4";
+    "PAG-PUSH-V5";
 
 
   const DEVICE_ID_KEY =
@@ -481,23 +463,32 @@
    * STATE
    * ========================================================== */
 
-  let _serviceWorkerRegistration = null;
+  let serviceWorkerRegistration =
+    null;
 
-  let _pushSubscription = null;
+  let pushSubscription =
+    null;
 
-  let _pushSubscriptionJSON = null;
+  let pushSubscriptionJSON =
+    null;
 
-  let _userSession = null;
+  let userSession =
+    null;
 
-  let _deviceId = null;
+  let deviceId =
+    null;
 
-  let _deviceLabel = null;
+  let deviceLabel =
+    null;
 
-  let _subscriptionSaveRunning = false;
+  let saveSubscriptionRunning =
+    false;
 
-  let _permissionWatcher = null;
+  let permissionStatus =
+    null;
 
-  let _bannerTimer = null;
+  let appUnlocked =
+    false;
 
 
   /* ==========================================================
@@ -510,39 +501,27 @@
     );
 
 
-  const overlay =
+  const appLock =
     document.getElementById(
-      "lockScreenOverlay"
+      "appLock"
     );
 
 
-  const permissionButton =
+  const enableButton =
     document.getElementById(
-      "notificationPermissionButton"
+      "enableNotificationButton"
     );
 
 
-  const continueButton =
+  const lockStatus =
     document.getElementById(
-      "notificationContinueButton"
+      "lockStatus"
     );
 
 
-  const banner =
+  const blockedHelp =
     document.getElementById(
-      "pagNotificationBanner"
-    );
-
-
-  const bannerTitle =
-    document.getElementById(
-      "pagBannerTitle"
-    );
-
-
-  const bannerBody =
-    document.getElementById(
-      "pagBannerBody"
+      "blockedHelp"
     );
 
 
@@ -554,18 +533,19 @@
 
     try {
 
-      let id =
+      let value =
         localStorage.getItem(
           DEVICE_ID_KEY
         );
 
 
-      if (id) {
-        return id;
+      if (value) {
+
+        return value;
       }
 
 
-      id =
+      value =
         "pag-" +
         Date.now().toString(36) +
         "-" +
@@ -576,11 +556,11 @@
 
       localStorage.setItem(
         DEVICE_ID_KEY,
-        id
+        value
       );
 
 
-      return id;
+      return value;
 
     } catch {
 
@@ -701,7 +681,8 @@
 
     const padding =
       "=".repeat(
-        (4 -
+        (
+          4 -
           base64String.length % 4
         ) % 4
       );
@@ -723,9 +704,7 @@
 
 
     const rawData =
-      window.atob(
-        base64
-      );
+      atob(base64);
 
 
     return Uint8Array.from(
@@ -772,8 +751,7 @@
 
     const response =
       await fetch(
-        SB_URL +
-        path,
+        SB_URL + path,
         {
           ...options,
           headers
@@ -784,7 +762,8 @@
     if (!response.ok) {
 
       const text =
-        await response.text()
+        await response
+          .text()
           .catch(
             () => ""
           );
@@ -804,18 +783,154 @@
 
 
   /* ==========================================================
+   * SHOW LOCK
+   * ========================================================== */
+
+  function showLock(
+    reason = "default"
+  ) {
+
+    appUnlocked =
+      false;
+
+
+    /*
+     * Hentikan tampilan aplikasi.
+     */
+
+    appFrame.classList.remove(
+      "active"
+    );
+
+
+    /*
+     * Tampilkan lock.
+     */
+
+    appLock.classList.add(
+      "active"
+    );
+
+
+    blockedHelp.classList.remove(
+      "active"
+    );
+
+
+    enableButton.disabled =
+      false;
+
+
+    enableButton.textContent =
+      "Aktifkan Notifikasi";
+
+
+    if (
+      reason === "denied"
+    ) {
+
+      enableButton.textContent =
+        "Notifikasi Diblokir";
+
+
+      enableButton.disabled =
+        true;
+
+
+      blockedHelp.classList.add(
+        "active"
+      );
+
+
+      lockStatus.textContent =
+        "Izinkan notifikasi melalui pengaturan browser.";
+    }
+
+
+    else if (
+      reason === "unsupported"
+    ) {
+
+      enableButton.textContent =
+        "Browser Tidak Mendukung";
+
+
+      enableButton.disabled =
+        true;
+
+
+      lockStatus.textContent =
+        "Browser ini tidak mendukung Web Push.";
+    }
+
+
+    else {
+
+      lockStatus.textContent =
+        "";
+    }
+  }
+
+
+  /* ==========================================================
+   * HIDE LOCK
+   * ========================================================== */
+
+  function unlockApp() {
+
+    appUnlocked =
+      true;
+
+
+    appLock.classList.remove(
+      "active"
+    );
+
+
+    appFrame.classList.add(
+      "active"
+    );
+
+
+    loadApp();
+  }
+
+
+  /* ==========================================================
+   * LOAD APPS SCRIPT
+   * ========================================================== */
+
+  function loadApp() {
+
+    if (
+      !appUnlocked
+    ) {
+
+      return;
+    }
+
+
+    if (
+      !appFrame.src ||
+      appFrame.src ===
+        "about:blank"
+    ) {
+
+      appFrame.src =
+        APPS_SCRIPT_EXEC_URL;
+    }
+  }
+
+
+  /* ==========================================================
    * SERVICE WORKER
    * ========================================================== */
 
-  async function siapkanServiceWorker() {
+  async function registerServiceWorker() {
 
     if (
       !("serviceWorker" in navigator)
     ) {
-
-      console.warn(
-        "[PAG] Service Worker tidak tersedia"
-      );
 
       return null;
     }
@@ -824,25 +939,26 @@
     try {
 
       let registration =
-        await navigator.serviceWorker.getRegistration(
-          "./"
-        );
+        await navigator.serviceWorker
+          .getRegistration("./");
 
 
       if (!registration) {
 
         registration =
-          await navigator.serviceWorker.register(
-            SW_PATH,
-            {
-              scope: "./",
-              updateViaCache: "none"
-            }
-          );
+          await navigator.serviceWorker
+            .register(
+              SW_PATH,
+              {
+                scope: "./",
+                updateViaCache:
+                  "none"
+              }
+            );
       }
 
 
-      _serviceWorkerRegistration =
+      serviceWorkerRegistration =
         registration;
 
 
@@ -850,8 +966,9 @@
 
 
       /*
-       * Ping hanya untuk verifikasi.
+       * Ping.
        */
+
       try {
 
         const worker =
@@ -859,13 +976,12 @@
           navigator.serviceWorker.controller;
 
 
-        if (worker) {
+        worker?.postMessage({
 
-          worker.postMessage({
-            type:
-              "PAG_SW_PING"
-          });
-        }
+          type:
+            "PAG_SW_PING"
+
+        });
 
       } catch {}
 
@@ -875,9 +991,10 @@
     } catch (error) {
 
       console.error(
-        "[PAG] Service Worker error:",
+        "[PAG] SW registration error:",
         error
       );
+
 
       return null;
     }
@@ -885,62 +1002,50 @@
 
 
   /* ==========================================================
-   * PUSH SUBSCRIPTION
+   * CREATE / GET PUSH SUBSCRIPTION
    * ========================================================== */
 
-  async function buatPushSubscription() {
-
-    if (
-      !("PushManager" in window)
-    ) {
-
-      throw new Error(
-        "PushManager tidak tersedia"
-      );
-    }
-
-
-    if (
-      !("Notification" in window)
-    ) {
-
-      throw new Error(
-        "Notification API tidak tersedia"
-      );
-    }
-
+  async function getPushSubscription() {
 
     if (
       Notification.permission !==
       "granted"
     ) {
 
+      return null;
+    }
+
+
+    if (
+      !serviceWorkerRegistration
+    ) {
+
+      await registerServiceWorker();
+    }
+
+
+    if (
+      !serviceWorkerRegistration
+    ) {
+
       throw new Error(
-        "Permission notification belum granted"
+        "Service Worker tidak tersedia."
       );
     }
 
 
     if (
-      !_serviceWorkerRegistration
-    ) {
-
-      await siapkanServiceWorker();
-    }
-
-
-    if (
-      !_serviceWorkerRegistration
+      !("PushManager" in window)
     ) {
 
       throw new Error(
-        "Service Worker gagal disiapkan"
+        "Push API tidak tersedia."
       );
     }
 
 
     let subscription =
-      await _serviceWorkerRegistration
+      await serviceWorkerRegistration
         .pushManager
         .getSubscription();
 
@@ -954,7 +1059,7 @@
 
 
       subscription =
-        await _serviceWorkerRegistration
+        await serviceWorkerRegistration
           .pushManager
           .subscribe({
 
@@ -966,11 +1071,11 @@
     }
 
 
-    _pushSubscription =
+    pushSubscription =
       subscription;
 
 
-    _pushSubscriptionJSON =
+    pushSubscriptionJSON =
       subscription.toJSON();
 
 
@@ -979,13 +1084,13 @@
 
 
   /* ==========================================================
-   * SAVE SUBSCRIPTION
+   * SAVE SUBSCRIPTION TO SUPABASE
    * ========================================================== */
 
-  async function simpanSubscription() {
+  async function saveSubscription() {
 
     if (
-      _subscriptionSaveRunning
+      saveSubscriptionRunning
     ) {
 
       return;
@@ -993,39 +1098,39 @@
 
 
     if (
-      !_pushSubscriptionJSON?.endpoint
+      !pushSubscriptionJSON?.endpoint
     ) {
 
       return;
     }
 
 
-    _subscriptionSaveRunning =
+    saveSubscriptionRunning =
       true;
 
 
     try {
 
       const keys =
-        _pushSubscriptionJSON.keys ||
+        pushSubscriptionJSON.keys ||
         {};
 
 
       const payload = {
 
         device_id:
-          _deviceId,
+          deviceId,
 
         user_id:
-          _userSession?.user_id ??
+          userSession?.user_id ??
           null,
 
         role:
-          _userSession?.role ||
+          userSession?.role ||
           "semua",
 
         endpoint:
-          _pushSubscriptionJSON.endpoint,
+          pushSubscriptionJSON.endpoint,
 
         keys_p256dh:
           keys.p256dh ||
@@ -1036,7 +1141,7 @@
           null,
 
         device_label:
-          _deviceLabel,
+          deviceLabel,
 
         updated_at:
           new Date()
@@ -1047,6 +1152,7 @@
       await supabaseFetch(
         "/rest/v1/web_push_subscriptions?on_conflict=endpoint",
         {
+
           method:
             "POST",
 
@@ -1065,32 +1171,36 @@
 
 
       console.log(
-        "[PAG] Push subscription tersimpan"
+        "[PAG] Push subscription saved."
       );
 
     } catch (error) {
 
       /*
-       * Jangan blok aplikasi.
+       * Push sudah boleh hidup walaupun
+       * penyimpanan session gagal.
+       *
+       * Jangan lock aplikasi karena error Supabase.
        */
+
       console.warn(
-        "[PAG] Subscription save failed:",
+        "[PAG] Save subscription failed:",
         error
       );
 
     } finally {
 
-      _subscriptionSaveRunning =
+      saveSubscriptionRunning =
         false;
     }
   }
 
 
   /* ==========================================================
-   * BACKGROUND PUSH SETUP
+   * INITIALIZE PUSH
    * ========================================================== */
 
-  async function siapkanPushBackground() {
+  async function initializePush() {
 
     if (
       Notification.permission !==
@@ -1103,16 +1213,23 @@
 
     try {
 
-      await siapkanServiceWorker();
+      await registerServiceWorker();
 
-      await buatPushSubscription();
+      await getPushSubscription();
 
-      await simpanSubscription();
+      await saveSubscription();
 
     } catch (error) {
 
+      /*
+       * Jangan lock aplikasi hanya karena
+       * subscription backend gagal.
+       *
+       * Permission sudah granted.
+       */
+
       console.warn(
-        "[PAG] Background push gagal:",
+        "[PAG] Push initialization failed:",
         error
       );
     }
@@ -1120,29 +1237,25 @@
 
 
   /* ==========================================================
-   * SESSION DARI APPS SCRIPT
-   *
-   * JS_Core.html dapat mengirim:
-   *
-   * window.parent.postMessage({
-   *   type: "SYNC_USER_SESSION",
-   *   session: {...}
-   * }, "*")
+   * USER SESSION FROM PAG DOCS
    * ========================================================== */
 
-  function handleMessage(event) {
+  function handleMessage(
+    event
+  ) {
 
     const data =
       event.data;
 
 
     if (!data) {
+
       return;
     }
 
 
     /* --------------------------------------------------------
-     * SESSION
+     * SESSION SYNC
      * -------------------------------------------------------- */
 
     if (
@@ -1150,22 +1263,22 @@
       "SYNC_USER_SESSION"
     ) {
 
-      _userSession =
+      userSession =
         data.session ||
         data.user ||
         null;
 
 
       /*
-       * Subscription sudah ada?
-       * Update user/role di database.
+       * Jika subscription sudah ada,
+       * update user_id dan role.
        */
 
       if (
-        _pushSubscriptionJSON
+        pushSubscriptionJSON
       ) {
 
-        simpanSubscription();
+        saveSubscription();
       }
 
 
@@ -1174,24 +1287,7 @@
 
 
     /* --------------------------------------------------------
-     * INTERNAL BANNER
-     * -------------------------------------------------------- */
-
-    if (
-      data.type ===
-      "SHOW_OS_NOTIFICATION"
-    ) {
-
-      tampilkanInternalNotification(
-        data
-      );
-
-      return;
-    }
-
-
-    /* --------------------------------------------------------
-     * SET BADGE
+     * BADGE
      * -------------------------------------------------------- */
 
     if (
@@ -1199,7 +1295,7 @@
       "SET_APP_BADGE"
     ) {
 
-      setPAGBadge(
+      setAppBadge(
         data.count
       );
 
@@ -1207,34 +1303,12 @@
     }
 
 
-    /* --------------------------------------------------------
-     * CLEAR BADGE
-     * -------------------------------------------------------- */
-
     if (
       data.type ===
       "CLEAR_APP_BADGE"
     ) {
 
-      clearPAGBadge();
-
-      return;
-    }
-
-
-    /* --------------------------------------------------------
-     * SW NOTIFICATION OPENED
-     * -------------------------------------------------------- */
-
-    if (
-      data.type ===
-      "PAG_NOTIFICATION_OPENED"
-    ) {
-
-      /*
-       * Jangan tampilkan ulang banner.
-       * Notification OS sudah diklik.
-       */
+      clearAppBadge();
 
       return;
     }
@@ -1248,76 +1322,32 @@
 
 
   /* ==========================================================
-   * INTERNAL BANNER
+   * BADGE - PAGE SIDE
    * ========================================================== */
 
-  function tampilkanInternalNotification(
-    data
-  ) {
-
-    bannerTitle.textContent =
-      data.title ||
-      data.judul ||
-      "PAG Docs";
-
-
-    bannerBody.textContent =
-      data.body ||
-      data.pesan ||
-      data.message ||
-      "Ada informasi baru.";
-
-
-    banner.classList.add(
-      "show"
-    );
-
-
-    clearTimeout(
-      _bannerTimer
-    );
-
-
-    _bannerTimer =
-      setTimeout(
-        () => {
-
-          banner.classList.remove(
-            "show"
-          );
-
-        },
-        6000
-      );
-  }
-
-
-  /* ==========================================================
-   * BADGE
-   * ========================================================== */
-
-  async function setPAGBadge(
+  async function setAppBadge(
     count
   ) {
 
+    const number =
+      Number(count);
+
+
     try {
 
-      const value =
-        Number(count);
-
-
       if (
-        "setAppBadge" in navigator
+        typeof navigator.setAppBadge ===
+        "function"
       ) {
 
         if (
-          Number.isFinite(value) &&
-          value > 0
+          Number.isFinite(number) &&
+          number > 0
         ) {
 
           await navigator.setAppBadge(
             Math.min(
-              Math.floor(value),
+              Math.floor(number),
               999
             )
           );
@@ -1326,6 +1356,7 @@
 
           await navigator.setAppBadge();
         }
+
 
         return;
       }
@@ -1340,41 +1371,37 @@
 
 
     /*
-     * Fallback ke Service Worker.
+     * Fallback Service Worker.
      */
 
     try {
 
       const registration =
-        _serviceWorkerRegistration ||
+        serviceWorkerRegistration ||
         await navigator.serviceWorker.ready;
 
 
-      const worker =
-        registration.active;
+      registration.active?.postMessage({
 
+        type:
+          "SET_BADGE",
 
-      if (worker) {
+        count:
+          number
 
-        worker.postMessage({
-
-          type:
-            "SET_BADGE",
-
-          count
-        });
-      }
+      });
 
     } catch {}
   }
 
 
-  async function clearPAGBadge() {
+  async function clearAppBadge() {
 
     try {
 
       if (
-        "clearAppBadge" in navigator
+        typeof navigator.clearAppBadge ===
+        "function"
       ) {
 
         await navigator.clearAppBadge();
@@ -1386,40 +1413,49 @@
     try {
 
       const registration =
-        _serviceWorkerRegistration ||
+        serviceWorkerRegistration ||
         await navigator.serviceWorker.ready;
 
 
-      if (
-        registration.active
-      ) {
+      registration.active?.postMessage({
 
-        registration.active.postMessage({
-          type:
-            "CLEAR_BADGE"
-        });
-      }
+        type:
+          "CLEAR_BADGE"
+
+      });
 
     } catch {}
   }
 
 
   /* ==========================================================
-   * REQUEST NOTIFICATION
+   * REQUEST PERMISSION
    * ========================================================== */
 
-  async function panggilAksiNotifikasi() {
+  async function requestNotificationPermission() {
 
     if (
       !("Notification" in window)
     ) {
 
-      overlay.classList.add(
-        "hidden"
+      showLock(
+        "unsupported"
       );
 
       return;
     }
+
+
+    enableButton.disabled =
+      true;
+
+
+    enableButton.textContent =
+      "Meminta Izin...";
+
+
+    lockStatus.textContent =
+      "Silakan pilih Allow / Izinkan pada browser.";
 
 
     try {
@@ -1428,23 +1464,31 @@
         await Notification.requestPermission();
 
 
+      /*
+       * GRANTED
+       */
+
       if (
         permission ===
         "granted"
       ) {
 
-        /*
-         * Hilangkan gate SEGERA.
-         */
-        overlay.classList.add(
-          "hidden"
-        );
+        lockStatus.textContent =
+          "Notifikasi aktif.";
 
 
         /*
-         * Jangan menunggu push.
+         * Buka aplikasi SEGERA.
          */
-        siapkanPushBackground();
+
+        unlockApp();
+
+
+        /*
+         * Subscription berjalan di background.
+         */
+
+        initializePush();
 
 
         return;
@@ -1452,110 +1496,56 @@
 
 
       /*
-       * User menolak / browser tidak memberikan
-       * permission.
+       * DENIED
        */
 
-      overlay.classList.add(
-        "hidden"
+      if (
+        permission ===
+        "denied"
+      ) {
+
+        showLock(
+          "denied"
+        );
+
+
+        return;
+      }
+
+
+      /*
+       * DEFAULT
+       */
+
+      showLock(
+        "default"
       );
 
     } catch (error) {
 
       console.warn(
-        "[PAG] Permission error:",
+        "[PAG] Permission request error:",
         error
       );
 
 
-      overlay.classList.add(
-        "hidden"
+      showLock(
+        "default"
       );
     }
   }
 
 
   /* ==========================================================
-   * INITIAL PERMISSION CHECK
-   * ========================================================== */
-
-  function cekPermissionAwal() {
-
-    /*
-     * Tidak ada Notification API.
-     * Aplikasi tetap dibuka.
-     */
-
-    if (
-      !("Notification" in window)
-    ) {
-
-      overlay.classList.add(
-        "hidden"
-      );
-
-      return;
-    }
-
-
-    switch (
-      Notification.permission
-    ) {
-
-      case "granted":
-
-        /*
-         * Langsung masuk aplikasi.
-         */
-
-        overlay.classList.add(
-          "hidden"
-        );
-
-
-        /*
-         * Push berjalan di background.
-         */
-
-        siapkanPushBackground();
-
-        break;
-
-
-      case "denied":
-
-        /*
-         * Jangan mengunci aplikasi.
-         */
-
-        overlay.classList.add(
-          "hidden"
-        );
-
-        break;
-
-
-      default:
-
-        /*
-         * Hanya permission pertama kali
-         * yang menampilkan gate.
-         */
-
-        overlay.classList.remove(
-          "hidden"
-        );
-
-        break;
-    }
-  }
-
-
-  /* ==========================================================
-   * PERMISSION CHANGE WATCHER
+   * PERMISSION STATE
    * ========================================================== */
 
   async function setupPermissionWatcher() {
+
+    /*
+     * Browser yang mendukung Permissions API
+     * dapat memberi tahu perubahan permission.
+     */
 
     try {
 
@@ -1567,44 +1557,15 @@
       }
 
 
-      _permissionWatcher =
+      permissionStatus =
         await navigator.permissions.query({
           name:
             "notifications"
         });
 
 
-      _permissionWatcher.onchange =
-        () => {
-
-          const permission =
-            Notification.permission;
-
-
-          /*
-           * Hanya bereaksi ketika permission
-           * benar-benar berubah.
-           */
-
-          if (
-            permission ===
-            "granted"
-          ) {
-
-            overlay.classList.add(
-              "hidden"
-            );
-
-
-            siapkanPushBackground();
-
-          } else {
-
-            overlay.classList.add(
-              "hidden"
-            );
-          }
-        };
+      permissionStatus.onchange =
+        handlePermissionChange;
 
     } catch (error) {
 
@@ -1617,19 +1578,200 @@
 
 
   /* ==========================================================
-   * LOAD APPS SCRIPT
+   * PERMISSION CHANGED
    * ========================================================== */
 
-  function loadApp() {
+  function handlePermissionChange() {
+
+    const permission =
+      Notification.permission;
+
+
+    console.log(
+      "[PAG] Notification permission:",
+      permission
+    );
+
+
+    /*
+     * GRANTED
+     */
 
     if (
-      appFrame.src !==
-      APPS_SCRIPT_EXEC_URL
+      permission ===
+      "granted"
     ) {
 
-      appFrame.src =
-        APPS_SCRIPT_EXEC_URL;
+      /*
+       * Kalau sebelumnya terkunci,
+       * buka aplikasi.
+       */
+
+      if (
+        !appUnlocked
+      ) {
+
+        unlockApp();
+      }
+
+
+      /*
+       * Pastikan push subscription aktif.
+       */
+
+      initializePush();
+
+
+      return;
     }
+
+
+    /*
+     * DENIED
+     *
+     * INI PENTING:
+     *
+     * Jika user kemudian memblokir
+     * notification dari browser settings,
+     * aplikasi langsung dikunci.
+     */
+
+    if (
+      permission ===
+      "denied"
+    ) {
+
+      showLock(
+        "denied"
+      );
+
+
+      return;
+    }
+
+
+    /*
+     * DEFAULT
+     */
+
+    showLock(
+      "default"
+    );
+  }
+
+
+  /* ==========================================================
+   * INITIAL PERMISSION CHECK
+   * ========================================================== */
+
+  function initialPermissionCheck() {
+
+    /*
+     * Notification API tidak ada.
+     */
+
+    if (
+      !("Notification" in window)
+    ) {
+
+      showLock(
+        "unsupported"
+      );
+
+      return;
+    }
+
+
+    const permission =
+      Notification.permission;
+
+
+    /*
+     * GRANTED
+     */
+
+    if (
+      permission ===
+      "granted"
+    ) {
+
+      /*
+       * LANGSUNG BUKA APP.
+       */
+
+      unlockApp();
+
+
+      /*
+       * Push background.
+       */
+
+      initializePush();
+
+
+      return;
+    }
+
+
+    /*
+     * DENIED
+     */
+
+    if (
+      permission ===
+      "denied"
+    ) {
+
+      showLock(
+        "denied"
+      );
+
+      return;
+    }
+
+
+    /*
+     * DEFAULT
+     *
+     * Pertama kali → lock.
+     */
+
+    showLock(
+      "default"
+    );
+  }
+
+
+  /* ==========================================================
+   * SERVICE WORKER MESSAGE
+   * ========================================================== */
+
+  if (
+    "serviceWorker" in navigator
+  ) {
+
+    navigator.serviceWorker
+      .addEventListener(
+        "message",
+        event => {
+
+          const data =
+            event.data;
+
+
+          if (
+            data?.type ===
+            "PAG_SW_PONG"
+          ) {
+
+            console.log(
+              "[PAG] SW:",
+              data.version
+            );
+          }
+
+        }
+      );
   }
 
 
@@ -1643,11 +1785,11 @@
 
       /*
        * Jika session sudah diketahui,
-       * kirim kembali ke Apps Script.
+       * kirim kembali.
        */
 
       if (
-        _userSession
+        userSession
       ) {
 
         try {
@@ -1659,7 +1801,7 @@
                 "PAG_PARENT_SESSION",
 
               session:
-                _userSession
+                userSession
 
             }, "*");
 
@@ -1670,136 +1812,65 @@
 
 
   /* ==========================================================
-   * PERMISSION BUTTON
+   * BUTTON
    * ========================================================== */
 
-  permissionButton.addEventListener(
+  enableButton.addEventListener(
     "click",
-    () => {
-
-      panggilAksiNotifikasi();
-    }
+    requestNotificationPermission
   );
 
 
   /* ==========================================================
-   * CONTINUE WITHOUT NOTIFICATION
-   * ========================================================== */
-
-  continueButton.addEventListener(
-    "click",
-    () => {
-
-      overlay.classList.add(
-        "hidden"
-      );
-    }
-  );
-
-
-  /* ==========================================================
-   * BANNER CLICK
-   * ========================================================== */
-
-  banner.addEventListener(
-    "click",
-    () => {
-
-      banner.classList.remove(
-        "show"
-      );
-    }
-  );
-
-
-  /* ==========================================================
-   * SERVICE WORKER MESSAGE
-   * ========================================================== */
-
-  if (
-    "serviceWorker" in navigator
-  ) {
-
-    navigator.serviceWorker.addEventListener(
-      "message",
-      event => {
-
-        const data =
-          event.data;
-
-
-        if (
-          data?.type ===
-          "PAG_SW_PONG"
-        ) {
-
-          console.log(
-            "[PAG] Service Worker:",
-            data.version
-          );
-        }
-      }
-    );
-  }
-
-
-  /* ==========================================================
-   * INITIALIZE
+   * INIT
    * ========================================================== */
 
   async function init() {
 
     /*
-     * Device information tidak menunggu apa pun.
+     * Device identity.
      */
 
-    _deviceId =
+    deviceId =
       getDeviceId();
 
 
-    _deviceLabel =
+    deviceLabel =
       getDeviceLabel();
 
 
     /*
-     * APP DIBUKA SEGERA.
-     */
-
-    loadApp();
-
-
-    /*
-     * Cek notification.
-     */
-
-    cekPermissionAwal();
-
-
-    /*
-     * Watch permission.
+     * Register watcher.
      */
 
     setupPermissionWatcher();
 
 
     /*
-     * Register SW di background.
+     * Permission adalah gerbang utama.
+     */
+
+    initialPermissionCheck();
+
+
+    /*
+     * Register SW secara background.
      *
-     * Tidak menghambat aplikasi.
+     * Tidak menunggu.
      */
 
     setTimeout(
       () => {
 
-        siapkanServiceWorker();
+        registerServiceWorker();
 
       },
-      300
+      250
     );
 
 
     /*
-     * Update SW setelah aplikasi hidup.
+     * Update SW.
      */
 
     setTimeout(
@@ -1812,12 +1883,7 @@
               .getRegistration("./");
 
 
-          if (
-            registration
-          ) {
-
-            await registration.update();
-          }
+          await registration?.update();
 
         } catch {}
 
@@ -1826,17 +1892,6 @@
     );
   }
 
-
-  /*
-   * PENTING:
-   *
-   * Tidak ada:
-   * - visibilitychange
-   * - focus
-   * - pageshow
-   * - polling 3 detik
-   * - lock notification berulang
-   */
 
   if (
     document.readyState ===
@@ -1857,6 +1912,7 @@
   }
 
 })();
+
 </script>
 
 </body>
