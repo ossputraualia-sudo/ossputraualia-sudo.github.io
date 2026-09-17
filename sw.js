@@ -1,277 +1,481 @@
-// ================================================================
-// sw.js
-// PAG DOCS FIELD / PT PUTRA AULIA GROUP
-// SERVICE WORKER - WEB PUSH
-// ================================================================
+/* =========================================================
+   PAG DOCS
+   SERVICE WORKER
+   WEB PUSH ONLY
 
-const SW_VERSION = 'pag-push-v2';
+   FILE:
+   /sw.js
 
+   PENTING:
+   File ini berjalan di browser.
+   Jangan memasukkan kode Supabase Edge Function di sini.
+   ========================================================= */
 
-// ================================================================
-// 1. INSTALL
-// ================================================================
-self.addEventListener('install', function(event) {
-  console.log('[PAG SW] Install:', SW_VERSION);
-
-  // Langsung gunakan worker terbaru
-  self.skipWaiting();
-});
+"use strict";
 
 
-// ================================================================
-// 2. ACTIVATE
-// ================================================================
-self.addEventListener('activate', function(event) {
-  event.waitUntil(
-    (async function() {
-      console.log('[PAG SW] Activate:', SW_VERSION);
+/* =========================================================
+   INSTALL
+   ========================================================= */
 
-      // Ambil kontrol semua halaman
-      await self.clients.claim();
-
-      // Bersihkan cache lama jika nanti digunakan
-      const keys = await caches.keys();
-
-      await Promise.all(
-        keys
-          .filter(function(key) {
-            return key !== SW_VERSION;
-          })
-          .map(function(key) {
-            return caches.delete(key);
-          })
-      );
-    })()
-  );
-});
-
-
-// ================================================================
-// 3. TERIMA WEB PUSH
-// ================================================================
-self.addEventListener('push', function(event) {
-
-  console.log('[PAG SW] PUSH diterima');
-
-  var data = {};
-
-  // --------------------------------------------------------------
-  // Baca payload
-  // --------------------------------------------------------------
-  if (event.data) {
-    try {
-      data = event.data.json();
-    } catch (e) {
-      data = {
-        judul: 'P.A.G DOCS',
-        pesan: event.data.text()
-      };
-    }
-  }
-
-  var judul =
-    data.judul ||
-    data.title ||
-    '🔔 P.A.G DOCS • PEMBERITAHUAN';
-
-  var pesan =
-    data.pesan ||
-    data.body ||
-    data.message ||
-    'Ada pembaruan pada sistem P.A.G Docs.';
-
-  var rawLink =
-    data.link ||
-    data.url ||
-    '/';
-
-  // --------------------------------------------------------------
-  // Pastikan URL absolut
-  // --------------------------------------------------------------
-  var targetUrl;
-
-  try {
-    targetUrl = new URL(
-      rawLink,
-      self.location.origin
-    ).href;
-  } catch (e) {
-    targetUrl = self.location.origin + '/';
-  }
-
-
-  // --------------------------------------------------------------
-  // Icon
-  // --------------------------------------------------------------
-  var iconUrl;
-
-  try {
-    iconUrl = new URL(
-      'icon-192.png',
-      self.location.origin
-    ).href;
-  } catch (e) {
-    iconUrl = '';
-  }
-
-
-  // --------------------------------------------------------------
-  // OPTIONS NOTIFIKASI
-  // --------------------------------------------------------------
-  var options = {
-
-    body: String(pesan),
-
-    icon: iconUrl,
-
-    badge: iconUrl,
-
-    // Gunakan tag tetap agar notifikasi PAG bisa diperbarui
-    // tanpa menghasilkan ratusan notifikasi identik.
-    tag: 'pag-docs-notification',
-
-    // Bunyi/getar kembali ketika notifikasi baru datang.
-    renotify: true,
-
-    // Tetap terlihat sampai user berinteraksi.
-    requireInteraction: true,
-
-    silent: false,
-
-    timestamp: Date.now(),
-
-    vibrate: [200, 100, 200],
-
-    data: {
-      url: targetUrl,
-      source: 'PAG_DOCS'
-    },
-
-    // Satu tombol saja.
-    actions: [
-      {
-        action: 'tutup',
-        title: '✕ Tutup'
-      }
-    ]
-  };
-
-
-  // --------------------------------------------------------------
-  // TAMPILKAN NOTIFIKASI
-  // --------------------------------------------------------------
-  event.waitUntil(
-
-    self.registration.showNotification(
-      judul,
-      options
-    )
-
-  );
-});
-
-
-// ================================================================
-// 4. KLIK NOTIFIKASI
-// ================================================================
 self.addEventListener(
-  'notificationclick',
+  "install",
   function(event) {
 
     console.log(
-      '[PAG SW] Notification click:',
-      event.action
+      "[PAG SW] Install"
     );
 
-    event.notification.close();
+    /*
+     * Langsung aktif.
+     */
+
+    self.skipWaiting();
+
+  }
+);
 
 
-    // ------------------------------------------------------------
-    // Tombol TUTUP
-    // ------------------------------------------------------------
-    if (event.action === 'tutup') {
-      return;
-    }
+/* =========================================================
+   ACTIVATE
+   ========================================================= */
 
-
-    // ------------------------------------------------------------
-    // Ambil URL
-    // ------------------------------------------------------------
-    var targetUrl =
-      event.notification &&
-      event.notification.data &&
-      event.notification.data.url
-        ? event.notification.data.url
-        : self.location.origin + '/';
-
+self.addEventListener(
+  "activate",
+  function(event) {
 
     event.waitUntil(
 
       (async function() {
 
-        var clientList =
-          await self.clients.matchAll({
-            type: 'window',
-            includeUncontrolled: true
-          });
+        console.log(
+          "[PAG SW] Activate"
+        );
 
 
-        // --------------------------------------------------------
-        // Cari halaman PAG Docs yang sudah terbuka
-        // --------------------------------------------------------
-        for (var i = 0; i < clientList.length; i++) {
+        /*
+         * Ambil kontrol seluruh client
+         * tanpa perlu reload tambahan.
+         */
 
-          var client = clientList[i];
+        await self.clients.claim();
 
-          if (
-            client &&
-            'focus' in client
-          ) {
+      })()
 
-            await client.focus();
+    );
 
-            // Kalau bisa navigate, arahkan ke URL target.
-            if ('navigate' in client) {
-              try {
-                await client.navigate(targetUrl);
-              } catch (e) {
-                console.warn(
-                  '[PAG SW] Gagal navigate:',
-                  e
-                );
-              }
-            }
+  }
+);
 
-            return;
-          }
+
+/* =========================================================
+   PUSH
+   ========================================================= */
+
+self.addEventListener(
+  "push",
+  function(event) {
+
+    console.log(
+      "[PAG SW] PUSH diterima."
+    );
+
+
+    let data = {};
+
+
+    /* -----------------------------------------------------
+       PARSE PAYLOAD
+       ----------------------------------------------------- */
+
+    if (event.data) {
+
+      try {
+
+        data =
+          event.data.json();
+
+      } catch (error) {
+
+        try {
+
+          data = {
+
+            judul:
+              "🔔 P.A.G Docs",
+
+            pesan:
+              event.data.text()
+
+          };
+
+        } catch (textError) {
+
+          data = {};
+
         }
 
+      }
 
-        // --------------------------------------------------------
-        // Kalau belum ada jendela → buka baru
-        // --------------------------------------------------------
-        if (self.clients.openWindow) {
-          await self.clients.openWindow(targetUrl);
+    }
+
+
+    /* -----------------------------------------------------
+       TITLE
+       ----------------------------------------------------- */
+
+    const title =
+      data.judul ||
+      data.title ||
+      "🔔 P.A.G Docs";
+
+
+    /* -----------------------------------------------------
+       BODY
+       ----------------------------------------------------- */
+
+    const body =
+      data.pesan ||
+      data.body ||
+      data.message ||
+      "Ada pemberitahuan baru dari P.A.G Docs.";
+
+
+    /* -----------------------------------------------------
+       URL
+       ----------------------------------------------------- */
+
+    const rawUrl =
+      data.link ||
+      data.url ||
+      "https://ossputraualia-sudo.github.io/";
+
+
+    let targetUrl;
+
+
+    try {
+
+      targetUrl =
+        new URL(
+          rawUrl,
+          self.location.origin
+        ).href;
+
+    } catch (error) {
+
+      targetUrl =
+        self.location.origin + "/";
+
+    }
+
+
+    /* -----------------------------------------------------
+       ICON
+       ----------------------------------------------------- */
+
+    let iconUrl;
+
+
+    try {
+
+      iconUrl =
+        new URL(
+          "icon-192.png",
+          self.location.origin
+        ).href;
+
+    } catch (error) {
+
+      iconUrl =
+        "";
+    }
+
+
+    /* -----------------------------------------------------
+       NOTIFICATION OPTIONS
+       ----------------------------------------------------- */
+
+    const options = {
+
+      body:
+        String(body),
+
+      icon:
+        iconUrl,
+
+      badge:
+        iconUrl,
+
+      /*
+       * Satu tag untuk notifikasi PAG Docs.
+       *
+       * Browser akan mengelola notifikasi
+       * dengan lebih rapi daripada membuat tag
+       * timestamp yang selalu berbeda.
+       */
+
+      tag:
+        "pag-docs-notification",
+
+      renotify:
+        true,
+
+      requireInteraction:
+        true,
+
+      silent:
+        false,
+
+      timestamp:
+        Date.now(),
+
+      vibrate:
+        [200, 100, 200],
+
+      data: {
+
+        url:
+          targetUrl,
+
+        source:
+          "PAG_DOCS"
+
+      },
+
+      actions: [
+
+        {
+          action:
+            "tutup",
+
+          title:
+            "Tutup"
+        }
+
+      ]
+
+    };
+
+
+    /* -----------------------------------------------------
+       SHOW NOTIFICATION
+       ----------------------------------------------------- */
+
+    event.waitUntil(
+
+      self.registration.showNotification(
+        title,
+        options
+      )
+
+    );
+
+  }
+);
+
+
+/* =========================================================
+   NOTIFICATION CLICK
+   ========================================================= */
+
+self.addEventListener(
+  "notificationclick",
+  function(event) {
+
+    console.log(
+      "[PAG SW] Notification click:",
+      event.action
+    );
+
+
+    /*
+     * Tutup notification.
+     */
+
+    event.notification.close();
+
+
+    /*
+     * Action "tutup".
+     */
+
+    if (
+      event.action ===
+      "tutup"
+    ) {
+
+      return;
+    }
+
+
+    /* -----------------------------------------------------
+       TARGET URL
+       ----------------------------------------------------- */
+
+    let targetUrl =
+      self.location.origin + "/";
+
+
+    if (
+      event.notification &&
+      event.notification.data &&
+      event.notification.data.url
+    ) {
+
+      targetUrl =
+        event.notification.data.url;
+
+    }
+
+
+    /* -----------------------------------------------------
+       OPEN / FOCUS WINDOW
+       ----------------------------------------------------- */
+
+    event.waitUntil(
+
+      (async function() {
+
+        try {
+
+          const clientList =
+            await self.clients.matchAll(
+              {
+                type:
+                  "window",
+
+                includeUncontrolled:
+                  true
+              }
+            );
+
+
+          /*
+           * Cari window yang sudah terbuka.
+           */
+
+          for (
+            let i = 0;
+            i < clientList.length;
+            i++
+          ) {
+
+            const client =
+              clientList[i];
+
+
+            if (
+              client &&
+              "focus" in client
+            ) {
+
+              try {
+
+                await client.focus();
+
+              } catch (focusError) {
+
+                console.warn(
+                  "[PAG SW] Focus gagal:",
+                  focusError
+                );
+
+              }
+
+
+              /*
+               * Jika bisa navigate,
+               * arahkan ke target.
+               */
+
+              if (
+                "navigate" in client
+              ) {
+
+                try {
+
+                  await client.navigate(
+                    targetUrl
+                  );
+
+                } catch (navigateError) {
+
+                  console.warn(
+                    "[PAG SW] Navigate gagal:",
+                    navigateError
+                  );
+
+                }
+
+              }
+
+
+              return;
+            }
+
+          }
+
+
+          /*
+           * Tidak ada window.
+           *
+           * Buka baru.
+           */
+
+          if (
+            self.clients.openWindow
+          ) {
+
+            await self.clients.openWindow(
+              targetUrl
+            );
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "[PAG SW] Notification click error:",
+            error
+          );
+
         }
 
       })()
 
     );
+
   }
 );
 
 
-// ================================================================
-// 5. PESAN DARI HALAMAN
-// ================================================================
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
 self.addEventListener(
-  'message',
+  "message",
   function(event) {
 
-    if (!event.data) return;
+    if (!event.data) {
 
-    if (event.data.type === 'SKIP_WAITING') {
+      return;
+    }
+
+
+    /*
+     * Optional:
+     * paksa Service Worker baru aktif.
+     */
+
+    if (
+      event.data.type ===
+      "SKIP_WAITING"
+    ) {
+
       self.skipWaiting();
+
     }
 
   }
