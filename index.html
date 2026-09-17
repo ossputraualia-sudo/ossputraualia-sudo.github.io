@@ -1,305 +1,1868 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0,
+             maximum-scale=1.0,
+             user-scalable=no,
+             viewport-fit=cover"
+  >
+
   <title>PT. Putra Aulia Group</title>
-  
-  <meta name="theme-color" content="#0f766e">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="PT.PA">
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <meta
+    name="theme-color"
+    content="#0f766e"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="PT.PA"
+  >
+
+  <meta
+    name="mobile-web-app-capable"
+    content="yes"
+  >
+
+  <link
+    rel="manifest"
+    href="manifest.json"
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="icon-192.png"
+  >
+
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      width: 100%; height: 100%; overflow: hidden;
-      background-color: #0f172a;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0f172a;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
       -webkit-font-smoothing: antialiased;
     }
+
+
+    /* ============================================================
+       APP FRAME
+       ============================================================ */
+
     #appFrame {
-      width: 100%; height: 100%; border: none; display: block; background: #f8fafc;
-      position: absolute; inset: 0; z-index: 1;
+
+      width: 100%;
+      height: 100%;
+
+      border: none;
+
+      display: block;
+
+      background: #f8fafc;
+
+      position: absolute;
+
+      inset: 0;
+
+      z-index: 1;
     }
 
-    /* PENGUNCI KEAMANAN SISTEM (SKENARIO A) */
+
+    /* ============================================================
+       LOCK SCREEN
+       ============================================================ */
+
     #lockScreenOverlay {
-      position: fixed; inset: 0;
-      background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; z-index: 99999999;
-      padding: 24px; overflow-y: auto;
+
+      position: fixed;
+
+      inset: 0;
+
+      background:
+        radial-gradient(
+          circle at top,
+          #1e293b 0%,
+          #0f172a 100%
+        );
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      z-index: 99999999;
+
+      padding: 24px;
+
+      overflow-y: auto;
     }
+
 
     .lock-card {
+
       background: #ffffff;
-      border-radius: 28px; padding: 36px 28px; max-width: 460px; width: 100%;
-      text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+      border-radius: 28px;
+
+      padding: 36px 28px;
+
+      max-width: 460px;
+
+      width: 100%;
+
+      text-align: center;
+
+      box-shadow:
+        0 25px 50px -12px
+        rgba(0, 0, 0, 0.5);
+
+      border:
+        1px solid
+        rgba(255,255,255,0.2);
+
+      animation:
+        popIn 0.3s
+        cubic-bezier(
+          0.175,
+          0.885,
+          0.32,
+          1.275
+        );
     }
+
 
     @keyframes popIn {
-      0% { transform: scale(0.9); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+
+      0% {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
     }
+
 
     .badge-icon {
-      width: 64px; height: 64px; border-radius: 20px;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-size: 32px; margin-bottom: 18px;
-    }
-    .badge-icon.blocked { background: #fee2e2; color: #ef4444; border: 2px solid #fca5a5; }
-    .badge-icon.prompt { background: #ccfbf1; color: #0f766e; border: 2px solid #99f6e4; }
 
-    .lock-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.3; }
-    .lock-desc { font-size: 13.5px; color: #475569; line-height: 1.5; margin-bottom: 24px; }
+      width: 64px;
+
+      height: 64px;
+
+      border-radius: 20px;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 32px;
+
+      margin-bottom: 18px;
+    }
+
+
+    .badge-icon.blocked {
+
+      background: #fee2e2;
+
+      color: #ef4444;
+
+      border:
+        2px solid
+        #fca5a5;
+    }
+
+
+    .badge-icon.prompt {
+
+      background: #ccfbf1;
+
+      color: #0f766e;
+
+      border:
+        2px solid
+        #99f6e4;
+    }
+
+
+    .badge-icon.loading {
+
+      background: #e0f2fe;
+
+      color: #0284c7;
+
+      border:
+        2px solid
+        #bae6fd;
+    }
+
+
+    .lock-title {
+
+      font-size: 20px;
+
+      font-weight: 800;
+
+      color: #0f172a;
+
+      margin-bottom: 8px;
+
+      line-height: 1.3;
+    }
+
+
+    .lock-desc {
+
+      font-size: 13.5px;
+
+      color: #475569;
+
+      line-height: 1.5;
+
+      margin-bottom: 24px;
+    }
+
 
     .unblock-guide {
-      background: #f8fafc; border: 1.5px dashed #cbd5e1;
-      border-radius: 18px; padding: 18px; text-align: left; margin-bottom: 24px;
+
+      background: #f8fafc;
+
+      border:
+        1.5px dashed
+        #cbd5e1;
+
+      border-radius: 18px;
+
+      padding: 18px;
+
+      text-align: left;
+
+      margin-bottom: 24px;
     }
+
 
     .guide-step {
-      display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px;
-      font-size: 13px; color: #334155; line-height: 1.4;
+
+      display: flex;
+
+      gap: 12px;
+
+      align-items: flex-start;
+
+      margin-bottom: 12px;
+
+      font-size: 13px;
+
+      color: #334155;
+
+      line-height: 1.4;
     }
-    .guide-step:last-child { margin-bottom: 0; }
+
+
+    .guide-step:last-child {
+      margin-bottom: 0;
+    }
+
 
     .step-num {
-      width: 22px; height: 22px; border-radius: 50%; background: #0f766e; color: #fff;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 2px;
+
+      width: 22px;
+
+      height: 22px;
+
+      border-radius: 50%;
+
+      background: #0f766e;
+
+      color: #fff;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      flex-shrink: 0;
+
+      margin-top: 2px;
     }
+
 
     .btn-main {
-      width: 100%; padding: 15px; border-radius: 14px; font-size: 14px; font-weight: 800;
-      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      gap: 8px; transition: transform 0.1s ease, background 0.2s ease;
+
+      width: 100%;
+
+      padding: 15px;
+
+      border-radius: 14px;
+
+      font-size: 14px;
+
+      font-weight: 800;
+
+      border: none;
+
+      cursor: pointer;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 8px;
+
+      transition:
+        transform 0.1s ease,
+        background 0.2s ease;
     }
-    .btn-main:active { transform: scale(0.98); }
-    .btn-teal { background: #0f766e; color: #ffffff; }
-    .btn-teal:hover { background: #0d9488; }
-    .btn-blue { background: #2563eb; color: #ffffff; }
-    .btn-blue:hover { background: #1d4ed8; }
+
+
+    .btn-main:active {
+      transform: scale(0.98);
+    }
+
+
+    .btn-teal {
+
+      background: #0f766e;
+
+      color: #ffffff;
+    }
+
+
+    .btn-teal:hover {
+      background: #0d9488;
+    }
+
+
+    .btn-blue {
+
+      background: #2563eb;
+
+      color: #ffffff;
+    }
+
+
+    .btn-blue:hover {
+      background: #1d4ed8;
+    }
+
+
+    .status-line {
+
+      margin-top: 14px;
+
+      font-size: 11px;
+
+      color: #64748b;
+    }
+
   </style>
+
 </head>
+
+
 <body>
 
-  <!-- PENGUNCI KEAMANAN SISTEM (SKENARIO A) -->
+
+  <!-- ==========================================================
+       LOCK SCREEN
+       ========================================================== -->
+
   <div id="lockScreenOverlay">
-    <div class="lock-card" id="lockCard"></div>
+
+    <div
+      class="lock-card"
+      id="lockCard"
+    ></div>
+
   </div>
 
-  <!-- Jendela Aplikasi Utama -->
-  <iframe 
-    id="appFrame" 
-    src="https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec" 
-    allow="clipboard-read; clipboard-write; geolocation; camera; microphone;"
+
+  <!-- ==========================================================
+       APLIKASI UTAMA
+       ==========================================================
+
+       PENTING:
+       src TIDAK langsung diberikan.
+
+       iframe baru dibuka setelah:
+       Notification = granted
+       DAN
+       Push Subscription berhasil.
+       ========================================================== -->
+
+  <iframe
+    id="appFrame"
+    allow="
+      clipboard-read;
+      clipboard-write;
+      geolocation;
+      camera;
+      microphone;
+    "
   ></iframe>
 
+
   <script>
-    var APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
-    
-    // ⚡ KUNCI RESMI
-    var VAPID_PUBLIC_KEY = "BFmbNUOxV304wqekMka5EzEwv7sAapDLaPzlDBN2M-fcbSX9osQvksqcMyBzYYXkls3Cz3o06ZIDz7xsvnzpl-Q".trim();
-    var SB_URL = "https://qywqxcvnlehmiqrkpwdd.supabase.co";
-    var SB_KEY = "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
 
-    var overlay = document.getElementById('lockScreenOverlay');
-    var lockCard = document.getElementById('lockCard');
-    var frame = document.getElementById('appFrame');
 
-    // ⚡ KUNCI PENGAMAN 1: IDENTITAS UNIK PERANGKAT DI LOCALSTORAGE
-    var DEVICE_ID = localStorage.getItem('PAG_DEVICE_UUID');
+    // ==========================================================
+    // KONFIGURASI
+    // ==========================================================
+
+    var APPS_SCRIPT_EXEC_URL =
+      "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec";
+
+
+    // ==========================================================
+    // GANTI DENGAN PUBLIC KEY BARU
+    // SETELAH VAPID KEY DIREGENERATE
+    // ==========================================================
+
+    var VAPID_PUBLIC_KEY =
+      "GANTI_DENGAN_VAPID_PUBLIC_KEY_BARU";
+
+
+    var SB_URL =
+      "https://qywqxcvnlehmiqrkpwdd.supabase.co";
+
+
+    var SB_KEY =
+      "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
+
+
+    // ==========================================================
+    // ELEMENT
+    // ==========================================================
+
+    var overlay =
+      document.getElementById(
+        'lockScreenOverlay'
+      );
+
+    var lockCard =
+      document.getElementById(
+        'lockCard'
+      );
+
+    var frame =
+      document.getElementById(
+        'appFrame'
+      );
+
+
+    // ==========================================================
+    // DEVICE ID
+    // ==========================================================
+
+    var DEVICE_ID =
+      localStorage.getItem(
+        'PAG_DEVICE_UUID'
+      );
+
+
     if (!DEVICE_ID) {
-      DEVICE_ID = 'DEV-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7);
-      localStorage.setItem('PAG_DEVICE_UUID', DEVICE_ID);
+
+      DEVICE_ID =
+        'DEV-' +
+        Date.now() +
+        '-' +
+        Math.random()
+          .toString(36)
+          .substring(2, 9);
+
+      localStorage.setItem(
+        'PAG_DEVICE_UUID',
+        DEVICE_ID
+      );
     }
+
+
+    // ==========================================================
+    // STATE
+    // ==========================================================
 
     var _sedangMendaftar = false;
 
-    function urlBase64ToUint8Array(base64String) {
-      var padding = '='.repeat((4 - base64String.length % 4) % 4);
-      var base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-      var rawData = window.atob(base64);
-      var outputArray = new Uint8Array(rawData.length);
-      for (var i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
+    var _sistemAktif = false;
+
+    var _serviceWorkerReady = false;
+
+    var _permissionWatcher = null;
+
+
+    // ==========================================================
+    // BASE64 → UINT8ARRAY
+    // ==========================================================
+
+    function urlBase64ToUint8Array(
+      base64String
+    ) {
+
+      var padding =
+        '='.repeat(
+          (4 - base64String.length % 4) % 4
+        );
+
+      var base64 =
+        (
+          base64String +
+          padding
+        )
+          .replace(/\-/g, '+')
+          .replace(/_/g, '/');
+
+
+      var rawData =
+        window.atob(base64);
+
+
+      var outputArray =
+        new Uint8Array(
+          rawData.length
+        );
+
+
+      for (
+        var i = 0;
+        i < rawData.length;
+        ++i
+      ) {
+
+        outputArray[i] =
+          rawData.charCodeAt(i);
       }
+
+
       return outputArray;
     }
 
-    function periksaIzinDanKunciSistem() {
-      if (!('Notification' in window)) {
-        bukaAplikasi();
-        return;
+
+    // ==========================================================
+    // DETEKSI DEVICE
+    // ==========================================================
+
+    function getDeviceLabel() {
+
+      var ua =
+        navigator.userAgent || '';
+
+      if (/Android/i.test(ua)) {
+        return 'HP Android';
       }
 
-      var status = Notification.permission;
-
-      if (status === 'granted') {
-        bukaAplikasi();
-        daftarkanPerangkatTunggal();
-        return;
+      if (
+        /iPhone|iPad|iPod/i.test(ua)
+      ) {
+        return 'iPhone iOS';
       }
 
-      overlay.style.display = 'flex';
+      return 'Laptop / PC Windows';
+    }
 
-      if (status === 'denied') {
-        lockCard.innerHTML = 
-          '<div class="badge-icon blocked">⛔</div>' +
-          '<h2 class="lock-title">AKSES SISTEM DIBEKUKAN</h2>' +
-          '<p class="lock-desc">Aplikasi mendeteksi <b>Notifikasi Latar Belakang DIBLOKIR</b> pada perangkat ini. Anda <b>WAJIB</b> membuka izin notifikasi untuk menggunakan sistem ini.</p>' +
-          
-          '<div class="unblock-guide">' +
-            '<div style="font-weight:800; font-size:12.5px; color:#0f766e; margin-bottom:12px; text-transform:uppercase;">👉 Cara Membuka Blokir:</div>' +
-            '<div class="guide-step">' +
-              '<span class="step-num">1</span>' +
-              '<span>Klik ikon <b>Gembok / Setelan 🔒</b> di sebelah kiri URL web ini (pada address bar atas).</span>' +
-            '</div>' +
-            '<div class="guide-step">' +
-              '<span class="step-num">2</span>' +
-              '<span>Ubah <b>Notifikasi (Notifications)</b> dari <i>Blokir</i> menjadi <b>Izinkan (Allow)</b>.</span>' +
-            '</div>' +
+
+    // ==========================================================
+    // TAMPILKAN LOADING
+    // ==========================================================
+
+    function tampilkanLoading(
+      pesan
+    ) {
+
+      overlay.style.display =
+        'flex';
+
+
+      lockCard.innerHTML =
+
+        '<div class="badge-icon loading">' +
+
+          '⏳' +
+
+        '</div>' +
+
+        '<h2 class="lock-title">' +
+
+          'MENYIAPKAN SISTEM' +
+
+        '</h2>' +
+
+        '<p class="lock-desc">' +
+
+          (pesan ||
+            'Memeriksa layanan notifikasi P.A.G Docs...') +
+
+        '</p>' +
+
+        '<div class="status-line">' +
+
+          'Mohon tunggu sebentar...' +
+
+        '</div>';
+    }
+
+
+    // ==========================================================
+    // KUNCI SISTEM
+    // ==========================================================
+
+    function kunciSistem(
+      mode
+    ) {
+
+      _sistemAktif = false;
+
+
+      // --------------------------------------------------------
+      // HENTIKAN APLIKASI
+      // --------------------------------------------------------
+
+      frame.src =
+        'about:blank';
+
+
+      overlay.style.display =
+        'flex';
+
+
+      // --------------------------------------------------------
+      // NOTIFICATION DIBLOKIR
+      // --------------------------------------------------------
+
+      if (mode === 'denied') {
+
+        lockCard.innerHTML =
+
+          '<div class="badge-icon blocked">' +
+
+            '⛔' +
+
           '</div>' +
 
-          '<button type="button" class="btn-main btn-blue" onclick="window.location.reload()">' +
-            '🔄 Saya Sudah Mengizinkan (Buka Akses)' +
+          '<h2 class="lock-title">' +
+
+            'AKSES SISTEM DIBEKUKAN' +
+
+          '</h2>' +
+
+          '<p class="lock-desc">' +
+
+            'Notifikasi P.A.G Docs sedang ' +
+
+            '<b>DIBLOKIR</b> pada browser ini. ' +
+
+            'Sistem tidak dapat digunakan sebelum ' +
+
+            'notifikasi diaktifkan kembali.' +
+
+          '</p>' +
+
+          '<div class="unblock-guide">' +
+
+            '<div style="' +
+
+              'font-weight:800;' +
+
+              'font-size:12.5px;' +
+
+              'color:#0f766e;' +
+
+              'margin-bottom:12px;' +
+
+              'text-transform:uppercase;' +
+
+            '">' +
+
+              '👉 Cara Membuka Blokir' +
+
+            '</div>' +
+
+            '<div class="guide-step">' +
+
+              '<span class="step-num">1</span>' +
+
+              '<span>' +
+
+                'Klik ikon ' +
+
+                '<b>Gembok / Setelan 🔒</b> ' +
+
+                'di sebelah kiri alamat web.' +
+
+              '</span>' +
+
+            '</div>' +
+
+            '<div class="guide-step">' +
+
+              '<span class="step-num">2</span>' +
+
+              '<span>' +
+
+                'Cari <b>Notifications / Notifikasi</b>.' +
+
+              '</span>' +
+
+            '</div>' +
+
+            '<div class="guide-step">' +
+
+              '<span class="step-num">3</span>' +
+
+              '<span>' +
+
+                'Ubah dari ' +
+
+                '<b>Block / Blokir</b> ' +
+
+                'menjadi ' +
+
+                '<b>Allow / Izinkan</b>.' +
+
+              '</span>' +
+
+            '</div>' +
+
+            '<div class="guide-step">' +
+
+              '<span class="step-num">4</span>' +
+
+              '<span>' +
+
+                'Kembali ke halaman ini. ' +
+
+                'Sistem akan memeriksa ulang secara otomatis.' +
+
+              '</span>' +
+
+            '</div>' +
+
+          '</div>' +
+
+          '<button ' +
+
+            'type="button" ' +
+
+            'class="btn-main btn-blue" ' +
+
+            'onclick="cekSistemSekarang()"' +
+
+          '>' +
+
+            '🔄 Cek Lagi' +
+
           '</button>';
-      } else {
-        lockCard.innerHTML = 
-          '<div class="badge-icon prompt">🔔</div>' +
-          '<h2 class="lock-title">AKTIFKAN NOTIFIKASI KANTOR</h2>' +
-          '<p class="lock-desc">Diperlukan izin notifikasi agar info tender dan dokumen kadaluarsa tetap melompat ke layar saat Anda membuka <b>Microsoft Excel / HP di kantong</b>.</p>' +
-          
-          '<button type="button" class="btn-main btn-teal" onclick="mintaIzinSekarang()">' +
-            '🔔 Izinkan & Masuk ke Sistem' +
-          '</button>';
+
+        return;
       }
+
+
+      // --------------------------------------------------------
+      // BELUM GRANTED
+      // --------------------------------------------------------
+
+      lockCard.innerHTML =
+
+        '<div class="badge-icon prompt">' +
+
+          '🔔' +
+
+        '</div>' +
+
+        '<h2 class="lock-title">' +
+
+          'AKTIFKAN NOTIFIKASI KANTOR' +
+
+        '</h2>' +
+
+        '<p class="lock-desc">' +
+
+          'Notifikasi wajib diaktifkan agar ' +
+
+          'P.A.G Docs dapat memberikan pemberitahuan ' +
+
+          'tender, dokumen, dan aktivitas penting ' +
+
+          'meskipun aplikasi tidak sedang terbuka.' +
+
+        '</p>' +
+
+        '<button ' +
+
+          'type="button" ' +
+
+          'class="btn-main btn-teal" ' +
+
+          'onclick="mintaIzinSekarang()"' +
+
+        '>' +
+
+          '🔔 Izinkan & Masuk ke Sistem' +
+
+        '</button>' +
+
+        '<div class="status-line">' +
+
+          'Tanpa izin notifikasi, aplikasi tetap terkunci.' +
+
+        '</div>';
     }
 
-    async function mintaIzinSekarang() {
-      var perm = await Notification.requestPermission();
-      if (perm === 'granted') {
-        bukaAplikasi();
-        daftarkanPerangkatTunggal();
-      } else {
-        periksaIzinDanKunciSistem();
-      }
-    }
+
+    // ==========================================================
+    // BUKA APLIKASI
+    // ==========================================================
 
     function bukaAplikasi() {
-      overlay.style.display = 'none';
+
+      if (_sistemAktif) {
+        return;
+      }
+
+
+      _sistemAktif = true;
+
+
+      overlay.style.display =
+        'none';
+
+
+      // --------------------------------------------------------
+      // BARU SEKARANG LOAD APPS SCRIPT
+      // --------------------------------------------------------
+
+      if (
+        frame.src !==
+        APPS_SCRIPT_EXEC_URL
+      ) {
+
+        frame.src =
+          APPS_SCRIPT_EXEC_URL;
+      }
     }
 
-    if ('permissions' in navigator) {
-      navigator.permissions.query({ name: 'notifications' }).then(function(p) {
-        p.onchange = function() {
-          periksaIzinDanKunciSistem();
-        };
-      }).catch(function() {});
+
+    // ==========================================================
+    // REGISTER SERVICE WORKER
+    // ==========================================================
+
+    async function siapkanServiceWorker() {
+
+      if (
+        !('serviceWorker' in navigator)
+      ) {
+
+        throw new Error(
+          'Browser tidak mendukung Service Worker.'
+        );
+      }
+
+
+      if (
+        !('PushManager' in window)
+      ) {
+
+        throw new Error(
+          'Browser tidak mendukung Web Push.'
+        );
+      }
+
+
+      var registration =
+        await navigator.serviceWorker.register(
+          './sw.js',
+          {
+            updateViaCache: 'none'
+          }
+        );
+
+
+      await navigator.serviceWorker.ready;
+
+
+      _serviceWorkerReady = true;
+
+
+      console.log(
+        '✅ PAG Service Worker aktif.'
+      );
+
+
+      return registration;
     }
 
-    /* =========================================================
-     * ⚡ PENDAFTARAN TUNGGAL (PASTI 1 BARIS PER PERANGKAT)
-     * ========================================================= */
-    async function daftarkanPerangkatTunggal(targetRole) {
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
-      if (Notification.permission !== 'granted') return;
-      if (_sedangMendaftar) return;
+
+    // ==========================================================
+    // DAFTARKAN PUSH SUBSCRIPTION
+    // ==========================================================
+
+    async function daftarkanPerangkatTunggal(
+      targetRole
+    ) {
+
+      if (_sedangMendaftar) {
+        return false;
+      }
+
+
+      if (
+        Notification.permission !==
+        'granted'
+      ) {
+
+        return false;
+      }
+
+
+      if (!_serviceWorkerReady) {
+
+        await siapkanServiceWorker();
+      }
+
+
       _sedangMendaftar = true;
 
-      try {
-        var reg = await navigator.serviceWorker.ready;
-        var sub = await reg.pushManager.getSubscription();
 
-        if (!sub) {
-          sub = await reg.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-          });
+      try {
+
+        var registration =
+          await navigator.serviceWorker.ready;
+
+
+        // ------------------------------------------------------
+        // Ambil subscription lama
+        // ------------------------------------------------------
+
+        var subscription =
+          await registration.pushManager
+            .getSubscription();
+
+
+        // ------------------------------------------------------
+        // Kalau belum ada → buat baru
+        // ------------------------------------------------------
+
+        if (!subscription) {
+
+          subscription =
+            await registration.pushManager.subscribe({
+
+              userVisibleOnly:
+                true,
+
+              applicationServerKey:
+                urlBase64ToUint8Array(
+                  VAPID_PUBLIC_KEY
+                )
+
+            });
         }
 
-        var subJson = sub.toJSON();
 
-        // ⚡ GEMBOK ANTI-GANDA: JIKA SUDAH PERNAH DISIMPAN, JANGAN POST KE-2 KALI!
-        if (localStorage.getItem('PAG_SAVED_ENDPOINT') === subJson.endpoint) {
-          console.log("Perangkat ini sudah tersimpan di Supabase, batalkan pengiriman ganda.");
+        // ------------------------------------------------------
+        // Konversi
+        // ------------------------------------------------------
+
+        var subJson =
+          subscription.toJSON();
+
+
+        if (
+          !subJson ||
+          !subJson.endpoint ||
+          !subJson.keys
+        ) {
+
+          throw new Error(
+            'Subscription Push tidak lengkap.'
+          );
+        }
+
+
+        // ------------------------------------------------------
+        // ROLE
+        // ------------------------------------------------------
+
+        var currentRole =
+          (
+            targetRole ||
+            localStorage.getItem(
+              'PAG_USER_ROLE'
+            ) ||
+            'semua'
+          )
+            .toLowerCase()
+            .trim();
+
+
+        // ------------------------------------------------------
+        // DEVICE
+        // ------------------------------------------------------
+
+        var labelPerangkat =
+          getDeviceLabel() +
+          ' [' +
+          DEVICE_ID +
+          ']';
+
+
+        // ------------------------------------------------------
+        // PAYLOAD
+        // ------------------------------------------------------
+
+        var payload = {
+
+          role:
+            currentRole,
+
+          user_id:
+            labelPerangkat,
+
+          endpoint:
+            subJson.endpoint,
+
+          keys_p256dh:
+            subJson.keys.p256dh,
+
+          keys_auth:
+            subJson.keys.auth,
+
+          updated_at:
+            new Date().toISOString()
+
+        };
+
+
+        // ------------------------------------------------------
+        // UPSERT
+        //
+        // endpoint harus UNIQUE di Supabase.
+        // ------------------------------------------------------
+
+        var response =
+          await fetch(
+            SB_URL +
+            '/rest/v1/web_push_subscriptions' +
+            '?on_conflict=endpoint',
+            {
+
+              method:
+                'POST',
+
+              headers: {
+
+                'apikey':
+                  SB_KEY,
+
+                'Authorization':
+                  'Bearer ' + SB_KEY,
+
+                'Content-Type':
+                  'application/json',
+
+                'Prefer':
+                  'resolution=merge-duplicates,' +
+                  'return=minimal'
+
+              },
+
+              body:
+                JSON.stringify(
+                  payload
+                )
+
+            }
+          );
+
+
+        // ------------------------------------------------------
+        // CEK HASIL
+        // ------------------------------------------------------
+
+        if (!response.ok) {
+
+          var errorText =
+            await response.text();
+
+          throw new Error(
+            'Gagal menyimpan subscription: ' +
+            errorText
+          );
+        }
+
+
+        // ------------------------------------------------------
+        // Simpan endpoint lokal hanya sebagai cache
+        // ------------------------------------------------------
+
+        localStorage.setItem(
+          'PAG_SAVED_ENDPOINT',
+          subJson.endpoint
+        );
+
+
+        console.log(
+          '✅ Push subscription aktif:',
+          labelPerangkat
+        );
+
+
+        return true;
+
+
+      } finally {
+
+        _sedangMendaftar =
+          false;
+      }
+
+    }
+
+
+    // ==========================================================
+    // VALIDASI TOTAL SISTEM
+    // ==========================================================
+
+    async function validasiDanBuka() {
+
+      // --------------------------------------------------------
+      // Browser tidak mendukung Notification
+      // --------------------------------------------------------
+
+      if (
+        !('Notification' in window)
+      ) {
+
+        kunciSistem(
+          'unsupported'
+        );
+
+        lockCard.innerHTML =
+
+          '<div class="badge-icon blocked">' +
+            '⚠️' +
+          '</div>' +
+
+          '<h2 class="lock-title">' +
+            'BROWSER TIDAK DIDUKUNG' +
+          '</h2>' +
+
+          '<p class="lock-desc">' +
+            'Browser ini tidak mendukung ' +
+            'notifikasi yang dibutuhkan P.A.G Docs.' +
+          '</p>';
+
+        return false;
+      }
+
+
+      // --------------------------------------------------------
+      // DENIED
+      // --------------------------------------------------------
+
+      if (
+        Notification.permission ===
+        'denied'
+      ) {
+
+        kunciSistem(
+          'denied'
+        );
+
+        return false;
+      }
+
+
+      // --------------------------------------------------------
+      // DEFAULT
+      // --------------------------------------------------------
+
+      if (
+        Notification.permission !==
+        'granted'
+      ) {
+
+        kunciSistem(
+          'default'
+        );
+
+        return false;
+      }
+
+
+      // --------------------------------------------------------
+      // GRANTED
+      // --------------------------------------------------------
+
+      try {
+
+        tampilkanLoading(
+          'Memastikan layanan notifikasi aktif...'
+        );
+
+
+        await siapkanServiceWorker();
+
+
+        var berhasil =
+          await daftarkanPerangkatTunggal();
+
+
+        if (!berhasil) {
+
+          throw new Error(
+            'Push notification belum berhasil diaktifkan.'
+          );
+        }
+
+
+        // ------------------------------------------------------
+        // SEMUA SYARAT TERPENUHI
+        // ------------------------------------------------------
+
+        bukaAplikasi();
+
+
+        return true;
+
+
+      } catch (error) {
+
+        console.error(
+          '❌ Validasi Push gagal:',
+          error
+        );
+
+
+        overlay.style.display =
+          'flex';
+
+
+        lockCard.innerHTML =
+
+          '<div class="badge-icon blocked">' +
+            '⚠️' +
+          '</div>' +
+
+          '<h2 class="lock-title">' +
+            'NOTIFIKASI BELUM SIAP' +
+          '</h2>' +
+
+          '<p class="lock-desc">' +
+            'Izin browser sudah aktif, tetapi ' +
+            'perangkat belum berhasil didaftarkan ' +
+            'ke layanan Push P.A.G Docs.' +
+          '</p>' +
+
+          '<button ' +
+            'type="button" ' +
+            'class="btn-main btn-blue" ' +
+            'onclick="cekSistemSekarang()"' +
+          '>' +
+
+            '🔄 Coba Lagi' +
+
+          '</button>' +
+
+          '<div class="status-line">' +
+
+            String(
+              error &&
+              error.message
+                ? error.message
+                : 'Kesalahan tidak diketahui.'
+            ) +
+
+          '</div>';
+
+
+        return false;
+      }
+    }
+
+
+    // ==========================================================
+    // USER KLIK IZINKAN
+    // ==========================================================
+
+    async function mintaIzinSekarang() {
+
+      try {
+
+        if (
+          !('Notification' in window)
+        ) {
+
+          kunciSistem(
+            'unsupported'
+          );
+
           return;
         }
 
-        var currentRole = (targetRole || localStorage.getItem('PAG_USER_ROLE') || 'superuser').toLowerCase().trim();
-        var isAndroid = /Android/i.test(navigator.userAgent);
-        var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        var labelPerangkat = (isAndroid ? "HP Android" : (isIOS ? "iPhone iOS" : "Laptop / PC Windows")) + " [" + DEVICE_ID + "]";
 
-        var payload = {
-          role: currentRole,
-          user_id: labelPerangkat,
-          endpoint: subJson.endpoint,
-          keys_p256dh: subJson.keys.p256dh,
-          keys_auth: subJson.keys.auth,
-          updated_at: new Date().toISOString()
-        };
+        // ------------------------------------------------------
+        // Jika sudah denied
+        // ------------------------------------------------------
 
-        // Simpan 1 baris tunggal ke Supabase
-        var res = await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
-          method: 'POST',
-          headers: {
-            'apikey': SB_KEY,
-            'Authorization': 'Bearer ' + SB_KEY,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
+        if (
+          Notification.permission ===
+          'denied'
+        ) {
 
-        // ⚡ Kunci di memori bahwa endpoint ini sudah resmi tersimpan
-        if (res.ok) {
-          localStorage.setItem('PAG_SAVED_ENDPOINT', subJson.endpoint);
-          console.log("✅ Pendaftaran tunggal sukses:", labelPerangkat);
+          kunciSistem(
+            'denied'
+          );
+
+          return;
         }
 
-      } catch (err) {
-        console.error('Pendaftaran Gagal:', err);
-      } finally {
-        _sedangMendaftar = false;
+
+        // ------------------------------------------------------
+        // Request permission
+        // ------------------------------------------------------
+
+        var permission =
+          await Notification.requestPermission();
+
+
+        // ------------------------------------------------------
+        // GRANTED
+        // ------------------------------------------------------
+
+        if (
+          permission ===
+          'granted'
+        ) {
+
+          await validasiDanBuka();
+
+          return;
+        }
+
+
+        // ------------------------------------------------------
+        // DENIED / DEFAULT
+        // ------------------------------------------------------
+
+        if (
+          permission ===
+          'denied'
+        ) {
+
+          kunciSistem(
+            'denied'
+          );
+
+        } else {
+
+          kunciSistem(
+            'default'
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          'Gagal meminta izin:',
+          error
+        );
+
+        kunciSistem(
+          'default'
+        );
       }
+
     }
 
-    // Hanya daftarkan 1 kali saat browser siap
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').then(function() {
-          periksaIzinDanKunciSistem();
-        });
-      });
+
+    // ==========================================================
+    // CEK ULANG
+    // ==========================================================
+
+    function cekSistemSekarang() {
+
+      validasiDanBuka();
+
     }
 
-    window.addEventListener('message', function(event) {
-      if (!event.data) return;
-      var data = event.data;
-      if (typeof data === 'string') {
-        try { data = JSON.parse(data); } catch(e) { return; }
+
+    // ==========================================================
+    // PANTAU PERUBAHAN IZIN
+    // ==========================================================
+
+    async function pantauPermission() {
+
+      if (
+        !('permissions' in navigator)
+      ) {
+        return;
       }
 
-      if (data.type === 'SYNC_USER_SESSION' && data.role) {
-        localStorage.setItem('PAG_USER_ROLE', data.role);
-        daftarkanPerangkatTunggal(data.role);
-      }
-    });
 
-    window.addEventListener('hashchange', function() {
-      var hash = window.location.hash || '';
-      if (frame && hash) {
-        try { frame.contentWindow.location.hash = hash; } catch (e) { frame.src = APPS_SCRIPT_EXEC_URL + hash; }
+      try {
+
+        var permissionStatus =
+          await navigator.permissions.query({
+            name: 'notifications'
+          });
+
+
+        permissionStatus.onchange =
+          function() {
+
+            console.log(
+              '🔔 Permission berubah:',
+              Notification.permission
+            );
+
+
+            validasiDanBuka();
+
+          };
+
+
+      } catch (error) {
+
+        console.warn(
+          'Permission API tidak tersedia.',
+          error
+        );
+
       }
-    });
+
+    }
+
+
+    // ==========================================================
+    // FALLBACK WATCHER
+    //
+    // Beberapa browser tidak selalu mengirim onchange
+    // ketika user mengubah izin melalui address bar.
+    // Karena itu kita cek ulang ketika halaman kembali aktif.
+    // ==========================================================
+
+    function aktifkanWatcher() {
+
+      if (_permissionWatcher) {
+        clearInterval(
+          _permissionWatcher
+        );
+      }
+
+
+      _permissionWatcher =
+        setInterval(
+          function() {
+
+            // Tidak perlu terus mengecek
+            // kalau aplikasi sudah aktif.
+            if (_sistemAktif) {
+              return;
+            }
+
+
+            var status =
+              Notification.permission;
+
+
+            if (
+              status === 'granted'
+            ) {
+
+              validasiDanBuka();
+
+            }
+
+          },
+          1500
+        );
+    }
+
+
+    // ==========================================================
+    // KETIKA TAB KEMBALI AKTIF
+    // ==========================================================
+
+    document.addEventListener(
+      'visibilitychange',
+      function() {
+
+        if (
+          document.visibilityState ===
+          'visible'
+        ) {
+
+          validasiDanBuka();
+
+        }
+
+      }
+    );
+
+
+    window.addEventListener(
+      'focus',
+      function() {
+
+        validasiDanBuka();
+
+      }
+    );
+
+
+    window.addEventListener(
+      'pageshow',
+      function() {
+
+        validasiDanBuka();
+
+      }
+    );
+
+
+    // ==========================================================
+    // MESSAGE DARI APPS SCRIPT
+    // ==========================================================
+
+    window.addEventListener(
+      'message',
+      function(event) {
+
+        if (!event.data) {
+          return;
+        }
+
+
+        var data =
+          event.data;
+
+
+        if (
+          typeof data ===
+          'string'
+        ) {
+
+          try {
+
+            data =
+              JSON.parse(data);
+
+          } catch (e) {
+
+            return;
+          }
+
+        }
+
+
+        // ------------------------------------------------------
+        // SESSION USER
+        // ------------------------------------------------------
+
+        if (
+          data.type ===
+          'SYNC_USER_SESSION'
+        ) {
+
+          if (data.role) {
+
+            localStorage.setItem(
+              'PAG_USER_ROLE',
+              String(data.role)
+            );
+
+
+            // Perbarui subscription
+            // dengan role terbaru.
+            daftarkanPerangkatTunggal(
+              data.role
+            ).catch(
+              console.error
+            );
+
+          }
+
+        }
+
+
+        // ------------------------------------------------------
+        // REQUEST NOTIFICATION DARI IFRAME
+        // ------------------------------------------------------
+
+        if (
+          data.type ===
+          'SHOW_OS_NOTIFICATION'
+        ) {
+
+          tampilkanOSNotification(
+            data.judul,
+            data.pesan,
+            data.url
+          );
+
+        }
+
+      }
+    );
+
+
+    // ==========================================================
+    // NOTIFIKASI DARI IFRAME
+    //
+    // Ini bukan Web Push.
+    // Ini hanya untuk ketika PAG Docs sedang terbuka.
+    // ==========================================================
+
+    async function tampilkanOSNotification(
+      judul,
+      pesan,
+      url
+    ) {
+
+      if (
+        Notification.permission !==
+        'granted'
+      ) {
+
+        return;
+      }
+
+
+      try {
+
+        var registration =
+          await navigator.serviceWorker.ready;
+
+
+        await registration.showNotification(
+
+          judul ||
+            'P.A.G Docs',
+
+          {
+
+            body:
+              pesan || '',
+
+            icon:
+              './icon-192.png',
+
+            badge:
+              './icon-192.png',
+
+            requireInteraction:
+              true,
+
+            data: {
+              url:
+                url ||
+                APPS_SCRIPT_EXEC_URL
+            }
+
+          }
+
+        );
+
+      } catch (error) {
+
+        console.error(
+          'OS notification gagal:',
+          error
+        );
+
+      }
+
+    }
+
+
+    // ==========================================================
+    // HASH ROUTING
+    // ==========================================================
+
+    window.addEventListener(
+      'hashchange',
+      function() {
+
+        var hash =
+          window.location.hash ||
+          '';
+
+
+        if (
+          frame &&
+          hash
+        ) {
+
+          try {
+
+            frame.contentWindow.location.hash =
+              hash;
+
+          } catch (e) {
+
+            frame.src =
+              APPS_SCRIPT_EXEC_URL +
+              hash;
+
+          }
+
+        }
+
+      }
+    );
+
+
+    // ==========================================================
+    // START SYSTEM
+    // ==========================================================
+
+    window.addEventListener(
+      'load',
+      async function() {
+
+        try {
+
+          tampilkanLoading(
+            'Memeriksa izin notifikasi...'
+          );
+
+
+          // ----------------------------------------------------
+          // Daftarkan SW lebih dahulu
+          // ----------------------------------------------------
+
+          await siapkanServiceWorker();
+
+
+          // ----------------------------------------------------
+          // Pantau permission
+          // ----------------------------------------------------
+
+          await pantauPermission();
+
+
+          // ----------------------------------------------------
+          // Fallback watcher
+          // ----------------------------------------------------
+
+          aktifkanWatcher();
+
+
+          // ----------------------------------------------------
+          // Validasi
+          // ----------------------------------------------------
+
+          await validasiDanBuka();
+
+        } catch (error) {
+
+          console.error(
+            '❌ PAG startup gagal:',
+            error
+          );
+
+
+          kunciSistem(
+            'unsupported'
+          );
+
+
+          lockCard.innerHTML =
+
+            '<div class="badge-icon blocked">' +
+
+              '⚠️' +
+
+            '</div>' +
+
+            '<h2 class="lock-title">' +
+
+              'SISTEM BELUM SIAP' +
+
+            '</h2>' +
+
+            '<p class="lock-desc">' +
+
+              'Layanan notifikasi P.A.G Docs ' +
+
+              'belum berhasil dijalankan.' +
+
+            '</p>' +
+
+            '<button ' +
+
+              'type="button" ' +
+
+              'class="btn-main btn-blue" ' +
+
+              'onclick="window.location.reload()"' +
+
+            '>' +
+
+              '🔄 Muat Ulang' +
+
+            '</button>';
+
+        }
+
+      }
+    );
+
+
   </script>
+
 </body>
+
 </html>
