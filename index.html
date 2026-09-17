@@ -114,7 +114,15 @@
     var overlay = document.getElementById('lockScreenOverlay');
     var lockCard = document.getElementById('lockCard');
     var frame = document.getElementById('appFrame');
-    var _isRegistering = false;
+
+    // ⚡ KUNCI PENGAMAN 1: IDENTITAS UNIK PERANGKAT DI LOCALSTORAGE
+    var DEVICE_ID = localStorage.getItem('PAG_DEVICE_UUID');
+    if (!DEVICE_ID) {
+      DEVICE_ID = 'DEV-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7);
+      localStorage.setItem('PAG_DEVICE_UUID', DEVICE_ID);
+    }
+
+    var _sedangMendaftar = false;
 
     function urlBase64ToUint8Array(base64String) {
       var padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -137,7 +145,7 @@
 
       if (status === 'granted') {
         bukaAplikasi();
-        sembuhkanDanDaftarkanToken();
+        daftarkanPerangkatTunggal();
         return;
       }
 
@@ -180,7 +188,7 @@
       var perm = await Notification.requestPermission();
       if (perm === 'granted') {
         bukaAplikasi();
-        sembuhkanDanDaftarkanToken(null, null, true); // true = pemicu klik manual
+        daftarkanPerangkatTunggal();
       } else {
         periksaIzinDanKunciSistem();
       }
@@ -199,58 +207,51 @@
     }
 
     /* =========================================================
-     * ⚡ DAFTARKAN PERANGKAT (MULTI-DEVICE ANTI-SALING HAPUS)
+     * ⚡ PENDAFTARAN TUNGGAL (PASTI 1 BARIS PER PERANGKAT)
      * ========================================================= */
-    async function sembuhkanDanDaftarkanToken(targetRole, targetUserId, isManualClick) {
+    async function daftarkanPerangkatTunggal(targetRole) {
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       if (Notification.permission !== 'granted') return;
-      if (_isRegistering) return;
-      _isRegistering = true;
+      
+      // ⚡ KUNCI PENGAMAN 2: CEGAH EKSEKUSI DOBEL
+      if (_sedangMendaftar) return;
+      _sedangMendaftar = true;
 
       try {
         var reg = await navigator.serviceWorker.ready;
         var sub = await reg.pushManager.getSubscription();
 
-        if (sub) {
-          try { await sub.unsubscribe(); } catch(e) {}
-        }
-
-        // Minta token baru dari Google FCM
-        var subscribeOptions = { userVisibleOnly: true };
-        try {
-          subscribeOptions.applicationServerKey = VAPID_PUBLIC_KEY;
-          sub = await reg.pushManager.subscribe(subscribeOptions);
-        } catch (eStr) {
-          subscribeOptions.applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
-          sub = await reg.pushManager.subscribe(subscribeOptions);
+        // ⚡ KUNCI PENGAMAN 3: REUSE SUBSCRIPTION JIKA SUDAH ADA
+        if (!sub) {
+          sub = await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+          });
         }
 
         var subJson = sub.toJSON();
         var currentRole = (targetRole || localStorage.getItem('PAG_USER_ROLE') || 'superuser').toLowerCase().trim();
 
-        // ⚡ DETEKSI NAMA PERANGKAT (AGAR TERLIHAT JELAS DI SUPABASE)
         var isAndroid = /Android/i.test(navigator.userAgent);
         var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        var labelPerangkat = isAndroid ? "HP Android" : (isIOS ? "iPhone iOS" : "Laptop / PC Windows");
+        var labelPerangkat = (isAndroid ? "HP Android" : (isIOS ? "iPhone iOS" : "Laptop / PC Windows")) + " [" + DEVICE_ID + "]";
 
         var payload = {
           role: currentRole,
-          user_id: labelPerangkat, // ⚡ NAMA PERANGKAT TERTULIS DI SINI!
+          user_id: labelPerangkat, // Berisi Nama + Device ID Unik
           endpoint: subJson.endpoint,
           keys_p256dh: subJson.keys.p256dh,
           keys_auth: subJson.keys.auth,
           updated_at: new Date().toISOString()
         };
 
-        // ⚡ HAPUS HANYA PERANGKAT INI SAJA (BERDASARKAN ENDPOINT), BUKAN MENGHAPUS SEMUA!
-        if (subJson && subJson.endpoint) {
-          await fetch(SB_URL + '/rest/v1/web_push_subscriptions?endpoint=eq.' + encodeURIComponent(subJson.endpoint), {
-            method: 'DELETE',
-            headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
-          });
-        }
+        // ⚡ HAPUS HANYA BARIS LAMA MILIK DEVICE ID INI (ANTI-DOBEL)
+        await fetch(SB_URL + '/rest/v1/web_push_subscriptions?user_id=eq.' + encodeURIComponent(labelPerangkat), {
+          method: 'DELETE',
+          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+        });
 
-        // SIMPAN DATA PERANGKAT INI
+        // SIMPAN HANYA 1 BARIS TUNGGAL YANG HIDUP
         await fetch(SB_URL + '/rest/v1/web_push_subscriptions', {
           method: 'POST',
           headers: {
@@ -261,20 +262,16 @@
           body: JSON.stringify(payload)
         });
 
-        console.log("✅ Terdaftar di Supabase:", labelPerangkat);
-
-        // Jika staf mengklik dari HP, beri tahu pop-up sukses
-        if (isManualClick || isAndroid) {
-          alert("✅ Berhasil! " + labelPerangkat + " Anda resmi terdaftar untuk menerima notifikasi.");
-        }
+        console.log("✅ Pendaftaran tunggal sukses:", labelPerangkat);
 
       } catch (err) {
         console.error('Pendaftaran Gagal:', err);
       } finally {
-        _isRegistering = false;
+        _sedangMendaftar = false;
       }
     }
 
+    // Hanya daftarkan 1 kali saat browser siap
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js').then(function() {
@@ -292,7 +289,7 @@
 
       if (data.type === 'SYNC_USER_SESSION' && data.role) {
         localStorage.setItem('PAG_USER_ROLE', data.role);
-        sembuhkanDanDaftarkanToken(data.role);
+        daftarkanPerangkatTunggal(data.role);
       }
     });
 
@@ -302,8 +299,6 @@
         try { frame.contentWindow.location.hash = hash; } catch (e) { frame.src = APPS_SCRIPT_EXEC_URL + hash; }
       }
     });
-
-    periksaIzinDanKunciSistem();
   </script>
 </body>
 </html>
