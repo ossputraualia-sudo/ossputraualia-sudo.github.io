@@ -1,261 +1,178 @@
-/* ==========================================================
- * PAG DOCS SERVICE WORKER
- *
- * PAG-PUSH-V3
- *
- * Fungsi:
- * 1. Web Push
- * 2. Notification
- * 3. Notification Click
- * 4. App Badge
- * 5. Clear Badge
- *
- * TIDAK ADA:
- * - Supabase key
- * - Service role
- * - Edge Function
- * - database access
- *
- * Service Worker hanya menangani sisi browser/device.
- * ========================================================== */
+/* ============================================================
+ * PAG DOCS - SERVICE WORKER
+ * Web Push + Notification + Badge
+ * VERSION: PAG-PUSH-V4
+ * ============================================================ */
 
-
-const PAG_SW_VERSION =
-  "PAG-PUSH-V3";
-
+const PAG_SW_VERSION = "PAG-PUSH-V4";
 
 const PAG_APP_URL =
   "https://ossputraualia-sudo.github.io/";
 
-
 const PAG_ICON_URL =
-  new URL(
-    "icon-192.png",
-    self.location.origin
-  ).href;
-
+  new URL("icon-192.png", self.location.origin).href;
 
 const PAG_BADGE_URL =
-  new URL(
-    "icon-192.png",
-    self.location.origin
-  ).href;
+  new URL("icon-192.png", self.location.origin).href;
 
 
-/* ==========================================================
+/* ============================================================
  * INSTALL
- * ========================================================== */
+ * ============================================================ */
 
-self.addEventListener(
-  "install",
-  event => {
-
-    event.waitUntil(
-      self.skipWaiting()
-    );
-
-  }
-);
+self.addEventListener("install", event => {
+  event.waitUntil(
+    self.skipWaiting()
+  );
+});
 
 
-/* ==========================================================
+/* ============================================================
  * ACTIVATE
- * ========================================================== */
+ * ============================================================ */
 
-self.addEventListener(
-  "activate",
-  event => {
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    (async () => {
+      await self.clients.claim();
 
-    event.waitUntil(
-
-      (async () => {
-
-        await self.clients.claim();
-
-        console.log(
-          "[PAG SW]",
-          PAG_SW_VERSION,
-          "activated"
-        );
-
-      })()
-
-    );
-
-  }
-);
+      console.log(
+        "[PAG SW]",
+        PAG_SW_VERSION,
+        "activated"
+      );
+    })()
+  );
+});
 
 
-/* ==========================================================
+/* ============================================================
  * SAFE URL
- * ========================================================== */
+ * ============================================================ */
 
-function getSafeUrl(
-  value
-) {
+function getSafeUrl(value) {
 
   try {
 
     if (!value) {
-
       return PAG_APP_URL;
-
     }
 
+    const url = new URL(
+      value,
+      PAG_APP_URL
+    );
 
-    const url =
-      new URL(
-        value,
-        PAG_APP_URL
-      );
-
+    if (url.protocol !== "https:") {
+      return PAG_APP_URL;
+    }
 
     /*
-     * Hanya izinkan HTTPS.
+     * Batasi navigasi hanya ke domain PAG Docs.
      */
+    const allowedHost =
+      "ossputraualia-sudo.github.io";
 
-    if (
-      url.protocol !==
-      "https:"
-    ) {
-
+    if (url.hostname !== allowedHost) {
       return PAG_APP_URL;
-
     }
-
 
     return url.href;
-
-  } catch {
-
-    return PAG_APP_URL;
-
-  }
-
-}
-
-
-/* ==========================================================
- * UPDATE APP BADGE
- *
- * unreadCount:
- *
- * 5
- * → badge 5
- *
- * 1
- * → badge 1
- *
- * 0
- * → clear
- *
- * null / undefined
- * → badge generic
- * ========================================================== */
-
-async function updateAppBadge(
-  unreadCount
-) {
-
-  try {
-
-    if (
-      typeof self.navigator.setAppBadge !==
-      "function"
-    ) {
-
-      return;
-
-    }
-
-
-    const count =
-      Number(
-        unreadCount
-      );
-
-
-    /*
-     * Ada angka
-     */
-
-    if (
-      Number.isFinite(count) &&
-      count > 0
-    ) {
-
-      await self.navigator.setAppBadge(
-
-        Math.min(
-          Math.floor(count),
-          999
-        )
-
-      );
-
-      return;
-
-    }
-
-
-    /*
-     * Nol
-     */
-
-    if (
-      Number.isFinite(count) &&
-      count === 0
-    ) {
-
-      if (
-        typeof self.navigator.clearAppBadge ===
-        "function"
-      ) {
-
-        await self.navigator.clearAppBadge();
-
-      }
-
-      return;
-
-    }
-
-
-    /*
-     * Tidak ada angka.
-     *
-     * Tetap tampilkan badge generik.
-     */
-
-    await self.navigator.setAppBadge();
 
   } catch (error) {
 
     console.warn(
-      "[PAG SW] Badge error:",
+      "[PAG SW] Invalid URL:",
       error
     );
 
+    return PAG_APP_URL;
   }
-
 }
 
 
-/* ==========================================================
- * CLEAR BADGE
- * ========================================================== */
+/* ============================================================
+ * BADGE
+ *
+ * Badge adalah fitur tambahan.
+ * Tidak semua browser mendukung badge dari Service Worker.
+ * Karena itu error tidak boleh menghentikan notification.
+ * ============================================================ */
+
+async function updateAppBadge(unreadCount) {
+
+  try {
+
+    const count =
+      Number(unreadCount);
+
+    /*
+     * Beberapa browser menyediakan
+     * setAppBadge pada WorkerNavigator.
+     */
+
+    if (
+      typeof navigator !== "undefined" &&
+      typeof navigator.setAppBadge === "function"
+    ) {
+
+      if (
+        Number.isFinite(count) &&
+        count > 0
+      ) {
+
+        await navigator.setAppBadge(
+          Math.min(
+            Math.floor(count),
+            999
+          )
+        );
+
+        return;
+      }
+
+      if (
+        Number.isFinite(count) &&
+        count === 0
+      ) {
+
+        if (
+          typeof navigator.clearAppBadge ===
+          "function"
+        ) {
+
+          await navigator.clearAppBadge();
+        }
+
+        return;
+      }
+
+      await navigator.setAppBadge();
+
+      return;
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "[PAG SW] Badge unavailable:",
+      error
+    );
+  }
+}
+
 
 async function clearAppBadge() {
 
   try {
 
     if (
-      typeof self.navigator.clearAppBadge ===
+      typeof navigator !== "undefined" &&
+      typeof navigator.clearAppBadge ===
       "function"
     ) {
 
-      await self.navigator.clearAppBadge();
-
+      await navigator.clearAppBadge();
     }
 
   } catch (error) {
@@ -264,315 +181,346 @@ async function clearAppBadge() {
       "[PAG SW] Clear badge error:",
       error
     );
-
   }
-
 }
 
 
-/* ==========================================================
- * PUSH EVENT
- * ========================================================== */
+/* ============================================================
+ * NORMALIZE PUSH DATA
+ * ============================================================ */
 
-self.addEventListener(
-  "push",
-  event => {
+async function getPushData(event) {
 
-    event.waitUntil(
-
-      (async () => {
-
-        let data = {};
-
-
-        /* --------------------------------------------------
-           PARSE PAYLOAD
-           -------------------------------------------------- */
-
-        try {
-
-          if (
-            event.data
-          ) {
-
-            try {
-
-              data =
-                event.data.json();
-
-            } catch {
-
-              data = {
-
-                pesan:
-                  event.data.text()
-
-              };
-
-            }
-
-          }
-
-        } catch (error) {
-
-          console.warn(
-            "[PAG SW] Payload parse error:",
-            error
-          );
-
-        }
-
-
-        /* --------------------------------------------------
-           TITLE
-           -------------------------------------------------- */
-
-        const title =
-          data.judul ||
-          data.title ||
-          "PAG Docs";
-
-
-        /* --------------------------------------------------
-           BODY
-           -------------------------------------------------- */
-
-        const body =
-          data.pesan ||
-          data.body ||
-          data.message ||
-          "Ada informasi baru dari PAG Docs.";
-
-
-        /* --------------------------------------------------
-           TARGET
-           -------------------------------------------------- */
-
-        const targetUrl =
-          getSafeUrl(
-
-            data.url ||
-            data.link ||
-            PAG_APP_URL
-
-          );
-
-
-        /* --------------------------------------------------
-           BADGE
-           -------------------------------------------------- */
-
-        await updateAppBadge(
-          data.unreadCount
-        );
-
-
-        /* --------------------------------------------------
-           NOTIFICATION OPTIONS
-           -------------------------------------------------- */
-
-        const notificationOptions = {
-
-          body,
-
-          icon:
-            data.icon ||
-            PAG_ICON_URL,
-
-          badge:
-            data.badge ||
-            PAG_BADGE_URL,
-
-          tag:
-            data.tag ||
-            "pag-docs-notification",
-
-          renotify:
-            true,
-
-          requireInteraction:
-            true,
-
-          silent:
-            false,
-
-          timestamp:
-            Date.now(),
-
-          vibrate: [
-            200,
-            100,
-            200
-          ],
-
-          data: {
-
-            url:
-              targetUrl,
-
-            source:
-              "PAG_DOCS",
-
-            unreadCount:
-              data.unreadCount ??
-              null
-
-          },
-
-          actions: [
-
-            {
-              action:
-                "tutup",
-
-              title:
-                "Tutup"
-
-            }
-
-          ]
-
-        };
-
-
-        /* --------------------------------------------------
-           SHOW NOTIFICATION
-           -------------------------------------------------- */
-
-        await self.registration.showNotification(
-
-          title,
-
-          notificationOptions
-
-        );
-
-
-        console.log(
-          "[PAG SW] Push received:",
-          title
-        );
-
-      })()
-
-    );
-
+  if (!event.data) {
+    return {};
   }
-);
+
+  try {
+
+    return event.data.json();
+
+  } catch (error) {
+
+    try {
+
+      return {
+        body: event.data.text()
+      };
+
+    } catch {
+
+      return {};
+    }
+  }
+}
 
 
-/* ==========================================================
+/* ============================================================
+ * PUSH EVENT
+ *
+ * INI YANG BEKERJA SAAT APLIKASI BENAR-BENAR DITUTUP.
+ * ============================================================ */
+
+self.addEventListener("push", event => {
+
+  event.waitUntil(
+    (async () => {
+
+      const data =
+        await getPushData(event);
+
+
+      /* ------------------------------------------------------
+       * DATA NOTIFICATION
+       * ------------------------------------------------------ */
+
+      const title =
+        data.title ||
+        data.judul ||
+        "PAG Docs";
+
+
+      const body =
+        data.body ||
+        data.pesan ||
+        data.message ||
+        "Ada informasi baru dari PAG Docs.";
+
+
+      const targetUrl =
+        getSafeUrl(
+          data.url ||
+          data.link ||
+          PAG_APP_URL
+        );
+
+
+      const unreadCount =
+        data.unreadCount ??
+        data.unread_count ??
+        null;
+
+
+      /* ------------------------------------------------------
+       * UPDATE BADGE
+       * ------------------------------------------------------ */
+
+      await updateAppBadge(
+        unreadCount
+      );
+
+
+      /* ------------------------------------------------------
+       * UNIQUE NOTIFICATION ID
+       *
+       * Jika Edge Function mengirim notificationId,
+       * gunakan itu sebagai tag.
+       * ------------------------------------------------------ */
+
+      const notificationId =
+        data.notificationId ||
+        data.notification_id ||
+        (
+          "pag-" +
+          Date.now() +
+          "-" +
+          Math.random()
+            .toString(36)
+            .slice(2, 8)
+        );
+
+
+      /* ------------------------------------------------------
+       * NOTIFICATION OPTIONS
+       * ------------------------------------------------------ */
+
+      const notificationOptions = {
+
+        body: body,
+
+        icon:
+          data.icon ||
+          PAG_ICON_URL,
+
+        badge:
+          data.badge ||
+          PAG_BADGE_URL,
+
+        /*
+         * Jangan memakai satu tag global.
+         * Setiap push bisa mempunyai notifikasi sendiri.
+         */
+        tag:
+          String(notificationId),
+
+        /*
+         * Browser boleh menampilkan kembali
+         * notification walaupun tag sama.
+         */
+        renotify: true,
+
+        /*
+         * Tidak membungkam notification.
+         */
+        silent: false,
+
+        /*
+         * Timestamp notification.
+         */
+        timestamp: Date.now(),
+
+        /*
+         * Android/browser tertentu mendukung vibrate.
+         */
+        vibrate: [
+          200,
+          100,
+          200
+        ],
+
+        /*
+         * Data yang ikut notification.
+         */
+        data: {
+
+          url: targetUrl,
+
+          notificationId:
+            notificationId,
+
+          unreadCount:
+            unreadCount,
+
+          source:
+            "PAG_DOCS"
+        },
+
+        /*
+         * Action.
+         */
+        actions: [
+          {
+            action: "open",
+            title: "Buka PAG Docs"
+          },
+          {
+            action: "tutup",
+            title: "Tutup"
+          }
+        ]
+      };
+
+
+      /* ------------------------------------------------------
+       * TAMPILKAN NOTIFICATION
+       *
+       * Ini tetap berjalan walaupun:
+       * - tab ditutup
+       * - browser window ditutup
+       * - PWA ditutup
+       * ------------------------------------------------------ */
+
+      await self.registration.showNotification(
+        title,
+        notificationOptions
+      );
+
+
+      console.log(
+        "[PAG SW] PUSH RECEIVED:",
+        title,
+        data
+      );
+
+    })()
+  );
+});
+
+
+/* ============================================================
  * NOTIFICATION CLICK
- * ========================================================== */
+ * ============================================================ */
 
 self.addEventListener(
   "notificationclick",
   event => {
 
-    /*
-     * Tutup notification terlebih dahulu.
-     */
-
     event.notification.close();
 
 
     /*
-     * Action "Tutup".
+     * Tombol Tutup
      */
-
     if (
       event.action ===
       "tutup"
     ) {
 
       return;
-
     }
 
 
     event.waitUntil(
-
       (async () => {
 
-        const rawUrl =
-          event.notification?.data?.url ||
-          PAG_APP_URL;
+        const notificationData =
+          event.notification?.data ||
+          {};
 
 
         const targetUrl =
           getSafeUrl(
-            rawUrl
+            notificationData.url
           );
 
 
-        /* --------------------------------------------------
-           CARI WINDOW PAG DOCS
-           -------------------------------------------------- */
+        /* ----------------------------------------------------
+         * CARI WINDOW PAG DOCS YANG SUDAH TERBUKA
+         * ---------------------------------------------------- */
 
-        const clientList =
+        const clients =
           await self.clients.matchAll({
-
-            type:
-              "window",
-
-            includeUncontrolled:
-              true
-
+            type: "window",
+            includeUncontrolled: true
           });
 
 
-        /* --------------------------------------------------
-           FOCUS / NAVIGATE EXISTING WINDOW
-           -------------------------------------------------- */
+        /*
+         * Jika ada PAG Docs yang terbuka,
+         * fokuskan window tersebut.
+         */
 
-        for (
-          const client of clientList
-        ) {
+        for (const client of clients) {
 
           try {
 
             /*
-             * Fokus window.
+             * Prioritaskan domain PAG Docs.
              */
-
-            if (
-              "focus" in client
-            ) {
-
-              await client.focus();
-
-            }
-
-
-            /*
-             * Kalau sudah berada di target,
-             * tidak perlu navigate lagi.
-             */
-
-            if (
-              client.url ===
-              targetUrl
-            ) {
-
-              return;
-
-            }
-
-
-            /*
-             * Navigate jika tersedia.
-             */
-
-            if (
-              "navigate" in client
-            ) {
-
-              await client.navigate(
-                targetUrl
+            const clientUrl =
+              new URL(
+                client.url
               );
 
-              return;
 
+            if (
+              clientUrl.origin ===
+              new URL(
+                PAG_APP_URL
+              ).origin
+            ) {
+
+              if (
+                "focus" in client
+              ) {
+
+                await client.focus();
+              }
+
+
+              /*
+               * Jika URL berbeda,
+               * navigasikan ke target.
+               */
+              if (
+                client.url !==
+                targetUrl &&
+                "navigate" in client
+              ) {
+
+                await client.navigate(
+                  targetUrl
+                );
+              }
+
+
+              /*
+               * Beri tahu halaman bahwa
+               * notification dibuka.
+               */
+
+              try {
+
+                client.postMessage({
+
+                  type:
+                    "PAG_NOTIFICATION_OPENED",
+
+                  notificationId:
+                    notificationData
+                      .notificationId ||
+                    null,
+
+                  unreadCount:
+                    notificationData
+                      .unreadCount ??
+                    null
+                });
+
+              } catch {}
+
+
+              return;
             }
 
           } catch (error) {
@@ -581,15 +529,15 @@ self.addEventListener(
               "[PAG SW] Existing client error:",
               error
             );
-
           }
-
         }
 
 
-        /* --------------------------------------------------
-           BUKA WINDOW BARU
-           -------------------------------------------------- */
+        /* ----------------------------------------------------
+         * TIDAK ADA WINDOW
+         *
+         * BUKA PAG DOCS BARU.
+         * ---------------------------------------------------- */
 
         if (
           self.clients.openWindow
@@ -598,32 +546,45 @@ self.addEventListener(
           await self.clients.openWindow(
             targetUrl
           );
-
         }
 
       })()
-
     );
-
   }
 );
 
 
-/* ==========================================================
- * MESSAGE FROM PAGE
- * ========================================================== */
+/* ============================================================
+ * NOTIFICATION CLOSE
+ * ============================================================ */
+
+self.addEventListener(
+  "notificationclose",
+  event => {
+
+    console.log(
+      "[PAG SW] Notification closed"
+    );
+  }
+);
+
+
+/* ============================================================
+ * MESSAGE FROM INDEX.HTML
+ * ============================================================ */
 
 self.addEventListener(
   "message",
   event => {
 
     const data =
-      event.data || {};
+      event.data ||
+      {};
 
 
-    /* ------------------------------------------------------
-       SKIP WAITING
-       ------------------------------------------------------ */
+    /* --------------------------------------------------------
+     * SKIP WAITING
+     * -------------------------------------------------------- */
 
     if (
       data.type ===
@@ -635,13 +596,12 @@ self.addEventListener(
       );
 
       return;
-
     }
 
 
-    /* ------------------------------------------------------
-       CLEAR BADGE
-       ------------------------------------------------------ */
+    /* --------------------------------------------------------
+     * CLEAR BADGE
+     * -------------------------------------------------------- */
 
     if (
       data.type ===
@@ -649,19 +609,16 @@ self.addEventListener(
     ) {
 
       event.waitUntil(
-
         clearAppBadge()
-
       );
 
       return;
-
     }
 
 
-    /* ------------------------------------------------------
-       SET BADGE
-       ------------------------------------------------------ */
+    /* --------------------------------------------------------
+     * SET BADGE
+     * -------------------------------------------------------- */
 
     if (
       data.type ===
@@ -669,21 +626,18 @@ self.addEventListener(
     ) {
 
       event.waitUntil(
-
         updateAppBadge(
           data.count
         )
-
       );
 
       return;
-
     }
 
 
-    /* ------------------------------------------------------
-       PING
-       ------------------------------------------------------ */
+    /* --------------------------------------------------------
+     * PING
+     * -------------------------------------------------------- */
 
     if (
       data.type ===
@@ -704,21 +658,18 @@ self.addEventListener(
 
             version:
               PAG_SW_VERSION
-
           });
-
         }
 
       } catch (error) {
 
         console.warn(
-          "[PAG SW] Ping response error:",
+          "[PAG SW] Ping error:",
           error
         );
-
       }
 
+      return;
     }
-
   }
 );
