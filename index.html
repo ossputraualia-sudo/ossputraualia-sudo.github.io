@@ -40,7 +40,7 @@
     href="./icon-192.png"
   >
 
-  <title>PAG Docs</title>
+  <title> PT. Putra Aulia </title>
 
 
   <style>
@@ -367,7 +367,7 @@
 
       <p id="lockText">
 
-        PAG Docs menggunakan
+        Aplikasi menggunakan
         notifikasi browser sebagai
         satu-satunya sistem
         pemberitahuan.
@@ -389,11 +389,7 @@
 
       <p class="lockSmall">
 
-        Setelah aktif, notifikasi
-        diproses oleh Service Worker
-        dan dapat diterima ketika
-        PAG Docs sedang dibuka
-        maupun tidak.
+        by: Azhar
 
       </p>
 
@@ -414,7 +410,7 @@
 
   <iframe
     id="appFrame"
-    title="PAG Docs"
+    title="PT. Putra Aulia"
   ></iframe>
 
 
@@ -922,7 +918,7 @@
     booting = true;
 
     try {
-      if (!window.isSecureContext) throw new Error("PAG Docs membutuhkan HTTPS.");
+      if (!window.isSecureContext) throw new Error("Aplikasi membutuhkan HTTPS.");
       if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
         throw new Error("Browser tidak mendukung Service Worker / Web Push.");
       }
@@ -1004,7 +1000,7 @@
       } else {
         showLock(
           "Notifikasi Belum Diizinkan",
-          "Izinkan notifikasi agar PAG Docs dapat mengirim pemberitahuan penting.",
+          "Izinkan notifikasi agar Aplikasi dapat mengirim pemberitahuan penting.",
           "Aktifkan Notifikasi"
         );
       }
@@ -1029,8 +1025,8 @@
 
   function showBlockedState() {
     showLock(
-      "Notifikasi Diblokir",
-      "Izin notifikasi telah diblokir di browser. Klik ikon Gembok / Setelan Situs di samping kolom URL browser Anda, ubah izin Notifikasi menjadi 'Izinkan', kemudian klik tombol di bawah.",
+      "Aplikasi Diblokir",
+      "Karena izin notifikasi telah diblokir di browser. Pilih titik 3 di kanan atas - App Info - Izinkan Notifikasi - Reload ",
       "Saya Sudah Mengizinkan"
     );
     allowButton.disabled = false;
@@ -1088,7 +1084,7 @@
     if (!mobile || isStandalonePWA()) return null;
 
     if (/iPhone|iPad|iPod/i.test(ua)) {
-      return "Untuk menerima notifikasi PAG Docs secara optimal di iPhone/iPad, pasang PAG Docs ke Layar Utama sebagai PWA terlebih dahulu, kemudian buka PAG Docs dari ikon tersebut.";
+      return "Untuk menerima notifikasi Aplikasi secara optimal di iPhone/iPad, pasang Aplikasi ke Layar Utama sebagai PWA terlebih dahulu, kemudian buka Aplikasi dari ikon tersebut.";
     }
     return null;
   }
@@ -1107,7 +1103,7 @@
 
     // 1. Cek HTTPS
     if (!window.isSecureContext) {
-      showLock("Koneksi Tidak Aman", "Web Push PAG Docs membutuhkan HTTPS.", "Tutup");
+      showLock("Koneksi Tidak Aman", "Web Push Aplikasi membutuhkan HTTPS.", "Tutup");
       allowButton.disabled = true;
       return;
     }
@@ -1138,12 +1134,12 @@
     // 5. JIKA DEFAULT (BELUM PERNAH DIATUR / PERTAMA KALI)
     const mobileMessage = getPlatformMessage();
     if (mobileMessage) {
-      showLock("Pasang PAG Docs Terlebih Dahulu", mobileMessage, "Saya Sudah Memasang");
+      showLock("Pasang Aplikasi Terlebih Dahulu", mobileMessage, "Saya Sudah Memasang");
       allowButton.addEventListener("click", async () => {
         if (isStandalonePWA()) {
           await requestNotificationPermission();
         } else {
-          showLock("PAG Docs Belum Terpasang", mobileMessage, "Saya Sudah Memasang");
+          showLock("Aplikasi Belum Terpasang", mobileMessage, "Saya Sudah Memasang");
         }
       }, { once: true });
       return;
@@ -1152,7 +1148,7 @@
     // Tampilkan lock izin untuk pengguna baru
     showLock(
       "Izin Notifikasi Diperlukan",
-      "PAG Docs menggunakan notifikasi browser sebagai satu-satunya sistem pemberitahuan. Izinkan notifikasi untuk membuka aplikasi.",
+      "Aplikasi menggunakan notifikasi browser sebagai satu-satunya sistem pemberitahuan. Izinkan notifikasi untuk membuka aplikasi.",
       "Aktifkan Notifikasi"
     );
   }
