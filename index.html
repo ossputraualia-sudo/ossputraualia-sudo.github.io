@@ -82,13 +82,6 @@
 
     /* ======================================================
      * NOTIFICATION LOCK
-     *
-     * CATATAN:
-     *
-     * Ini bukan banner push.
-     *
-     * Ini hanya pengaman aplikasi ketika
-     * notifikasi memang belum siap.
      * ====================================================== */
 
     #notificationLock {
@@ -121,9 +114,10 @@
     }
 
 
+    /* KUNCI ANTI KEDIP: Sembunyikan secara default */
     #notificationLock.hidden {
 
-      display: none;
+      display: none !important;
 
     }
 
@@ -348,10 +342,12 @@
 
   <!-- =====================================================
        SINGLE NOTIFICATION LOCK
+       Secara default diberi class "hidden" agar tidak berkedip
        ===================================================== -->
 
   <div
     id="notificationLock"
+    class="hidden"
     role="dialog"
     aria-modal="true"
     aria-labelledby="lockTitle"
@@ -433,7 +429,7 @@
 
 
   /* ========================================================
-   * CONFIG
+   * CONFIG (100% PERSIS SEPERTI ASLINYA, TIDAK ADA PERUBAHAN)
    * ======================================================== */
 
   const CONFIG = {
@@ -453,11 +449,6 @@
     SB_KEY:
       "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq",
 
-
-    /*
-     * VAPID PUBLIC KEY YANG SUDAH TERBUKTI
-     * COCOK DENGAN PRIVATE KEY DI SUPABASE.
-     */
 
     VAPID_PUBLIC_KEY:
       "BJA7AZcYbZ-m23nmGsoICga9u-MhkIOfaL4ZuYTF0lO0PyUQKztgodNHp3EjQxKXTfMq0eO0nIDEyi5SHlKEZPg",
@@ -479,17 +470,9 @@
       "PAG_DOCS_UNREAD_COUNT",
 
 
-    /*
-     * Maksimal retry untuk operasi recovery.
-     */
-
     MAX_RETRY:
       2,
 
-
-    /*
-     * Timeout network.
-     */
 
     NETWORK_TIMEOUT:
       12000
@@ -597,39 +580,16 @@
    * LOG
    * ======================================================== */
 
-  function log(
-    ...args
-  ) {
-
-    console.log(
-      "[PAG]",
-      ...args
-    );
-
+  function log(...args) {
+    console.log("[PAG]", ...args);
   }
 
-
-  function warn(
-    ...args
-  ) {
-
-    console.warn(
-      "[PAG]",
-      ...args
-    );
-
+  function warn(...args) {
+    console.warn("[PAG]", ...args);
   }
 
-
-  function error(
-    ...args
-  ) {
-
-    console.error(
-      "[PAG]",
-      ...args
-    );
-
+  function error(...args) {
+    console.error("[PAG]", ...args);
   }
 
 
@@ -637,2144 +597,572 @@
    * ERROR UI
    * ======================================================== */
 
-  function showError(
-    message
-  ) {
-
-    errorBox.textContent =
-      String(
-        message ||
-        ""
-      );
-
-    errorBox.style.display =
-      "block";
-
+  function showError(message) {
+    errorBox.textContent = String(message || "");
+    errorBox.style.display = "block";
   }
-
 
   function clearError() {
-
-    errorBox.textContent =
-      "";
-
-    errorBox.style.display =
-      "none";
-
+    errorBox.textContent = "";
+    errorBox.style.display = "none";
   }
 
 
   /* ========================================================
-   * LOCK
+   * LOCK CONTROLS
    * ======================================================== */
 
-  function showLock(
-    title,
-    message,
-    buttonText
-  ) {
-
-    lockTitle.textContent =
-      title ||
-      "Notifikasi Diperlukan";
-
-
-    lockText.textContent =
-      message ||
-      "";
-
-
-    allowButton.textContent =
-      buttonText ||
-      "Aktifkan Notifikasi";
-
-
-    lock.classList.remove(
-      "hidden"
-    );
-
+  function showLock(title, message, buttonText) {
+    lockTitle.textContent = title || "Notifikasi Diperlukan";
+    lockText.textContent = message || "";
+    allowButton.textContent = buttonText || "Aktifkan Notifikasi";
+    lock.classList.remove("hidden");
   }
 
-
   function hideLock() {
-
-    lock.classList.add(
-      "hidden"
-    );
-
+    lock.classList.add("hidden");
   }
 
 
   /* ========================================================
-   * OPEN APPLICATION
-   *
-   * HANYA DIPANGGIL SETELAH PUSH READY.
+   * OPEN APPLICATION (LANGSUNG TAMPILKAN IFRAME)
    * ======================================================== */
 
   function openApplication() {
-
     hideLock();
+    appFrame.style.display = "block";
 
-
-    appFrame.style.display =
-      "block";
-
-
-    if (
-      !appFrame.getAttribute(
-        "src"
-      )
-    ) {
-
-      appFrame.src =
-        CONFIG.APP_SCRIPT_URL;
-
+    if (!appFrame.getAttribute("src")) {
+      appFrame.src = CONFIG.APP_SCRIPT_URL;
     }
-
   }
 
 
   /* ========================================================
-   * DEVICE ID
+   * LOCK APPLICATION (JIKA IZIN DICABUT SAAT DIGUNAKAN)
+   * ======================================================== */
+
+  function lockApplicationInstantly() {
+    appFrame.style.display = "none";
+    showBlockedState();
+  }
+
+
+  /* ========================================================
+   * DEVICE IDENTIFIER & METADATA
    * ======================================================== */
 
   function getDeviceId() {
-
-    let id =
-      localStorage.getItem(
-        CONFIG.DEVICE_STORAGE
-      );
-
-
+    let id = localStorage.getItem(CONFIG.DEVICE_STORAGE);
     if (!id) {
-
-      if (
-        typeof crypto !==
-        "undefined" &&
-        typeof crypto.randomUUID ===
-        "function"
-      ) {
-
-        id =
-          crypto.randomUUID();
-
+      if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+        id = crypto.randomUUID();
       } else {
-
-        id =
-          "pag-" +
-          Date.now() +
-          "-" +
-          Math.random()
-            .toString(36)
-            .slice(2);
-
+        id = "pag-" + Date.now() + "-" + Math.random().toString(36).slice(2);
       }
-
-
-      localStorage.setItem(
-        CONFIG.DEVICE_STORAGE,
-        id
-      );
-
+      localStorage.setItem(CONFIG.DEVICE_STORAGE, id);
     }
-
-
     return id;
-
   }
-
-
-  /* ========================================================
-   * DEVICE LABEL
-   * ======================================================== */
 
   function getDeviceLabel() {
-
-    const ua =
-      navigator.userAgent ||
-      "";
-
-
-    if (
-      /Android/i.test(ua)
-    ) {
-
-      return "Android";
-
-    }
-
-
-    if (
-      /iPhone|iPad|iPod/i.test(ua)
-    ) {
-
-      return "iOS";
-
-    }
-
-
-    if (
-      /Windows/i.test(ua)
-    ) {
-
-      return "Windows";
-
-    }
-
-
-    if (
-      /Macintosh|Mac OS/i.test(ua)
-    ) {
-
-      return "macOS";
-
-    }
-
-
-    if (
-      /Linux/i.test(ua)
-    ) {
-
-      return "Linux";
-
-    }
-
-
+    const ua = navigator.userAgent || "";
+    if (/Android/i.test(ua)) return "Android";
+    if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+    if (/Windows/i.test(ua)) return "Windows";
+    if (/Macintosh|Mac OS/i.test(ua)) return "macOS";
+    if (/Linux/i.test(ua)) return "Linux";
     return "Browser";
-
   }
-
-
-  /* ========================================================
-   * PWA DETECTION
-   * ======================================================== */
 
   function isStandalonePWA() {
-
-    const standalone =
-      window.matchMedia &&
-      window.matchMedia(
-        "(display-mode: standalone)"
-      ).matches;
-
-
-    const iosStandalone =
-      window.navigator.standalone === true;
-
-
-    return Boolean(
-      standalone ||
-      iosStandalone
-    );
-
+    const standalone = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
+    const iosStandalone = window.navigator.standalone === true;
+    return Boolean(standalone || iosStandalone);
   }
 
 
   /* ========================================================
-   * VAPID KEY
+   * VAPID CRYPTO UTILS (UTUH 100%)
    * ======================================================== */
 
-  function vapidToUint8Array(
-    base64
-  ) {
-
-    const padding =
-      "=".repeat(
-        (4 -
-          base64.length % 4) % 4
-      );
-
-
-    const base64Url =
-      (
-        base64 +
-        padding
-      )
-        .replace(
-          /-/g,
-          "+"
-        )
-        .replace(
-          /_/g,
-          "/"
-        );
-
-
-    const raw =
-      atob(
-        base64Url
-      );
-
-
-    return Uint8Array.from(
-      [...raw].map(
-        char =>
-          char.charCodeAt(0)
-      )
-    );
-
+  function vapidToUint8Array(base64) {
+    const padding = "=".repeat((4 - base64.length % 4) % 4);
+    const base64Url = (base64 + padding).replace(/-/g, "+").replace(/_/g, "/");
+    const raw = atob(base64Url);
+    return Uint8Array.from([...raw].map(char => char.charCodeAt(0)));
   }
 
-
-  /* ========================================================
-   * ARRAY BUFFER → BASE64URL
-   * ======================================================== */
-
-  function uint8ToBase64Url(
-    value
-  ) {
-
-    if (!value) {
-
-      return "";
-
+  function uint8ToBase64Url(value) {
+    if (!value) return "";
+    const bytes = value instanceof Uint8Array ? value : new Uint8Array(value);
+    let binary = "";
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      binary += String.fromCharCode(...bytes.subarray(i, Math.min(i + chunk, bytes.length)));
     }
-
-
-    const bytes =
-      value instanceof Uint8Array
-        ? value
-        : new Uint8Array(
-            value
-          );
-
-
-    let binary =
-      "";
-
-
-    const chunk =
-      0x8000;
-
-
-    for (
-      let i = 0;
-      i < bytes.length;
-      i += chunk
-    ) {
-
-      binary += String.fromCharCode(
-        ...bytes.subarray(
-          i,
-          Math.min(
-            i + chunk,
-            bytes.length
-          )
-        )
-      );
-
-    }
-
-
-    return btoa(
-      binary
-    )
-      .replace(
-        /\+/g,
-        "-"
-      )
-      .replace(
-        /\//g,
-        "_"
-      )
-      .replace(
-        /=+$/g,
-        ""
-      );
-
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
   }
 
-
-  /* ========================================================
-   * COMPARE VAPID APPLICATION SERVER KEY
-   *
-   * INI PENTING.
-   *
-   * getSubscription() bisa mengembalikan subscription lama
-   * yang dibuat menggunakan VAPID public key lama.
-   *
-   * Kalau key berbeda:
-   *
-   * unsubscribe()
-   * →
-   * subscribe() ulang dengan key baru.
-   * ======================================================== */
-
-  function subscriptionUsesCurrentVapid(
-    subscription
-  ) {
-
+  function subscriptionUsesCurrentVapid(subscription) {
     try {
+      if (!subscription) return false;
+      const configuredKey = vapidToUint8Array(CONFIG.VAPID_PUBLIC_KEY);
+      const actualKey = subscription?.options?.applicationServerKey;
+      if (!actualKey) return true;
 
-      if (
-        !subscription
-      ) {
-
-        return false;
-
+      const actual = new Uint8Array(actualKey);
+      if (actual.length !== configuredKey.length) return false;
+      for (let i = 0; i < configuredKey.length; i++) {
+        if (actual[i] !== configuredKey[i]) return false;
       }
-
-
-      const configuredKey =
-        vapidToUint8Array(
-          CONFIG.VAPID_PUBLIC_KEY
-        );
-
-
-      const actualKey =
-        subscription
-          ?.options
-          ?.applicationServerKey;
-
-
-      /*
-       * Browser tertentu dapat tidak mengekspos
-       * applicationServerKey.
-       *
-       * Kalau tidak tersedia, jangan memaksa
-       * unsubscribe subscription yang sebenarnya
-       * mungkin valid.
-       */
-
-      if (
-        !actualKey
-      ) {
-
-        return true;
-
-      }
-
-
-      const actual =
-        new Uint8Array(
-          actualKey
-        );
-
-
-      if (
-        actual.length !==
-        configuredKey.length
-      ) {
-
-        return false;
-
-      }
-
-
-      for (
-        let i = 0;
-        i < configuredKey.length;
-        i++
-      ) {
-
-        if (
-          actual[i] !==
-          configuredKey[i]
-        ) {
-
-          return false;
-
-        }
-
-      }
-
-
       return true;
-
-    } catch (
-      errorValue
-    ) {
-
-      warn(
-        "Tidak dapat memeriksa applicationServerKey:",
-        errorValue
-      );
-
-
-      /*
-       * Fail-open di sini.
-       *
-       * Jangan menghancurkan subscription
-       * yang mungkin sebenarnya valid.
-       */
-
+    } catch (errorValue) {
+      warn("Tidak dapat memeriksa applicationServerKey:", errorValue);
       return true;
-
     }
-
   }
 
 
   /* ========================================================
-   * NETWORK FETCH WITH TIMEOUT
+   * NETWORK & SUPABASE FETCH (UTUH 100%)
    * ======================================================== */
 
-  async function fetchWithTimeout(
-    url,
-    options = {},
-    timeout =
-      CONFIG.NETWORK_TIMEOUT
-  ) {
-
-    const controller =
-      new AbortController();
-
-
-    const timer =
-      setTimeout(
-        () => {
-
-          controller.abort();
-
-        },
-        timeout
-      );
-
-
+  async function fetchWithTimeout(url, options = {}, timeout = CONFIG.NETWORK_TIMEOUT) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => { controller.abort(); }, timeout);
     try {
-
-      return await fetch(
-        url,
-        {
-
-          ...options,
-
-          signal:
-            controller.signal
-
-        }
-      );
-
+      return await fetch(url, { ...options, signal: controller.signal });
     } finally {
-
-      clearTimeout(
-        timer
-      );
-
+      clearTimeout(timer);
     }
-
   }
 
+  async function supabaseFetch(path, options = {}) {
+    const response = await fetchWithTimeout(CONFIG.SB_URL + path, {
+      ...options,
+      headers: {
+        apikey: CONFIG.SB_KEY,
+        Accept: "application/json",
+        ...(options.headers || {})
+      }
+    });
 
-  /* ========================================================
-   * SUPABASE REST
-   * ======================================================== */
-
-  async function supabaseFetch(
-    path,
-    options = {}
-  ) {
-
-    const response =
-      await fetchWithTimeout(
-        CONFIG.SB_URL +
-        path,
-        {
-
-          ...options,
-
-          headers: {
-
-            apikey:
-              CONFIG.SB_KEY,
-
-            Accept:
-              "application/json",
-
-            ...(options.headers || {})
-
-          }
-
-        }
-      );
-
-
-    const text =
-      await response.text();
-
-
-    if (
-      !response.ok
-    ) {
-
-      throw new Error(
-        "Supabase " +
-        response.status +
-        ": " +
-        text
-      );
-
-    }
-
-
-    if (
-      !text
-    ) {
-
-      return null;
-
-    }
-
-
-    try {
-
-      return JSON.parse(
-        text
-      );
-
-    } catch (
-      _
-    ) {
-
-      return text;
-
-    }
-
+    const text = await response.text();
+    if (!response.ok) throw new Error("Supabase " + response.status + ": " + text);
+    if (!text) return null;
+    try { return JSON.parse(text); } catch (_) { return text; }
   }
 
-
-  /* ========================================================
-   * RETRY HELPER
-   * ======================================================== */
-
-  async function retry(
-    fn,
-    maxRetry =
-      CONFIG.MAX_RETRY
-  ) {
-
-    let lastError =
-      null;
-
-
-    for (
-      let attempt = 0;
-      attempt <= maxRetry;
-      attempt++
-    ) {
-
+  async function retry(fn, maxRetry = CONFIG.MAX_RETRY) {
+    let lastError = null;
+    for (let attempt = 0; attempt <= maxRetry; attempt++) {
       try {
-
-        return await fn(
-          attempt
-        );
-
-      } catch (
-        errorValue
-      ) {
-
-        lastError =
-          errorValue;
-
-
-        if (
-          attempt >=
-          maxRetry
-        ) {
-
-          break;
-
-        }
-
-
-        await new Promise(
-          resolve =>
-            setTimeout(
-              resolve,
-              500 *
-              (attempt + 1)
-            )
-        );
-
+        return await fn(attempt);
+      } catch (errorValue) {
+        lastError = errorValue;
+        if (attempt >= maxRetry) break;
+        await new Promise(resolve => setTimeout(resolve, 500 * (attempt + 1)));
       }
-
     }
-
-
     throw lastError;
-
   }
 
 
   /* ========================================================
-   * BADGE
+   * BADGE SYNC
    * ======================================================== */
 
-  async function setBadge(
-    count
-  ) {
-
-    const n =
-      Math.max(
-        0,
-        Math.min(
-          999,
-          Number(count) ||
-          0
-        )
-      );
-
-
-    localStorage.setItem(
-      CONFIG.BADGE_STORAGE,
-      String(n)
-    );
-
-
-    /*
-     * Page-side Badging API.
-     */
+  async function setBadge(count) {
+    const n = Math.max(0, Math.min(999, Number(count) || 0));
+    localStorage.setItem(CONFIG.BADGE_STORAGE, String(n));
 
     try {
-
-      if (
-        typeof navigator.setAppBadge ===
-        "function"
-      ) {
-
-        if (
-          n > 0
-        ) {
-
-          await navigator.setAppBadge(
-            n
-          );
-
-        } else if (
-          typeof navigator.clearAppBadge ===
-          "function"
-        ) {
-
+      if (typeof navigator.setAppBadge === "function") {
+        if (n > 0) {
+          await navigator.setAppBadge(n);
+        } else if (typeof navigator.clearAppBadge === "function") {
           await navigator.clearAppBadge();
-
         }
-
       }
-
-    } catch (
-      badgeError
-    ) {
-
-      warn(
-        "Badge page:",
-        badgeError
-      );
-
+    } catch (badgeError) {
+      warn("Badge page:", badgeError);
     }
 
-
-    /*
-     * Service Worker badge.
-     */
-
     try {
-
-      const worker =
-        swRegistration?.active;
-
-
-      if (
-        worker
-      ) {
-
+      const worker = swRegistration?.active;
+      if (worker) {
         worker.postMessage({
-
-          type:
-            n > 0
-              ? "SET_APP_BADGE"
-              : "CLEAR_APP_BADGE",
-
-          count:
-            n
-
+          type: n > 0 ? "SET_APP_BADGE" : "CLEAR_APP_BADGE",
+          count: n
         });
-
       }
-
-    } catch (
-      _
-    ) {}
-
+    } catch (_) {}
   }
 
 
   /* ========================================================
-   * SW VERSION
+   * SERVICE WORKER & SUBSCRIPTION ENGINE
    * ======================================================== */
 
   async function getSwVersion() {
-
-    return new Promise(
-      resolve => {
-
-        if (
-          !swRegistration?.active
-        ) {
-
-          resolve(
-            "unknown"
-          );
-
-          return;
-
-        }
-
-
-        const channel =
-          new MessageChannel();
-
-
-        const timer =
-          setTimeout(
-            () => {
-
-              resolve(
-                "unknown"
-              );
-
-            },
-            1500
-          );
-
-
-        channel.port1.onmessage =
-          event => {
-
-            clearTimeout(
-              timer
-            );
-
-
-            resolve(
-              event.data?.version ||
-              "unknown"
-            );
-
-          };
-
-
-        try {
-
-          swRegistration.active.postMessage(
-            {
-              type:
-                "PAG_SW_PING"
-            },
-            [
-              channel.port2
-            ]
-          );
-
-        } catch (
-          errorValue
-        ) {
-
-          clearTimeout(
-            timer
-          );
-
-
-          resolve(
-            "unknown"
-          );
-
-        }
-
+    return new Promise(resolve => {
+      if (!swRegistration?.active) {
+        resolve("unknown");
+        return;
       }
-    );
-
+      const channel = new MessageChannel();
+      const timer = setTimeout(() => { resolve("unknown"); }, 1500);
+      channel.port1.onmessage = event => {
+        clearTimeout(timer);
+        resolve(event.data?.version || "unknown");
+      };
+      try {
+        swRegistration.active.postMessage({ type: "PAG_SW_PING" }, [channel.port2]);
+      } catch (errorValue) {
+        clearTimeout(timer);
+        resolve("unknown");
+      }
+    });
   }
 
-
-  /* ========================================================
-   * DELETE OLD DEVICE SUBSCRIPTIONS
-   *
-   * BEST EFFORT.
-   *
-   * Jika RLS tidak mengizinkan DELETE dengan publishable key,
-   * proses utama TIDAK dihentikan.
-   *
-   * Endpoint aktif tetap disimpan.
-   * ======================================================== */
-
-  async function cleanupOldDeviceSubscriptions(
-    endpoint
-  ) {
-
-    const deviceId =
-      getDeviceId();
-
-
-    if (
-      !deviceId ||
-      !endpoint
-    ) {
-
-      return;
-
-    }
-
+  async function cleanupOldDeviceSubscriptions(endpoint) {
+    const deviceId = getDeviceId();
+    if (!deviceId || !endpoint) return;
 
     try {
-
-      const query =
-        "/rest/v1/web_push_subscriptions" +
-        "?device_id=eq." +
-        encodeURIComponent(
-          deviceId
-        ) +
-        "&endpoint=neq." +
-        encodeURIComponent(
-          endpoint
-        );
-
-
-      await supabaseFetch(
-        query,
-        {
-          method:
-            "DELETE"
-        }
-      );
-
-
-      log(
-        "Subscription lama pada device dibersihkan."
-      );
-
-    } catch (
-      errorValue
-    ) {
-
-      /*
-       * Jangan membuat push gagal hanya karena
-       * cleanup tidak diizinkan oleh RLS.
-       */
-
-      warn(
-        "Cleanup subscription lama dilewati:",
-        errorValue?.message ||
-        errorValue
-      );
-
+      const query = "/rest/v1/web_push_subscriptions?device_id=eq." +
+        encodeURIComponent(deviceId) + "&endpoint=neq." + encodeURIComponent(endpoint);
+      await supabaseFetch(query, { method: "DELETE" });
+      log("Subscription lama pada device dibersihkan.");
+    } catch (errorValue) {
+      warn("Cleanup subscription lama dilewati:", errorValue?.message || errorValue);
     }
-
   }
 
-
-  /* ========================================================
-   * SAVE SUBSCRIPTION
-   * ======================================================== */
-
-  async function saveSubscription(
-    subscription
-  ) {
-
-    const json =
-      subscription.toJSON();
-
-
-    const keys =
-      json.keys ||
-      {};
-
-
-    if (
-      !json.endpoint ||
-      !keys.p256dh ||
-      !keys.auth
-    ) {
-
-      throw new Error(
-        "Push subscription tidak lengkap."
-      );
-
+  async function saveSubscription(subscription) {
+    const json = subscription.toJSON();
+    const keys = json.keys || {};
+    if (!json.endpoint || !keys.p256dh || !keys.auth) {
+      throw new Error("Push subscription tidak lengkap.");
     }
-
 
     const row = {
-
-      device_id:
-        getDeviceId(),
-
-      user_id:
-        session.user_id ||
-        null,
-
-      role:
-        session.role ||
-        null,
-
-      endpoint:
-        json.endpoint,
-
-      keys_p256dh:
-        keys.p256dh,
-
-      keys_auth:
-        keys.auth,
-
-      device_label:
-        getDeviceLabel(),
-
-      updated_at:
-        new Date().toISOString()
-
+      device_id: getDeviceId(),
+      user_id: session.user_id || null,
+      role: session.role || null,
+      endpoint: json.endpoint,
+      keys_p256dh: keys.p256dh,
+      keys_auth: keys.auth,
+      device_label: getDeviceLabel(),
+      updated_at: new Date().toISOString()
     };
 
+    await cleanupOldDeviceSubscriptions(json.endpoint);
 
-    /*
-     * Bersihkan endpoint lama milik device.
-     *
-     * Best effort.
-     */
+    await supabaseFetch("/rest/v1/web_push_subscriptions?on_conflict=endpoint", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates,return=minimal"
+      },
+      body: JSON.stringify(row)
+    });
 
-    await cleanupOldDeviceSubscriptions(
-      json.endpoint
-    );
-
-
-    /*
-     * Endpoint tetap menjadi conflict key
-     * sesuai schema yang sudah berhasil digunakan.
-     */
-
-    await supabaseFetch(
-
-      "/rest/v1/web_push_subscriptions" +
-      "?on_conflict=endpoint",
-
-      {
-
-        method:
-          "POST",
-
-        headers: {
-
-          "Content-Type":
-            "application/json",
-
-          "Prefer":
-            "resolution=merge-duplicates,return=minimal"
-
-        },
-
-        body:
-          JSON.stringify(
-            row
-          )
-
-      }
-
-    );
-
-
-    health.subscriptionSaved =
-      true;
-
-
-    log(
-      "Push subscription tersimpan."
-    );
-
+    health.subscriptionSaved = true;
+    log("Push subscription tersimpan di Supabase.");
   }
-
-
-  /* ========================================================
-   * REGISTER SERVICE WORKER
-   * ======================================================== */
 
   async function registerServiceWorker() {
-
-    swRegistration =
-      await navigator.serviceWorker.register(
-        CONFIG.SW_PATH,
-        {
-
-          scope:
-            CONFIG.SW_SCOPE,
-
-          updateViaCache:
-            "none"
-
-        }
-      );
-
-
-    swRegistration =
-      await navigator.serviceWorker.ready;
-
-
-    health.serviceWorker =
-      true;
-
-
-    log(
-      "SW:",
-      await getSwVersion()
-    );
-
-
+    swRegistration = await navigator.serviceWorker.register(CONFIG.SW_PATH, {
+      scope: CONFIG.SW_SCOPE,
+      updateViaCache: "none"
+    });
+    swRegistration = await navigator.serviceWorker.ready;
+    health.serviceWorker = true;
+    log("SW Version:", await getSwVersion());
     return swRegistration;
-
   }
-
-
-  /* ========================================================
-   * GET OR CREATE SUBSCRIPTION
-   * ======================================================== */
 
   async function ensurePushSubscription() {
+    if (!swRegistration) throw new Error("Service Worker belum siap.");
+    if (Notification.permission !== "granted") throw new Error("Izin notifikasi belum granted.");
 
-    if (
-      !swRegistration
-    ) {
-
-      throw new Error(
-        "Service Worker belum siap."
-      );
-
-    }
-
-
-    /*
-     * Permission harus sudah granted.
-     */
-
-    if (
-      Notification.permission !==
-      "granted"
-    ) {
-
-      throw new Error(
-        "Izin notifikasi belum granted."
-      );
-
-    }
-
-
-    let subscription =
-      await swRegistration
-        .pushManager
-        .getSubscription();
-
-
-    /* ------------------------------------------------------
-     * EXISTING SUBSCRIPTION
-     * ------------------------------------------------------ */
-
-    if (
-      subscription
-    ) {
-
-      /*
-       * Periksa apakah subscription dibuat
-       * dengan VAPID public key yang sekarang.
-       */
-
-      const validKey =
-        subscriptionUsesCurrentVapid(
-          subscription
-        );
-
-
-      if (
-        !validKey
-      ) {
-
-        log(
-          "Subscription memakai VAPID key lama. Membuat subscription baru..."
-        );
-
-
-        try {
-
-          await subscription.unsubscribe();
-
-        } catch (
-          unsubscribeError
-        ) {
-
-          warn(
-            "Unsubscribe subscription lama:",
-            unsubscribeError
-          );
-
-        }
-
-
-        subscription =
-          null;
-
+    let subscription = await swRegistration.pushManager.getSubscription();
+    if (subscription) {
+      const validKey = subscriptionUsesCurrentVapid(subscription);
+      if (!validKey) {
+        log("Subscription memakai VAPID key lama. Membuat baru...");
+        try { await subscription.unsubscribe(); } catch (e) {}
+        subscription = null;
       }
-
     }
 
-
-    /* ------------------------------------------------------
-     * CREATE NEW SUBSCRIPTION
-     * ------------------------------------------------------ */
-
-    if (
-      !subscription
-    ) {
-
-      log(
-        "Membuat PushSubscription baru..."
-      );
-
-
-      subscription =
-        await swRegistration
-          .pushManager
-          .subscribe({
-
-            userVisibleOnly:
-              true,
-
-            applicationServerKey:
-              vapidToUint8Array(
-                CONFIG.VAPID_PUBLIC_KEY
-              )
-
-          });
-
+    if (!subscription) {
+      log("Mendaftarkan PushSubscription baru ke browser...");
+      subscription = await swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: vapidToUint8Array(CONFIG.VAPID_PUBLIC_KEY)
+      });
     }
 
-
-    if (
-      !subscription
-    ) {
-
-      throw new Error(
-        "PushSubscription tidak tersedia."
-      );
-
-    }
-
-
-    health.subscription =
-      true;
-
-
+    if (!subscription) throw new Error("PushSubscription gagal dibuat.");
+    health.subscription = true;
     return subscription;
-
   }
 
 
   /* ========================================================
-   * INITIALIZE PUSH
-   *
-   * FUNGSI INI TIDAK MEMINTA PERMISSION.
-   *
-   * Permission harus sudah granted.
-   *
+   * INITIALIZE PUSH (BERJALAN DI BACKGROUND)
    * ======================================================== */
 
   async function initializePush() {
-
-    if (
-      initialized
-    ) {
-
-      return true;
-
-    }
-
-
-    if (
-      booting
-    ) {
-
-      return false;
-
-    }
-
-
-    booting =
-      true;
-
+    if (initialized) return true;
+    if (booting) return false;
+    booting = true;
 
     try {
-
-      if (
-        !window.isSecureContext
-      ) {
-
-        throw new Error(
-          "PAG Docs membutuhkan HTTPS."
-        );
-
+      if (!window.isSecureContext) throw new Error("PAG Docs membutuhkan HTTPS.");
+      if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
+        throw new Error("Browser tidak mendukung Service Worker / Web Push.");
       }
-
-
-      health.secure =
-        true;
-
-
-      if (
-        !("serviceWorker" in navigator)
-      ) {
-
-        throw new Error(
-          "Browser tidak mendukung Service Worker."
-        );
-
-      }
-
-
-      if (
-        !("PushManager" in window)
-      ) {
-
-        throw new Error(
-          "Browser tidak mendukung Web Push."
-        );
-
-      }
-
-
-      if (
-        !("Notification" in window)
-      ) {
-
-        throw new Error(
-          "Browser tidak mendukung Notification API."
-        );
-
-      }
-
-
-      health.supported =
-        true;
-
-
-      health.permission =
-        Notification.permission;
-
-
-      if (
-        Notification.permission !==
-        "granted"
-      ) {
-
-        throw new Error(
-          "Izin notifikasi belum granted."
-        );
-
-      }
-
-
-      /* ----------------------------------------------------
-       * SERVICE WORKER
-       * ---------------------------------------------------- */
 
       await registerServiceWorker();
 
+      const subscription = await retry(async () => ensurePushSubscription());
+      await retry(async () => saveSubscription(subscription));
 
-      /* ----------------------------------------------------
-       * SUBSCRIPTION
-       * ---------------------------------------------------- */
+      const oldBadge = Number(localStorage.getItem(CONFIG.BADGE_STORAGE) || 0);
+      if (oldBadge > 0) await setBadge(oldBadge);
 
-      const subscription =
-        await retry(
-          async () =>
-            ensurePushSubscription()
-        );
-
-
-      /* ----------------------------------------------------
-       * SAVE
-       * ---------------------------------------------------- */
-
-      await retry(
-        async () =>
-          saveSubscription(
-            subscription
-          )
-      );
-
-
-      /* ----------------------------------------------------
-       * RESTORE BADGE
-       * ---------------------------------------------------- */
-
-      const oldBadge =
-        Number(
-          localStorage.getItem(
-            CONFIG.BADGE_STORAGE
-          ) ||
-          0
-        );
-
-
-      if (
-        oldBadge > 0
-      ) {
-
-        await setBadge(
-          oldBadge
-        );
-
-      }
-
-
-      initialized =
-        true;
-
-
-      health.lastError =
-        null;
-
-
-      log(
-        "Push system READY."
-      );
-
-
-      /*
-       * HANYA DI SINI APLIKASI DIBUKA.
-       */
-
-      openApplication();
-
-
+      initialized = true;
+      log("Push system READY.");
       return true;
 
-    } catch (
-      errorValue
-    ) {
-
-      health.lastError =
-        errorValue?.message ||
-        String(errorValue);
-
-
+    } catch (errorValue) {
+      error("Push background error:", errorValue);
       throw errorValue;
-
     } finally {
-
-      booting =
-        false;
-
+      booting = false;
     }
-
   }
 
 
   /* ========================================================
-   * PERMISSION REQUEST
-   *
-   * HANYA DIPANGGIL DARI TOMBOL USER.
-   *
-   * Tidak ada automatic request.
+   * REAL-TIME PERMISSION MONITOR (MENCEGAH PENCABUTAN IZIN)
+   * ======================================================== */
+
+  function setupRealtimePermissionMonitor() {
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions.query({ name: 'notifications' }).then(permissionStatus => {
+        permissionStatus.onchange = () => {
+          log("Status izin berubah real-time:", permissionStatus.state);
+          if (permissionStatus.state === 'granted') {
+            openApplication();
+            initializePush().catch(() => {});
+          } else {
+            // Pengguna memblokir izin notifikasi: Kunci detik itu juga!
+            lockApplicationInstantly();
+          }
+        };
+      }).catch(e => {
+        warn("Permission query tidak didukung:", e);
+      });
+    }
+  }
+
+
+  /* ========================================================
+   * REQUEST PERMISSION (DIPANGGIL DARI KLIK TOMBOL)
    * ======================================================== */
 
   async function requestNotificationPermission() {
-
     clearError();
-
-
-    allowButton.disabled =
-      true;
-
+    allowButton.disabled = true;
 
     try {
-
-      /*
-       * Jika sudah denied, jangan request ulang.
-       */
-
-      if (
-        Notification.permission ===
-        "denied"
-      ) {
-
+      if (Notification.permission === "denied") {
         showBlockedState();
-
-
         return;
-
       }
 
-
-      /*
-       * Jika sudah granted, tidak perlu request.
-       */
-
-      if (
-        Notification.permission ===
-        "granted"
-      ) {
-
+      if (Notification.permission === "granted") {
+        openApplication();
         await initializePush();
-
-
         return;
-
       }
 
+      // Memaksa dialog izin browser muncul
+      const permission = await Notification.requestPermission();
+      health.permission = permission;
 
-      /*
-       * Hanya default yang boleh memunculkan
-       * permission prompt.
-       */
-
-      const permission =
-        await Notification.requestPermission();
-
-
-      health.permission =
-        permission;
-
-
-      if (
-        permission !==
-        "granted"
-      ) {
-
-        if (
-          permission ===
-          "denied"
-        ) {
-
-          showBlockedState();
-
-        } else {
-
-          showLock(
-
-            "Notifikasi Belum Diizinkan",
-
-            "Izinkan notifikasi agar PAG Docs dapat mengirim pemberitahuan penting.",
-
-            "Aktifkan Notifikasi"
-
-          );
-
-        }
-
-
-        return;
-
+      if (permission === "granted") {
+        openApplication();
+        await initializePush();
+      } else if (permission === "denied") {
+        showBlockedState();
+      } else {
+        showLock(
+          "Notifikasi Belum Diizinkan",
+          "Izinkan notifikasi agar PAG Docs dapat mengirim pemberitahuan penting.",
+          "Aktifkan Notifikasi"
+        );
       }
 
-
-      await initializePush();
-
-    } catch (
-      errorValue
-    ) {
-
-      error(
-        "Push init:",
-        errorValue
-      );
-
-
-      showError(
-        errorValue?.message ||
-        String(errorValue)
-      );
-
-
-      /*
-       * Permission sudah granted tetapi subscription/
-       * Supabase belum siap.
-       *
-       * Tetap lock karena notifikasi adalah
-       * pengaman aplikasi.
-       */
-
+    } catch (errorValue) {
+      error("Push init error:", errorValue);
+      showError(errorValue?.message || String(errorValue));
       showLock(
-
         "Notifikasi Belum Siap",
-
-        "PAG Docs belum dapat menyiapkan sistem notifikasi. Periksa koneksi internet lalu coba lagi.",
-
+        "Periksa koneksi internet Anda lalu coba lagi.",
         "Coba Lagi"
-
       );
-
     } finally {
-
-      allowButton.disabled =
-        false;
-
+      allowButton.disabled = false;
     }
-
   }
 
 
   /* ========================================================
-   * BLOCKED STATE
-   *
-   * TIDAK ADA requestPermission().
-   *
-   * Browser tidak akan menampilkan prompt lagi
-   * jika permission sudah denied.
+   * BLOCKED STATE (PANDUAN PEMBUKAAN BLOKIR BROWSER)
    * ======================================================== */
 
   function showBlockedState() {
-
     showLock(
-
       "Notifikasi Diblokir",
-
-      "Notifikasi PAG Docs diblokir oleh browser. Aktifkan kembali izin notifikasi untuk situs ini melalui pengaturan browser, kemudian buka kembali PAG Docs.",
-
+      "Izin notifikasi telah diblokir di browser. Klik ikon Gembok / Setelan Situs di samping kolom URL browser Anda, ubah izin Notifikasi menjadi 'Izinkan', kemudian klik tombol di bawah.",
       "Saya Sudah Mengizinkan"
-
     );
-
-
-    allowButton.disabled =
-      false;
-
+    allowButton.disabled = false;
   }
 
-
-  /* ========================================================
-   * BUTTON BEHAVIOR
-   *
-   * Jika DENIED:
-   * tombol hanya melakukan pengecekan ulang.
-   *
-   * Tidak meminta permission.
-   * ======================================================== */
 
   async function handleAllowButton() {
-
     clearError();
 
-
-    if (
-      Notification.permission ===
-      "denied"
-    ) {
-
-      /*
-       * Jangan requestPermission().
-       *
-       * User harus mengubah permission
-       * dari pengaturan browser.
-       */
-
-      showBlockedState();
-
-
-      /*
-       * Cek ulang setelah user kembali.
-       * Jika browser sudah berubah menjadi granted,
-       * initializePush akan berjalan.
-       */
-
-      setTimeout(
-        async () => {
-
-          if (
-            Notification.permission ===
-            "granted"
-          ) {
-
-            try {
-
-              await initializePush();
-
-            } catch (
-              errorValue
-            ) {
-
-              showError(
-                errorValue?.message ||
-                String(errorValue)
-              );
-
-            }
-
-          }
-
-        },
-        500
-      );
-
-
+    if (Notification.permission === "denied") {
+      // Jika pengguna sudah mengaktifkan lewat settings browser
+      if (Notification.permission === "granted") {
+        openApplication();
+        await initializePush();
+      } else {
+        showBlockedState();
+      }
       return;
-
     }
-
 
     await requestNotificationPermission();
-
   }
 
 
   /* ========================================================
-   * SESSION FROM APPS SCRIPT
+   * SESSION DARI IFRAME APPS SCRIPT
    * ======================================================== */
 
-  async function handleIframeMessage(
-    event
-  ) {
+  async function handleIframeMessage(event) {
+    if (event.source !== appFrame.contentWindow) return;
+    const data = event.data || {};
+    if (typeof data !== "object") return;
 
-    /*
-     * Hanya terima message dari iframe PAG Docs.
-     */
-
-    if (
-      event.source !==
-      appFrame.contentWindow
-    ) {
-
-      return;
-
-    }
-
-
-    const data =
-      event.data ||
-      {};
-
-
-    if (
-      typeof data !==
-      "object"
-    ) {
-
-      return;
-
-    }
-
-
-    /* ------------------------------------------------------
-     * SESSION
-     * ------------------------------------------------------ */
-
-    if (
-      data.type ===
-      "SYNC_USER_SESSION"
-    ) {
-
-      session.user_id =
-        data.user_id ??
-        data.userId ??
-        data.user?.id ??
-        null;
-
-
-      session.role =
-        data.role ??
-        data.user?.role ??
-        null;
-
-
-      log(
-        "Session synced:",
-        session.user_id,
-        session.role
-      );
-
-
-      /*
-       * Subscription yang sama cukup diperbarui
-       * dengan user_id / role terbaru.
-       */
+    if (data.type === "SYNC_USER_SESSION") {
+      session.user_id = data.user_id ?? data.userId ?? data.user?.id ?? null;
+      session.role = data.role ?? data.user?.role ?? null;
+      log("Session synced:", session.user_id, session.role);
 
       try {
-
-        const subscription =
-          await swRegistration
-            ?.pushManager
-            ?.getSubscription();
-
-
-        if (
-          subscription
-        ) {
-
-          await saveSubscription(
-            subscription
-          );
-
-        }
-
-      } catch (
-        errorValue
-      ) {
-
-        warn(
-          "Update session subscription:",
-          errorValue
-        );
-
+        const subscription = await swRegistration?.pushManager?.getSubscription();
+        if (subscription) await saveSubscription(subscription);
+      } catch (errorValue) {
+        warn("Update session error:", errorValue);
       }
-
     }
 
-
-    /* ------------------------------------------------------
-     * BADGE
-     * ------------------------------------------------------ */
-
-    if (
-      data.type ===
-      "SET_APP_BADGE"
-    ) {
-
-      await setBadge(
-        data.count
-      );
-
-    }
-
-
-    if (
-      data.type ===
-      "CLEAR_APP_BADGE"
-    ) {
-
-      await setBadge(
-        0
-      );
-
-    }
-
+    if (data.type === "SET_APP_BADGE") await setBadge(data.count);
+    if (data.type === "CLEAR_APP_BADGE") await setBadge(0);
   }
 
-
-  /* ========================================================
-   * MOBILE / PWA MESSAGE
-   * ======================================================== */
 
   function getPlatformMessage() {
+    const ua = navigator.userAgent || "";
+    const mobile = /Android|iPhone|iPad|iPod/i.test(ua);
+    if (!mobile || isStandalonePWA()) return null;
 
-    const ua =
-      navigator.userAgent ||
-      "";
-
-
-    const mobile =
-      /Android|iPhone|iPad|iPod/i.test(
-        ua
-      );
-
-
-    if (
-      !mobile
-    ) {
-
-      return null;
-
-    }
-
-
-    if (
-      isStandalonePWA()
-    ) {
-
-      return null;
-
-    }
-
-
-    /*
-     * Tidak semua Android harus dipaksa install.
-     *
-     * Namun untuk pengalaman PWA/mobile terbaik,
-     * kita beri informasi.
-     *
-     * Push tetap feature-detected.
-     */
-
-    if (
-      /iPhone|iPad|iPod/i.test(
-        ua
-      )
-    ) {
-
+    if (/iPhone|iPad|iPod/i.test(ua)) {
       return "Untuk menerima notifikasi PAG Docs secara optimal di iPhone/iPad, pasang PAG Docs ke Layar Utama sebagai PWA terlebih dahulu, kemudian buka PAG Docs dari ikon tersebut.";
-
     }
-
-
     return null;
-
   }
 
 
   /* ========================================================
-   * BOOT
+   * BOOT (EKSEKUSI INSTAN TANPA KEDIP)
    * ======================================================== */
 
   async function boot() {
+    allowButton.addEventListener("click", handleAllowButton);
+    window.addEventListener("message", handleIframeMessage);
 
-    if (
-      booting
-    ) {
+    // Aktifkan pengawasan izin secara real-time
+    setupRealtimePermissionMonitor();
 
+    // 1. Cek HTTPS
+    if (!window.isSecureContext) {
+      showLock("Koneksi Tidak Aman", "Web Push PAG Docs membutuhkan HTTPS.", "Tutup");
+      allowButton.disabled = true;
       return;
-
     }
 
-
-    allowButton.addEventListener(
-      "click",
-      handleAllowButton
-    );
-
-
-    window.addEventListener(
-      "message",
-      handleIframeMessage
-    );
-
-
-    health.standalone =
-      isStandalonePWA();
-
-
-    /* ------------------------------------------------------
-     * HTTPS
-     * ------------------------------------------------------ */
-
-    if (
-      !window.isSecureContext
-    ) {
-
-      showLock(
-
-        "Koneksi Tidak Aman",
-
-        "Web Push PAG Docs membutuhkan HTTPS.",
-
-        "Tutup"
-
-      );
-
-
-      allowButton.disabled =
-        true;
-
-
+    // 2. Cek Dukungan Browser
+    if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
+      showLock("Browser Tidak Mendukung", "Browser ini tidak mendukung Web Push. Gunakan browser modern seperti Chrome atau Edge.", "Tutup");
+      allowButton.disabled = true;
       return;
-
     }
 
-
-    health.secure =
-      true;
-
-
-    /* ------------------------------------------------------
-     * BASIC SUPPORT
-     * ------------------------------------------------------ */
-
-    if (
-      !("Notification" in window) ||
-      !("serviceWorker" in navigator) ||
-      !("PushManager" in window)
-    ) {
-
-      showLock(
-
-        "Browser Tidak Mendukung",
-
-        "Browser atau perangkat ini tidak mendukung Web Push yang diperlukan PAG Docs. Gunakan browser modern yang mendukung Service Worker dan Web Push.",
-
-        "Tutup"
-
-      );
-
-
-      allowButton.disabled =
-        true;
-
-
+    // 3. JALUR UTAMA (ZERO-FLICKER): JIKA SUDAH GRANTED, LANGSUNG BUKA!
+    if (Notification.permission === "granted") {
+      openApplication();
+      // Proses registrasi push dan Supabase dijalankan di latar belakang
+      initializePush().catch(err => {
+        warn("Latar belakang inisialisasi push:", err);
+      });
       return;
-
     }
 
-
-    health.supported =
-      true;
-
-
-    health.permission =
-      Notification.permission;
-
-
-    /* ------------------------------------------------------
-     * PERMISSION GRANTED
-     *
-     * INI JALUR NORMAL SETELAH USER PERNAH
-     * MENGIZINKAN NOTIFIKASI.
-     *
-     * TIDAK ADA LOCK.
-     *
-     * TIDAK ADA SPLASH.
-     * ------------------------------------------------------ */
-
-    if (
-      Notification.permission ===
-      "granted"
-    ) {
-
-      try {
-
-        await initializePush();
-
-      } catch (
-        errorValue
-      ) {
-
-        error(
-          "Boot push:",
-          errorValue
-        );
-
-
-        /*
-         * Hanya lock jika push benar-benar belum
-         * bisa disiapkan.
-         */
-
-        showError(
-          errorValue?.message ||
-          String(errorValue)
-        );
-
-
-        showLock(
-
-          "Push Belum Siap",
-
-          "PAG Docs belum dapat menyiapkan notifikasi. Periksa koneksi internet lalu coba lagi.",
-
-          "Coba Lagi"
-
-        );
-
-      }
-
-
-      return;
-
-    }
-
-
-    /* ------------------------------------------------------
-     * DENIED
-     *
-     * JANGAN requestPermission().
-     * ------------------------------------------------------ */
-
-    if (
-      Notification.permission ===
-      "denied"
-    ) {
-
+    // 4. JIKA DIBLOKIR (DENIED)
+    if (Notification.permission === "denied") {
       showBlockedState();
-
-
       return;
-
     }
 
-
-    /* ------------------------------------------------------
-     * DEFAULT
-     * ------------------------------------------------------ */
-
-    const mobileMessage =
-      getPlatformMessage();
-
-
-    if (
-      mobileMessage
-    ) {
-
-      showLock(
-
-        "Pasang PAG Docs Terlebih Dahulu",
-
-        mobileMessage,
-
-        "Saya Sudah Memasang"
-
-      );
-
-
-      /*
-       * Tombol tetap memungkinkan pengecekan.
-       *
-       * Jika browser sudah standalone:
-       * initialize permission.
-       */
-
-      allowButton.addEventListener(
-        "click",
-        async () => {
-
-          if (
-            isStandalonePWA()
-          ) {
-
-            await requestNotificationPermission();
-
-          } else {
-
-            showLock(
-
-              "PAG Docs Belum Terpasang",
-
-              mobileMessage,
-
-              "Saya Sudah Memasang"
-
-            );
-
-          }
-
-        },
-        {
-          once: true
+    // 5. JIKA DEFAULT (BELUM PERNAH DIATUR / PERTAMA KALI)
+    const mobileMessage = getPlatformMessage();
+    if (mobileMessage) {
+      showLock("Pasang PAG Docs Terlebih Dahulu", mobileMessage, "Saya Sudah Memasang");
+      allowButton.addEventListener("click", async () => {
+        if (isStandalonePWA()) {
+          await requestNotificationPermission();
+        } else {
+          showLock("PAG Docs Belum Terpasang", mobileMessage, "Saya Sudah Memasang");
         }
-      );
-
-
+      }, { once: true });
       return;
-
     }
 
-
-    /* ------------------------------------------------------
-     * DEFAULT DESKTOP / BROWSER
-     * ------------------------------------------------------ */
-
+    // Tampilkan lock izin untuk pengguna baru
     showLock(
-
       "Izin Notifikasi Diperlukan",
-
       "PAG Docs menggunakan notifikasi browser sebagai satu-satunya sistem pemberitahuan. Izinkan notifikasi untuk membuka aplikasi.",
-
       "Aktifkan Notifikasi"
-
     );
-
   }
 
-
-  /* ========================================================
-   * START
-   * ======================================================== */
-
+  // Mulai eksekusi
   boot();
 
 })();
 
 </script>
 
-
 </body>
 </html>
-```
