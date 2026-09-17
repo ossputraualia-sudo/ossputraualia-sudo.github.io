@@ -58,6 +58,7 @@
        ===================================================== */
 
     #appFrame {
+
       position: fixed;
 
       inset: 0;
@@ -74,8 +75,16 @@
 
 
     /* =====================================================
-       LOCK SCREEN
-       SATU-SATUNYA LOCK SCREEN
+       NOTIFICATION PERMISSION GATE
+
+       PENTING:
+       Overlay INI BUKAN splash screen.
+
+       Hanya digunakan ketika:
+       Notification.permission === "default"
+
+       Jika permission sudah granted:
+       aplikasi langsung dibuka.
        ===================================================== */
 
     #lockScreenOverlay {
@@ -147,13 +156,23 @@
     @keyframes pagLockIn {
 
       from {
+
         opacity: 0;
-        transform: translateY(10px) scale(.98);
+
+        transform:
+          translateY(10px)
+          scale(.98);
+
       }
 
       to {
+
         opacity: 1;
-        transform: translateY(0) scale(1);
+
+        transform:
+          translateY(0)
+          scale(1);
+
       }
 
     }
@@ -299,7 +318,7 @@
 
 
     /* =====================================================
-       SMALL DEVICE
+       MOBILE
        ===================================================== */
 
     @media (max-width: 480px) {
@@ -334,14 +353,12 @@
 
   <!-- =====================================================
        APPS SCRIPT
-       PENTING:
-       TIDAK ADA src DI SINI.
 
-       Apps Script baru dimuat setelah:
-       1. Permission granted
-       2. Service Worker ready
-       3. Push subscription valid
-       4. Subscription berhasil disimpan
+       Apps Script dimuat segera.
+
+       Push notification TIDAK lagi menjadi gerbang
+       yang menghalangi aplikasi jika permission sudah
+       granted atau denied.
        ===================================================== -->
 
   <iframe
@@ -360,11 +377,20 @@
 
 
   <!-- =====================================================
-       SINGLE LOCK SCREEN
+       NOTIFICATION PERMISSION GATE
+
+       HANYA muncul ketika browser masih meminta izin.
+
+       Setelah permission granted:
+       overlay langsung hilang.
+
+       Setelah permission denied:
+       overlay juga tidak mengunci aplikasi.
        ===================================================== -->
 
   <div
     id="lockScreenOverlay"
+    class="hidden"
     role="dialog"
     aria-modal="true"
     aria-labelledby="lockTitle"
@@ -381,12 +407,14 @@
 
 
       <div id="lockTitle">
-        MENYIAPKAN NOTIFIKASI
+        AKTIFKAN NOTIFIKASI
       </div>
 
 
       <div id="lockMessage">
-        Sistem sedang memeriksa layanan notifikasi P.A.G Docs.
+        Aktifkan notifikasi agar P.A.G Docs dapat
+        mengirim pemberitahuan pekerjaan dan aktivitas
+        sistem.
       </div>
 
 
@@ -395,12 +423,12 @@
         type="button"
         onclick="window.panggilAksiNotifikasi()"
       >
-        Memeriksa...
+        Aktifkan Notifikasi
       </button>
 
 
       <div id="lockHint">
-        Mohon tunggu sebentar.
+        Izin akan diminta oleh browser.
       </div>
 
     </div>
@@ -426,9 +454,10 @@
 
 
     /*
-     * HARUS SAMA dengan VAPID PUBLIC KEY
-     * di Supabase Edge Function Secrets.
+     * HARUS sama dengan VAPID PUBLIC KEY
+     * di Supabase Edge Function.
      */
+
     const VAPID_PUBLIC_KEY =
       "BFmbNUOxV304wqekMka5EzEwv7sAapDLaPzlDBN2M-fcbSX9osQvksqcMyBzYYXkls3Cz3o06ZIDz7xsvnzpl-Q";
 
@@ -440,9 +469,9 @@
     /*
      * Publishable / anon key.
      *
-     * JANGAN memasukkan service_role key
-     * ke file ini.
+     * JANGAN gunakan service_role key.
      */
+
     const SB_KEY =
       "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq";
 
@@ -457,10 +486,6 @@
 
     let _notifChecking = false;
 
-    let _notifRetryTimer = null;
-
-    let _permissionWatcher = null;
-
     let _serviceWorkerRegistration = null;
 
     let _pushSubscription = null;
@@ -474,6 +499,10 @@
     let _deviceId = null;
 
     let _deviceLabel = null;
+
+    let _permissionWatcher = null;
+
+    let _startupFinished = false;
 
 
     /* =====================================================
@@ -535,38 +564,45 @@
       }
 
 
+      const ua =
+        navigator.userAgent || "";
+
+
+      const uaLower =
+        ua.toLowerCase();
+
+
       let browser =
         "Browser";
 
 
-      const ua =
-        navigator.userAgent
-          .toLowerCase();
-
-
       if (
-        ua.includes("edg/")
+        uaLower.includes("edg/")
       ) {
 
-        browser = "Microsoft Edge";
+        browser =
+          "Microsoft Edge";
 
       } else if (
-        ua.includes("chrome")
+        uaLower.includes("firefox")
       ) {
 
-        browser = "Google Chrome";
+        browser =
+          "Mozilla Firefox";
 
       } else if (
-        ua.includes("firefox")
+        uaLower.includes("chrome")
       ) {
 
-        browser = "Mozilla Firefox";
+        browser =
+          "Google Chrome";
 
       } else if (
-        ua.includes("safari")
+        uaLower.includes("safari")
       ) {
 
-        browser = "Safari";
+        browser =
+          "Safari";
       }
 
 
@@ -575,36 +611,39 @@
 
 
       if (
-        /android/i.test(
-          navigator.userAgent
-        )
+        /android/i.test(ua)
       ) {
 
-        os = "Android";
+        os =
+          "Android";
 
       } else if (
-        /iphone|ipad|ipod/i.test(
-          navigator.userAgent
-        )
+        /iphone|ipad|ipod/i.test(ua)
       ) {
 
-        os = "iOS";
+        os =
+          "iOS";
 
       } else if (
-        /windows/i.test(
-          navigator.userAgent
-        )
+        /windows/i.test(ua)
       ) {
 
-        os = "Windows";
+        os =
+          "Windows";
 
       } else if (
-        /macintosh|mac os/i.test(
-          navigator.userAgent
-        )
+        /macintosh|mac os/i.test(ua)
       ) {
 
-        os = "macOS";
+        os =
+          "macOS";
+
+      } else if (
+        /linux/i.test(ua)
+      ) {
+
+        os =
+          "Linux";
       }
 
 
@@ -643,9 +682,12 @@
 
       const padding =
         "=".repeat(
-          (4 - (
-            clean.length % 4
-          )) % 4
+          (
+            4 -
+            (
+              clean.length % 4
+            )
+          ) % 4
         );
 
 
@@ -685,10 +727,8 @@
 
 
       /*
-       * Web Push VAPID public key:
-       *
-       * 65 byte
-       * 04 + X32 + Y32
+       * EC P-256 public key:
+       * 65 byte.
        */
 
       if (
@@ -719,7 +759,7 @@
 
 
     /* =====================================================
-       LOCK
+       LOCK — SHOW
        ===================================================== */
 
     function tampilkanLockNotifikasi(
@@ -764,7 +804,7 @@
 
         titleEl.textContent =
           title ||
-          "NOTIFIKASI DIPERLUKAN";
+          "NOTIFIKASI";
       }
 
 
@@ -806,114 +846,10 @@
 
 
     /* =====================================================
-       LOCK — LOADING
+       LOCK — HIDE
        ===================================================== */
 
-    function loadingLockNotifikasi(
-      message
-    ) {
-
-      const overlay =
-        el("lockScreenOverlay");
-
-      const titleEl =
-        el("lockTitle");
-
-      const messageEl =
-        el("lockMessage");
-
-      const buttonEl =
-        el("lockActionBtn");
-
-      const hintEl =
-        el("lockHint");
-
-      const iconEl =
-        el("lockIcon");
-
-
-      if (overlay) {
-
-        overlay.classList.remove(
-          "hidden"
-        );
-      }
-
-
-      if (titleEl) {
-
-        titleEl.textContent =
-          "MENYIAPKAN NOTIFIKASI";
-      }
-
-
-      if (messageEl) {
-
-        messageEl.textContent =
-          message ||
-          "Sedang menghubungkan perangkat dengan layanan notifikasi P.A.G Docs.";
-      }
-
-
-      if (buttonEl) {
-
-        buttonEl.disabled =
-          true;
-
-        buttonEl.textContent =
-          "Menyiapkan...";
-      }
-
-
-      if (hintEl) {
-
-        hintEl.textContent =
-          "Mohon tunggu sebentar.";
-      }
-
-
-      if (iconEl) {
-
-        iconEl.textContent =
-          "⏳";
-      }
-
-    }
-
-
-    /* =====================================================
-       LOCK — ERROR
-       ===================================================== */
-
-    function gagalLockNotifikasi(
-      message,
-      hint
-    ) {
-
-      tampilkanLockNotifikasi(
-
-        "NOTIFIKASI BELUM SIAP",
-
-        message ||
-          "Perangkat belum berhasil terhubung ke layanan push P.A.G Docs.",
-
-        "Coba Lagi",
-
-        hint ||
-          "Tekan Coba Lagi untuk mengulangi pemeriksaan.",
-
-        "⚠️"
-
-      );
-
-    }
-
-
-    /* =====================================================
-       BUKA APLIKASI
-       ===================================================== */
-
-    function bukaAplikasiNotifikasi() {
+    function sembunyikanLockNotifikasi() {
 
       const overlay =
         el("lockScreenOverlay");
@@ -927,6 +863,40 @@
 
       overlay.classList.add(
         "hidden"
+      );
+
+    }
+
+
+    /* =====================================================
+       LOCK — ERROR
+
+       ERROR TIDAK LAGI MENGUNCI APLIKASI.
+
+       Ini hanya digunakan untuk kasus permission
+       yang masih default dan browser benar-benar
+       membutuhkan interaksi user.
+       ===================================================== */
+
+    function tampilkanInfoNotifikasi(
+      message,
+      hint
+    ) {
+
+      tampilkanLockNotifikasi(
+
+        "AKTIFKAN NOTIFIKASI",
+
+        message ||
+          "Notifikasi P.A.G Docs belum diaktifkan.",
+
+        "Aktifkan Notifikasi",
+
+        hint ||
+          "Klik tombol untuk memberikan izin.",
+
+        "🔔"
+
       );
 
     }
@@ -948,106 +918,91 @@
       }
 
 
-      _serviceWorkerRegistration =
-        await navigator.serviceWorker.register(
-          SW_PATH,
-          {
-            scope: "./"
-          }
-        );
-
-
       /*
-       * Tunggu service worker aktif.
+       * Gunakan registration lama jika sudah ada.
        */
 
       if (
-        !_serviceWorkerRegistration.active
+        _serviceWorkerRegistration
       ) {
 
-        await new Promise(
-          function(resolve) {
-
-            const worker =
-              _serviceWorkerRegistration.installing ||
-              _serviceWorkerRegistration.waiting;
-
-
-            if (!worker) {
-
-              resolve();
-
-              return;
-            }
-
-
-            const check =
-              function() {
-
-                if (
-                  worker.state ===
-                    "activated"
-                ) {
-
-                  resolve();
-
-                } else {
-
-                  setTimeout(
-                    check,
-                    100
-                  );
-                }
-
-              };
-
-
-            check();
-
-          }
-        );
+        return _serviceWorkerRegistration;
       }
 
 
       /*
-       * Pastikan controller siap.
+       * Coba gunakan registration yang sudah ada.
+       */
+
+      try {
+
+        const existing =
+          await navigator.serviceWorker.getRegistration(
+            "./"
+          );
+
+
+        if (existing) {
+
+          _serviceWorkerRegistration =
+            existing;
+
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "[PAG SW] getRegistration gagal:",
+          error
+        );
+
+      }
+
+
+      /*
+       * Jika belum ada, register.
        */
 
       if (
-        !navigator.serviceWorker.controller
+        !_serviceWorkerRegistration
       ) {
 
-        await new Promise(
-          function(resolve) {
+        _serviceWorkerRegistration =
+          await navigator.serviceWorker.register(
+            SW_PATH,
+            {
+              scope: "./"
+            }
+          );
 
-            const timer =
-              setTimeout(
-                resolve,
-                2000
-              );
+      }
 
 
-            navigator.serviceWorker.addEventListener(
-              "controllerchange",
-              function() {
+      /*
+       * Tunggu sampai ready.
+       *
+       * Jangan menunggu controller secara manual.
+       * navigator.serviceWorker.ready sudah cukup
+       * untuk PushManager.
+       */
 
-                clearTimeout(timer);
+      try {
 
-                resolve();
+        _serviceWorkerRegistration =
+          await navigator.serviceWorker.ready;
 
-              },
-              {
-                once: true
-              }
-            );
+      } catch (error) {
 
-          }
+        console.warn(
+          "[PAG SW] ready gagal:",
+          error
         );
+
       }
 
 
       console.log(
-        "[PAG PUSH] Service Worker siap."
+        "[PAG SW] Service Worker siap."
       );
 
 
@@ -1056,7 +1011,7 @@
 
 
     /* =====================================================
-       BUAT / AMBIL PUSH SUBSCRIPTION
+       PUSH SUBSCRIPTION
        ===================================================== */
 
     async function buatPushSubscription() {
@@ -1072,10 +1027,22 @@
 
 
       if (
+        Notification.permission !==
+        "granted"
+      ) {
+
+        throw new Error(
+          "Izin notifikasi belum diberikan."
+        );
+      }
+
+
+      if (
         !_serviceWorkerRegistration
       ) {
 
         await siapkanServiceWorker();
+
       }
 
 
@@ -1091,34 +1058,11 @@
       }
 
 
-      /*
-       * Pastikan permission granted.
-       */
-
-      if (
-        Notification.permission !==
-        "granted"
-      ) {
-
-        throw new Error(
-          "Izin notifikasi belum diberikan."
-        );
-      }
-
-
-      /*
-       * Konversi VAPID key.
-       */
-
       const applicationServerKey =
         urlBase64ToUint8Array(
           VAPID_PUBLIC_KEY
         );
 
-
-      /*
-       * Cek subscription lama.
-       */
 
       let subscription =
         await registration.pushManager
@@ -1126,7 +1070,7 @@
 
 
       /*
-       * Kalau belum ada → buat baru.
+       * Buat subscription hanya jika belum ada.
        */
 
       if (!subscription) {
@@ -1158,10 +1102,6 @@
         );
       }
 
-
-      /*
-       * Convert ke JSON.
-       */
 
       const json =
         subscription.toJSON();
@@ -1195,8 +1135,13 @@
 
 
       return {
-        subscription,
-        json
+
+        subscription:
+          subscription,
+
+        json:
+          json
+
       };
 
     }
@@ -1217,7 +1162,9 @@
 
       const headers =
         Object.assign(
+
           {
+
             apikey:
               SB_KEY,
 
@@ -1230,23 +1177,35 @@
 
             Prefer:
               "return=representation"
+
           },
 
           opts.headers || {}
+
         );
 
 
       const response =
         await fetch(
+
           SB_URL +
           path,
+
           Object.assign(
+
             {},
+
             opts,
+
             {
-              headers
+
+              headers:
+                headers
+
             }
+
           )
+
         );
 
 
@@ -1254,7 +1213,8 @@
         await response.text();
 
 
-      let data = null;
+      let data =
+        null;
 
 
       if (text) {
@@ -1268,41 +1228,56 @@
 
           data =
             text;
+
         }
+
       }
 
 
       if (!response.ok) {
 
         const errorMessage =
+
           data &&
           typeof data === "object"
+
             ? (
+
                 data.message ||
+
                 data.error_description ||
+
                 data.hint ||
+
                 data.details ||
+
                 "Supabase request gagal."
+
               )
-            : String(data);
+
+            :
+
+              String(data);
 
 
         throw new Error(
+
           "Supabase " +
           response.status +
           ": " +
           errorMessage
+
         );
+
       }
 
 
       return data;
-
     }
 
 
     /* =====================================================
-       SIMPAN SUBSCRIPTION
+       SIMPAN SUBSCRIPTION KE SUPABASE
        ===================================================== */
 
     async function simpanSubscriptionKeSupabase(
@@ -1318,23 +1293,6 @@
           "Subscription tidak valid."
         );
       }
-
-
-      /*
-       * IMPORTANT
-       *
-       * user_id belum tentu tersedia pada tahap
-       * pertama karena iframe Apps Script belum dimuat.
-       *
-       * Oleh karena itu:
-       *
-       * - device_id digunakan sebagai identitas perangkat
-       * - user_id diisi jika session sudah tersedia
-       * - role default = semua
-       *
-       * Setelah Apps Script mengirim session,
-       * subscription akan diperbarui lagi.
-       */
 
 
       const payload = {
@@ -1370,88 +1328,84 @@
       };
 
 
+      console.log(
+        "[PAG PUSH] Menyimpan subscription..."
+      );
+
+
       /*
-       * ---------------------------------------------------
-       * UPSERT
+       * Endpoint dibuat UNIQUE di Supabase.
        *
-       * Endpoint sebaiknya UNIQUE di database.
-       * ---------------------------------------------------
+       * on_conflict=endpoint
+       * akan meng-update subscription lama.
+       */
+
+      const result =
+        await supabaseRequest(
+
+          "/rest/v1/web_push_subscriptions" +
+          "?on_conflict=endpoint",
+
+          {
+
+            method:
+              "POST",
+
+            headers: {
+
+              Prefer:
+                "resolution=merge-duplicates,return=representation"
+
+            },
+
+            body:
+              JSON.stringify(
+                payload
+              )
+
+          }
+
+        );
+
+
+      console.log(
+        "[PAG PUSH] Subscription tersimpan."
+      );
+
+
+      /*
+       * Cache lokal hanya indikator.
+       * Bukan sumber otorisasi.
        */
 
       try {
 
-        const result =
-          await supabaseRequest(
-            "/rest/v1/web_push_subscriptions?on_conflict=endpoint",
-            {
-              method:
-                "POST",
-
-              headers: {
-
-                Prefer:
-                  "resolution=merge-duplicates,return=representation"
-
-              },
-
-              body:
-                JSON.stringify(
-                  payload
-                )
-            }
-          );
-
-
-        console.log(
-          "[PAG PUSH] Subscription tersimpan:",
-          result
+        localStorage.setItem(
+          "PAG_PUSH_REGISTERED",
+          "1"
         );
 
-
-        /*
-         * Cache lokal hanya untuk informasi.
-         * BUKAN sebagai sumber otorisasi.
-         */
-
-        try {
-
-          localStorage.setItem(
-            "PAG_PUSH_REGISTERED",
-            "1"
-          );
-
-          localStorage.setItem(
-            "PAG_PUSH_ENDPOINT",
-            subscriptionJSON.endpoint
-          );
-
-        } catch (storageError) {
-
-          console.warn(
-            "[PAG PUSH] localStorage gagal:",
-            storageError
-          );
-        }
-
-
-        return result;
-
-      } catch (error) {
-
-        console.error(
-          "[PAG PUSH] Gagal menyimpan subscription:",
-          error
+        localStorage.setItem(
+          "PAG_PUSH_ENDPOINT",
+          subscriptionJSON.endpoint
         );
 
+      } catch (storageError) {
 
-        throw error;
+        console.warn(
+          "[PAG PUSH] localStorage gagal:",
+          storageError
+        );
+
       }
 
+
+      return result;
     }
 
 
     /* =====================================================
-       UPDATE SESSION KE SUBSCRIPTION
+       UPDATE USER SESSION
        ===================================================== */
 
     async function updateSubscriptionSession() {
@@ -1472,10 +1426,15 @@
 
 
         console.log(
-          "[PAG PUSH] Session subscription diperbarui."
+          "[PAG PUSH] Subscription user diperbarui."
         );
 
       } catch (error) {
+
+        /*
+         * Jangan ganggu aplikasi hanya karena
+         * update metadata subscription gagal.
+         */
 
         console.warn(
           "[PAG PUSH] Update session gagal:",
@@ -1511,11 +1470,6 @@
       }
 
 
-      /*
-       * Tandai sebelum src dipasang
-       * agar tidak double-load.
-       */
-
       _appLoaded =
         true;
 
@@ -1532,237 +1486,243 @@
 
 
     /* =====================================================
-       NOTIFICATION MAIN CHECK
+       PREPARE PUSH BACKGROUND
        ===================================================== */
 
-    async function cekNotifikasiUtama() {
+    async function siapkanPushBackground() {
 
-      if (_notifChecking) {
+      /*
+       * Jika browser tidak mendukung push,
+       * aplikasi tetap boleh berjalan.
+       */
+
+      if (
+        !("Notification" in window)
+      ) {
+
+        console.warn(
+          "[PAG PUSH] Notification API tidak tersedia."
+        );
+
+        return false;
+      }
+
+
+      if (
+        !("serviceWorker" in navigator)
+      ) {
+
+        console.warn(
+          "[PAG PUSH] Service Worker tidak tersedia."
+        );
+
+        return false;
+      }
+
+
+      if (
+        !("PushManager" in window)
+      ) {
+
+        console.warn(
+          "[PAG PUSH] PushManager tidak tersedia."
+        );
+
+        return false;
+      }
+
+
+      if (
+        Notification.permission !==
+        "granted"
+      ) {
+
+        return false;
+      }
+
+
+      try {
+
+        /*
+         * Service Worker.
+         */
+
+        await siapkanServiceWorker();
+
+
+        /*
+         * Subscription.
+         */
+
+        const hasil =
+          await buatPushSubscription();
+
+
+        /*
+         * Simpan ke Supabase.
+         */
+
+        await simpanSubscriptionKeSupabase(
+          hasil.json
+        );
+
+
+        console.log(
+          "[PAG PUSH] Push siap."
+        );
+
+
+        return true;
+
+      } catch (error) {
+
+        /*
+         * PENTING:
+         *
+         * Jangan kunci aplikasi jika push gagal.
+         *
+         * Aplikasi utama tetap berjalan.
+         */
+
+        console.warn(
+          "[PAG PUSH] Background setup gagal:",
+          error
+        );
+
+
+        return false;
+
+      }
+
+    }
+
+
+    /* =====================================================
+       PERMISSION CHECK
+
+       FUNGSI INI TIDAK LAGI DIPANGGIL BERULANG
+       SAAT FOCUS / VISIBILITY / PAGESHOW.
+       ===================================================== */
+
+    async function cekPermissionAwal() {
+
+      if (
+        !("Notification" in window)
+      ) {
+
+        /*
+         * Browser tidak punya notification.
+         * Tetap buka aplikasi.
+         */
+
+        muatAplikasiUtama();
 
         return;
       }
 
 
-      _notifChecking =
-        true;
+      const permission =
+        Notification.permission;
 
 
-      try {
+      console.log(
+        "[PAG PUSH] Permission:",
+        permission
+      );
 
-        /* =================================================
-           SUPPORT CHECK
-           ================================================= */
 
-        if (
-          !("Notification" in window)
-        ) {
+      /* ===================================================
+         GRANTED
+         =================================================== */
 
-          gagalLockNotifikasi(
+      if (
+        permission ===
+        "granted"
+      ) {
 
-            "Browser tidak menyediakan layanan notifikasi.",
+        /*
+         * LANGSUNG BUKA APLIKASI.
+         *
+         * Tidak ada lock.
+         */
 
-            "Gunakan browser modern seperti Chrome atau Edge."
+        sembunyikanLockNotifikasi();
 
-          );
-
-          return;
-        }
-
-
-        if (
-          !("serviceWorker" in navigator)
-        ) {
-
-          gagalLockNotifikasi(
-
-            "Browser tidak mendukung Service Worker.",
-
-            "Web Push P.A.G Docs membutuhkan Service Worker."
-
-          );
-
-          return;
-        }
-
-
-        if (
-          !("PushManager" in window)
-        ) {
-
-          gagalLockNotifikasi(
-
-            "Browser tidak mendukung Web Push.",
-
-            "Gunakan Chrome atau Edge versi terbaru."
-
-          );
-
-          return;
-        }
-
-
-        /* =================================================
-           PERMISSION DENIED
-           ================================================= */
-
-        if (
-          Notification.permission ===
-          "denied"
-        ) {
-
-          tampilkanLockNotifikasi(
-
-            "NOTIFIKASI HARUS DIAKTIFKAN",
-
-            "Akses notifikasi untuk P.A.G Docs sedang diblokir oleh browser.",
-
-            "Cek Pengaturan Browser",
-
-            "Klik ikon 🔒 di sebelah alamat website → Notifications → Allow, kemudian kembali ke halaman ini.",
-
-            "🔒"
-
-          );
-
-          return;
-        }
-
-
-        /* =================================================
-           PERMISSION DEFAULT
-           ================================================= */
-
-        if (
-          Notification.permission ===
-          "default"
-        ) {
-
-          tampilkanLockNotifikasi(
-
-            "AKTIFKAN NOTIFIKASI",
-
-            "P.A.G Docs memerlukan izin notifikasi untuk menerima pemberitahuan pekerjaan dan aktivitas sistem.",
-
-            "Aktifkan Notifikasi",
-
-            "Izin akan diminta oleh browser.",
-
-            "🔔"
-
-          );
-
-          return;
-        }
-
-
-        /* =================================================
-           PERMISSION GRANTED
-           ================================================= */
-
-        if (
-          Notification.permission ===
-          "granted"
-        ) {
-
-          loadingLockNotifikasi(
-
-            "Sedang memastikan perangkat ini terdaftar untuk menerima push notification."
-
-          );
-
-
-          /*
-           * Service Worker
-           */
-
-          await siapkanServiceWorker();
-
-
-          /*
-           * Push Subscription
-           */
-
-          const hasil =
-            await buatPushSubscription();
-
-
-          /*
-           * Simpan subscription
-           */
-
-          await simpanSubscriptionKeSupabase(
-            hasil.json
-          );
-
-
-          /*
-           * SEMUA SUKSES
-           */
-
-          bukaAplikasiNotifikasi();
-
-
-          /*
-           * Baru sekarang Apps Script dibuka.
-           */
-
-          muatAplikasiUtama();
-
-
-          return;
-        }
-
-
-      } catch (error) {
-
-        console.error(
-          "[PAG NOTIF] CHECK ERROR:",
-          error
-        );
+        muatAplikasiUtama();
 
 
         /*
-         * Jika permission berubah menjadi denied
-         * saat proses berjalan.
+         * Push dipersiapkan di background.
          */
 
-        if (
-          Notification.permission ===
-          "denied"
-        ) {
-
-          tampilkanLockNotifikasi(
-
-            "NOTIFIKASI HARUS DIAKTIFKAN",
-
-            "Notifikasi P.A.G Docs telah diblokir oleh browser.",
-
-            "Cek Pengaturan Browser",
-
-            "Klik ikon 🔒 → Notifications → Allow, lalu kembali ke halaman ini.",
-
-            "🔒"
-
-          );
-
-          return;
-        }
+        void siapkanPushBackground();
 
 
-        gagalLockNotifikasi(
+        return;
+      }
 
-          error?.message ||
-          "Gagal menyiapkan layanan notifikasi.",
 
-          "Tekan Coba Lagi. Sistem akan mengulangi proses tanpa perlu reload."
+      /* ===================================================
+         DENIED
+         =================================================== */
+
+      if (
+        permission ===
+        "denied"
+      ) {
+
+        /*
+         * JANGAN KUNCI APLIKASI.
+         *
+         * User tetap bisa menggunakan P.A.G Docs.
+         */
+
+        sembunyikanLockNotifikasi();
+
+        muatAplikasiUtama();
+
+
+        console.warn(
+          "[PAG PUSH] Notification permission denied."
+        );
+
+
+        return;
+      }
+
+
+      /* ===================================================
+         DEFAULT
+         =================================================== */
+
+      if (
+        permission ===
+        "default"
+      ) {
+
+        /*
+         * Hanya pada kondisi ini lock ditampilkan.
+         */
+
+        tampilkanInfoNotifikasi(
+
+          "P.A.G Docs dapat mengirim pemberitahuan " +
+          "pekerjaan dan aktivitas sistem.",
+
+          "Klik Aktifkan Notifikasi untuk melanjutkan."
 
         );
 
-      } finally {
 
-        _notifChecking =
-          false;
+        return;
       }
+
+
+      /*
+       * Fallback.
+       */
+
+      muatAplikasiUtama();
 
     }
 
@@ -1780,26 +1740,40 @@
         }
 
 
+        _notifChecking =
+          true;
+
+
         const button =
           el("lockActionBtn");
 
 
-        if (button) {
-
-          button.disabled =
-            true;
-
-          button.textContent =
-            "Memproses...";
-        }
+        const hint =
+          el("lockHint");
 
 
         try {
 
+          if (
+            !("Notification" in window)
+          ) {
+
+            /*
+             * Tidak ada Notification API.
+             * Jangan mengunci aplikasi.
+             */
+
+            sembunyikanLockNotifikasi();
+
+            muatAplikasiUtama();
+
+            return;
+          }
+
+
           /*
-           * DEFAULT
-           *
-           * Minta permission.
+           * Jika permission default,
+           * browser meminta izin.
            */
 
           if (
@@ -1807,21 +1781,97 @@
             "default"
           ) {
 
+            if (button) {
+
+              button.disabled =
+                true;
+
+              button.textContent =
+                "Meminta izin...";
+
+            }
+
+
+            if (hint) {
+
+              hint.textContent =
+                "Silakan pilih Allow / Izinkan pada dialog browser.";
+
+            }
+
+
             const permission =
               await Notification.requestPermission();
 
+
+            console.log(
+              "[PAG PUSH] Permission result:",
+              permission
+            );
+
+
+            /*
+             * GRANTED
+             */
 
             if (
               permission ===
               "granted"
             ) {
 
-              await cekNotifikasiUtama();
+              sembunyikanLockNotifikasi();
 
-            } else {
+              muatAplikasiUtama();
 
-              await cekNotifikasiUtama();
+
+              /*
+               * Push background.
+               */
+
+              void siapkanPushBackground();
+
+
+              return;
             }
+
+
+            /*
+             * DENIED
+             *
+             * Aplikasi tetap boleh digunakan.
+             */
+
+            if (
+              permission ===
+              "denied"
+            ) {
+
+              sembunyikanLockNotifikasi();
+
+              muatAplikasiUtama();
+
+
+              return;
+            }
+
+
+            /*
+             * User menutup dialog / permission tetap default.
+             */
+
+            tampilkanInfoNotifikasi(
+
+              "NOTIFIKASI BELUM DIAKTIFKAN",
+
+              "Izin notifikasi belum diberikan.",
+
+              "Aktifkan Notifikasi",
+
+              "Klik tombol ini lagi jika ingin mengaktifkan notifikasi.",
+
+              "🔔"
+
+            );
 
 
             return;
@@ -1837,7 +1887,13 @@
             "granted"
           ) {
 
-            await cekNotifikasiUtama();
+            sembunyikanLockNotifikasi();
+
+            muatAplikasiUtama();
+
+
+            void siapkanPushBackground();
+
 
             return;
           }
@@ -1845,38 +1901,44 @@
 
           /*
            * DENIED
-           *
-           * Tidak bisa dipaksa lewat JavaScript.
            */
 
-          tampilkanLockNotifikasi(
+          if (
+            Notification.permission ===
+            "denied"
+          ) {
 
-            "NOTIFIKASI MASIH DIBLOKIR",
+            sembunyikanLockNotifikasi();
 
-            "Browser masih memblokir notifikasi untuk P.A.G Docs.",
+            muatAplikasiUtama();
 
-            "Cek Pengaturan Browser",
 
-            "Klik ikon 🔒 di address bar → Notifications → Allow. Setelah itu kembali ke halaman ini.",
+            return;
+          }
 
-            "🔒"
-
-          );
 
         } catch (error) {
 
           console.error(
-            "[PAG NOTIF] BUTTON ERROR:",
+            "[PAG PUSH] Permission action error:",
             error
           );
 
 
-          gagalLockNotifikasi(
+          /*
+           * Bahkan jika push gagal,
+           * jangan membuat aplikasi terkunci.
+           */
 
-            error?.message ||
-            "Gagal menyiapkan notifikasi."
+          sembunyikanLockNotifikasi();
 
-          );
+          muatAplikasiUtama();
+
+        } finally {
+
+          _notifChecking =
+            false;
+
         }
 
       };
@@ -1884,13 +1946,14 @@
 
     /* =====================================================
        PERMISSION WATCHER
+       
+       Watcher hanya digunakan untuk mengetahui jika
+       permission berubah dari browser settings.
+
+       TIDAK menjalankan proses push berulang-ulang.
        ===================================================== */
 
     async function setupPermissionWatcher() {
-
-      /*
-       * Permissions API tidak selalu tersedia.
-       */
 
       if (
         !navigator.permissions ||
@@ -1906,7 +1969,8 @@
         _permissionWatcher =
           await navigator.permissions.query(
             {
-              name: "notifications"
+              name:
+                "notifications"
             }
           );
 
@@ -1920,14 +1984,80 @@
             );
 
 
-            setTimeout(
-              function() {
+            /*
+             * Jika permission berubah menjadi granted,
+             * siapkan push tanpa membuka lock.
+             */
 
-                cekNotifikasiUtama();
+            if (
+              Notification.permission ===
+              "granted"
+            ) {
 
-              },
-              100
-            );
+              sembunyikanLockNotifikasi();
+
+              muatAplikasiUtama();
+
+              void siapkanPushBackground();
+
+              return;
+            }
+
+
+            /*
+             * Jika denied:
+             * aplikasi tetap terbuka.
+             */
+
+            if (
+              Notification.permission ===
+              "denied"
+            ) {
+
+              sembunyikanLockNotifikasi();
+
+              muatAplikasiUtama();
+
+              return;
+            }
+
+
+            /*
+             * Jika kembali default,
+             * tampilkan permission gate.
+             */
+
+            if (
+              Notification.permission ===
+              "default"
+            ) {
+
+              /*
+               * Hanya tampilkan jika user belum
+               * melakukan interaksi aplikasi.
+               *
+               * Jangan mengganggu session aktif.
+               */
+
+              if (!_appLoaded) {
+
+                tampilkanInfoNotifikasi(
+
+                  "AKTIFKAN NOTIFIKASI",
+
+                  "Aktifkan notifikasi P.A.G Docs agar menerima pemberitahuan.",
+
+                  "Aktifkan Notifikasi",
+
+                  "Izin akan diminta oleh browser.",
+
+                  "🔔"
+
+                );
+
+              }
+
+            }
 
           };
 
@@ -1937,149 +2067,6 @@
           "[PAG PUSH] Permission watcher tidak tersedia:",
           error
         );
-      }
-
-    }
-
-
-    /* =====================================================
-       VISIBILITY / FOCUS WATCHER
-       ===================================================== */
-
-    function mulaiPemantauanNotifikasi() {
-
-      /*
-       * Initial check
-       */
-
-      setTimeout(
-        function() {
-
-          cekNotifikasiUtama();
-
-        },
-        250
-      );
-
-
-      /*
-       * Tab kembali terlihat
-       */
-
-      document.addEventListener(
-        "visibilitychange",
-        function() {
-
-          if (
-            document.visibilityState ===
-            "visible"
-          ) {
-
-            setTimeout(
-              function() {
-
-                cekNotifikasiUtama();
-
-              },
-              150
-            );
-
-          }
-
-        }
-      );
-
-
-      /*
-       * Window focus
-       */
-
-      window.addEventListener(
-        "focus",
-        function() {
-
-          setTimeout(
-            function() {
-
-              cekNotifikasiUtama();
-
-            },
-            150
-          );
-
-        }
-      );
-
-
-      /*
-       * pageshow
-       */
-
-      window.addEventListener(
-        "pageshow",
-        function() {
-
-          setTimeout(
-            function() {
-
-              cekNotifikasiUtama();
-
-            },
-            150
-          );
-
-        }
-      );
-
-
-      /*
-       * Fallback polling.
-       *
-       * Tidak terlalu agresif.
-       */
-
-      if (
-        !_notifRetryTimer
-      ) {
-
-        _notifRetryTimer =
-          setInterval(
-            function() {
-
-              if (
-                !_notifChecking &&
-                document.visibilityState ===
-                  "visible"
-              ) {
-
-                /*
-                 * Hanya cek permission.
-                 *
-                 * Jika masih granted dan app sudah
-                 * terbuka, jangan membuat proses
-                 * subscription baru terus-menerus.
-                 */
-
-                if (
-                  Notification.permission !==
-                  "granted"
-                ) {
-
-                  cekNotifikasiUtama();
-
-                } else if (
-                  !_appLoaded
-                ) {
-
-                  cekNotifikasiUtama();
-
-                }
-
-              }
-
-            },
-            3000
-          );
 
       }
 
@@ -2087,7 +2074,7 @@
 
 
     /* =====================================================
-       TERIMA SESSION DARI APPS SCRIPT
+       MESSAGE DARI APPS SCRIPT
        ===================================================== */
 
     window.addEventListener(
@@ -2105,7 +2092,7 @@
 
 
         /* =================================================
-           SYNC USER SESSION
+           USER SESSION
            ================================================= */
 
         if (
@@ -2135,11 +2122,11 @@
 
 
           /*
-           * Perbarui subscription agar sekarang
-           * terhubung dengan user sebenarnya.
+           * Sekarang subscription dapat
+           * dikaitkan dengan user sebenarnya.
            */
 
-          await updateSubscriptionSession();
+          void updateSubscriptionSession();
 
 
           return;
@@ -2147,7 +2134,7 @@
 
 
         /* =================================================
-           OPTIONAL: SHOW OS NOTIFICATION
+           LOCAL OS NOTIFICATION
            ================================================= */
 
         if (
@@ -2155,9 +2142,10 @@
           "SHOW_OS_NOTIFICATION"
         ) {
 
-          tampilkanOSNotification(
+          void tampilkanOSNotification(
             data
           );
+
 
           return;
         }
@@ -2175,6 +2163,14 @@
     ) {
 
       try {
+
+        if (
+          !("Notification" in window)
+        ) {
+
+          return;
+        }
+
 
         if (
           Notification.permission !==
@@ -2215,7 +2211,9 @@
 
 
         await registration.showNotification(
+
           title,
+
           {
 
             body:
@@ -2237,11 +2235,14 @@
               true,
 
             data: {
+
               url:
                 link
+
             }
 
           }
+
         );
 
       } catch (error) {
@@ -2257,26 +2258,32 @@
 
 
     /* =====================================================
-       HANDLE SERVICE WORKER MESSAGE
+       SERVICE WORKER MESSAGE
        ===================================================== */
 
-    navigator.serviceWorker?.addEventListener(
-      "message",
-      function(event) {
+    if (
+      "serviceWorker" in navigator
+    ) {
 
-        if (!event.data) {
+      navigator.serviceWorker.addEventListener(
+        "message",
+        function(event) {
 
-          return;
+          if (!event.data) {
+
+            return;
+          }
+
+
+          console.log(
+            "[PAG SW MESSAGE]",
+            event.data
+          );
+
         }
+      );
 
-
-        console.log(
-          "[PAG SW MESSAGE]",
-          event.data
-        );
-
-      }
-    );
+    }
 
 
     /* =====================================================
@@ -2287,63 +2294,69 @@
       "load",
       async function() {
 
+        if (_startupFinished) {
+
+          return;
+        }
+
+
+        _startupFinished =
+          true;
+
+
         console.log(
           "[PAG] Startup..."
         );
 
 
-        _deviceId =
-          getDeviceId();
-
-
-        _deviceLabel =
-          getDeviceLabel();
-
+        /*
+         * Device information.
+         */
 
         try {
 
-          /*
-           * Setup permission watcher.
-           */
+          _deviceId =
+            getDeviceId();
 
-          await setupPermissionWatcher();
-
-
-          /*
-           * Service Worker disiapkan
-           * lebih awal.
-           */
-
-          await siapkanServiceWorker();
-
-
-          /*
-           * Mulai notification gate.
-           */
-
-          mulaiPemantauanNotifikasi();
-
-
-          console.log(
-            "[PAG] Startup selesai."
-          );
+          _deviceLabel =
+            getDeviceLabel();
 
         } catch (error) {
 
-          console.error(
-            "[PAG] Startup error:",
+          console.warn(
+            "[PAG] Device identification gagal:",
             error
           );
 
-
-          gagalLockNotifikasi(
-
-            error?.message ||
-            "Gagal memulai layanan notifikasi P.A.G Docs."
-
-          );
-
         }
+
+
+        /*
+         * Permission watcher.
+         */
+
+        await setupPermissionWatcher();
+
+
+        /*
+         * PENTING:
+         *
+         * Jangan siapkan Service Worker
+         * sebelum permission gate.
+         *
+         * Untuk permission granted,
+         * proses dilakukan background.
+         *
+         * Ini membuat startup aplikasi jauh
+         * lebih cepat.
+         */
+
+        await cekPermissionAwal();
+
+
+        console.log(
+          "[PAG] Startup selesai."
+        );
 
       }
     );
