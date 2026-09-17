@@ -2,7 +2,7 @@
   "id": "./",
   "name": "PT. PUTRA AULIA KONSULTAN",
   "short_name": "PT.PUTRA AULIA",
-  "description": "Sistem Dokumentasi dan Manajemen PT. Putra Aulia Konsultan",
+  "description": "Sistem Informasi dan Manajemen PT. Putra Aulia Konsultan",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -25,8 +25,8 @@
   ],
   "shortcuts": [
     {
-      "name": "Buka PAG Docs",
-      "short_name": "PAG Docs",
+      "name": "PT. Putra Aulia",
+      "short_name": "PT. Putra Aulia",
       "url": "./"
     }
   ],
