@@ -1,8 +1,8 @@
 {
   "id": "./",
   "name": "PT. PUTRA AULIA KONSULTAN",
-  "short_name": "PAG Docs",
-  "description": "PAG Docs - Sistem Dokumentasi dan Manajemen PT. Putra Aulia Konsultan",
+  "short_name": "PT.PUTRA AULIA",
+  "description": "Sistem Dokumentasi dan Manajemen PT. Putra Aulia Konsultan",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
