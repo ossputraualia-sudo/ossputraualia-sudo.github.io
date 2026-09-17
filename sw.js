@@ -1,4 +1,3 @@
-```javascript
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
  * VERSION: PAG-PUSH-V7
@@ -1515,4 +1514,3 @@ log(
   "Loaded:",
   SW_VERSION
 );
-```
