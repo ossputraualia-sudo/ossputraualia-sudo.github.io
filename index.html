@@ -2,107 +2,74 @@
 <html lang="id">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0f766e">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./icon-192.png">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
 
-  <title>PT. Putra Aulia</title>
+  <meta
+    name="theme-color"
+    content="#0f766e"
+  >
+
+  <meta
+    name="mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="default"
+  >
+
+  <link
+    rel="manifest"
+    href="./manifest.json"
+  >
+
+  <link
+    rel="icon"
+    href="./icon-192.png"
+  >
+
+  <title> PT. Putra Aulia </title>
 
   <style>
+
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     html,
     body {
+      margin: 0;
       width: 100%;
       height: 100%;
-      height: 100dvh;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background: #0f766e; /* Mencegah layar putih berkedip */
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+      background: #ffffff;
     }
 
     #app {
       width: 100%;
       height: 100%;
-      position: relative;
-    }
-
-    /* ======================================================
-     * SPLASH SCREEN ELEGAN (PEMBERANTAS GLITCH)
-     * ====================================================== */
-    #splashScreen {
-      position: fixed;
-      inset: 0;
-      z-index: 999998;
-      background: #0f766e;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
-
-    #splashScreen.fade-out {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .splashLogo {
-      width: 76px;
-      height: 76px;
-      border-radius: 20px;
-      background: #ffffff;
-      color: #0f766e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: 800;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      margin-bottom: 20px;
-    }
-
-    .splashTitle {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .splashSubtitle {
-      font-size: 12px;
-      opacity: 0.85;
-      margin-bottom: 24px;
-    }
-
-    .splashSpinner {
-      width: 32px;
-      height: 32px;
-      border: 3px solid rgba(255, 255, 255, 0.25);
-      border-top-color: #ffffff;
-      border-radius: 50%;
-      animation: spinSplash 0.8s linear infinite;
-    }
-
-    @keyframes spinSplash {
-      to { transform: rotate(360deg); }
     }
 
     /* ======================================================
      * NOTIFICATION LOCK
      * ====================================================== */
+
     #notificationLock {
       position: fixed;
       inset: 0;
@@ -110,27 +77,49 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+      padding:
+        max(
+          24px,
+          env(safe-area-inset-top)
+        )
+        24px
+        max(
+          24px,
+          env(safe-area-inset-bottom)
+        );
       background: #f4f7f8;
     }
 
+    /* KUNCI ANTI KEDIP: Sembunyikan secara default */
     #notificationLock.hidden {
       display: none !important;
     }
 
     .lockCard {
-      width: min(430px, 100%);
+      width: min(
+        430px,
+        100%
+      );
       padding: 30px;
       border-radius: 20px;
       background: #ffffff;
-      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.12);
+      box-shadow:
+        0 15px 45px
+        rgba(
+          0,
+          0,
+          0,
+          .12
+        );
       text-align: center;
     }
 
     .lockLogo {
       width: 72px;
       height: 72px;
-      margin: 0 auto 18px;
+      margin:
+        0 auto
+        18px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -142,13 +131,16 @@
     }
 
     .lockCard h1 {
-      margin: 0 0 10px;
+      margin:
+        0 0
+        10px;
       font-size: 21px;
-      color: #1e293b;
     }
 
     .lockCard p {
-      margin: 8px 0 18px;
+      margin:
+        8px 0
+        18px;
       color: #5f6870;
       font-size: 14px;
       line-height: 1.6;
@@ -163,23 +155,16 @@
       color: white;
       font-weight: 700;
       cursor: pointer;
-      font-size: 14px;
-      transition: background 0.2s;
-    }
-
-    .lockButton:hover {
-      background: #115e59;
     }
 
     .lockButton:disabled {
-      opacity: 0.55;
+      opacity: .55;
       cursor: default;
     }
 
     .lockSmall {
       font-size: 12px !important;
       color: #7b858d !important;
-      margin-top: 14px;
     }
 
     #errorBox {
@@ -194,127 +179,262 @@
       word-break: break-word;
     }
 
-    /* ======================================================
-     * APPLICATION IFRAME
-     * ====================================================== */
     #appFrame {
+      display: none;
       width: 100%;
       height: 100%;
       border: 0;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      background: #ffffff;
     }
 
-    #appFrame.ready {
-      opacity: 1;
-    }
+    /* ======================================================
+     * MOBILE
+     * ====================================================== */
 
     @media (max-width: 600px) {
+
       #notificationLock {
-        padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+        padding:
+          max(
+            18px,
+            env(safe-area-inset-top)
+          )
+          16px
+          max(
+            18px,
+            env(safe-area-inset-bottom)
+          );
       }
+
       .lockCard {
         padding: 24px 20px;
         border-radius: 18px;
       }
+
       .lockLogo {
         width: 64px;
         height: 64px;
         margin-bottom: 15px;
       }
+
       .lockCard h1 {
         font-size: 19px;
       }
+
     }
+
   </style>
+
 </head>
 
 <body>
 
 <div id="app">
 
-  <!-- 1. SPLASH SCREEN TRANSISI HALUS (ANTI-KEDIP) -->
-  <div id="splashScreen">
-    <div class="splashLogo">PAG</div>
-    <div class="splashTitle">PT. PUTRA AULIA GROUP</div>
-    <div class="splashSubtitle">Sistem Manajemen Dokumen & Radar Tender</div>
-    <div class="splashSpinner"></div>
-  </div>
+  <!-- =====================================================
+       SINGLE NOTIFICATION LOCK
+       Secara default diberi class "hidden" agar tidak berkedip
+       ===================================================== -->
 
-  <!-- 2. NOTIFICATION LOCK -->
-  <div id="notificationLock" class="hidden" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+  <div
+    id="notificationLock"
+    class="hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lockTitle"
+  >
+
     <div class="lockCard">
-      <div class="lockLogo">PAG</div>
-      <h1 id="lockTitle">Izin Notifikasi Diperlukan</h1>
+
+      <div class="lockLogo">
+        PAG
+      </div>
+
+      <h1 id="lockTitle">
+        Izin Notifikasi Diperlukan
+      </h1>
+
       <p id="lockText">
-        Aplikasi menggunakan notifikasi browser sebagai satu-satunya sistem pemberitahuan real-time.
-        Izinkan notifikasi untuk membuka aplikasi.
+        Aplikasi menggunakan
+        notifikasi browser sebagai
+        satu-satunya sistem
+        pemberitahuan.
+
+        Izinkan notifikasi
+        untuk membuka aplikasi.
       </p>
-      <button id="allowButton" class="lockButton" type="button">Aktifkan Notifikasi</button>
-      <p class="lockSmall">by: Azhar</p>
-      <div id="errorBox" role="alert"></div>
+
+      <button
+        id="allowButton"
+        class="lockButton"
+        type="button"
+      >
+        Aktifkan Notifikasi
+      </button>
+
+      <p class="lockSmall">
+        by: Azhar
+      </p>
+
+      <div
+        id="errorBox"
+        role="alert"
+      ></div>
+
     </div>
+
   </div>
 
-  <!-- 3. MAIN APPLICATION (GOOGLE APPS SCRIPT IFRAME) -->
-  <iframe id="appFrame" title="PT. Putra Aulia"></iframe>
+  <!-- =====================================================
+       MAIN APPLICATION
+       ===================================================== -->
+
+  <iframe
+    id="appFrame"
+    title="PT. Putra Aulia"
+  ></iframe>
 
 </div>
 
 <script>
+
 (() => {
+
   "use strict";
 
+  /* ========================================================
+   * CONFIG
+   * ======================================================== */
+
   const CONFIG = {
+
     APP_SCRIPT_URL:
-      "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec",
+      "https://script.google.com/macros/s/AKfycbxv0JKvRNzqaEmchKbCD-d9mX663iK4796xdSVu16MMctVJANt-o2tohk1hYHeqbj6wlA/exec"
+      .replace(
+        "AKfycbxv0JKvNVRNzk",
+        "AKfycbxv0JKvRNzqaE"
+      ),
+
     SB_URL:
       "https://qywqxcvnlehmiqrkpwdd.supabase.co",
+
     SB_KEY:
       "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq",
+
     VAPID_PUBLIC_KEY:
       "BJA7AZcYbZ-m23nmGsoICga9u-MhkIOfaL4ZuYTF0lO0PyUQKztgodNHp3EjQxKXTfMq0eO0nIDEyi5SHlKEZPg",
+
     SW_PATH:
       "./sw.js",
+
     SW_SCOPE:
       "./",
+
     DEVICE_STORAGE:
       "PAG_DOCS_PUSH_DEVICE_ID",
+
     BADGE_STORAGE:
       "PAG_DOCS_UNREAD_COUNT",
-    MAX_RETRY: 2,
-    NETWORK_TIMEOUT: 12000
+
+    MAX_RETRY:
+      2,
+
+    NETWORK_TIMEOUT:
+      12000
+
   };
 
-  const lock = document.getElementById("notificationLock");
-  const lockTitle = document.getElementById("lockTitle");
-  const lockText = document.getElementById("lockText");
-  const allowButton = document.getElementById("allowButton");
-  const errorBox = document.getElementById("errorBox");
-  const appFrame = document.getElementById("appFrame");
-  const splashScreen = document.getElementById("splashScreen");
+  /* ========================================================
+   * ELEMENT
+   * ======================================================== */
 
-  let swRegistration = null;
-  let initialized = false;
-  let booting = false;
-  let session = { user_id: null, role: null };
+  const lock =
+    document.getElementById(
+      "notificationLock"
+    );
+
+  const lockTitle =
+    document.getElementById(
+      "lockTitle"
+    );
+
+  const lockText =
+    document.getElementById(
+      "lockText"
+    );
+
+  const allowButton =
+    document.getElementById(
+      "allowButton"
+    );
+
+  const errorBox =
+    document.getElementById(
+      "errorBox"
+    );
+
+  const appFrame =
+    document.getElementById(
+      "appFrame"
+    );
+
+  /* ========================================================
+   * STATE
+   * ======================================================== */
+
+  let swRegistration =
+    null;
+
+  let initialized =
+    false;
+
+  let booting =
+    false;
+
+  let session = {
+    user_id:
+      null,
+    role:
+      null
+  };
+
   const health = {
-    secure: false, supported: false, permission: "unknown",
-    serviceWorker: false, subscription: false, subscriptionSaved: false,
-    standalone: false, lastError: null
+    secure:
+      false,
+    supported:
+      false,
+    permission:
+      "unknown",
+    serviceWorker:
+      false,
+    subscription:
+      false,
+    subscriptionSaved:
+      false,
+    standalone:
+      false,
+    lastError:
+      null
   };
 
-  function log(...args) { console.log("[PAG]", ...args); }
-  function warn(...args) { console.warn("[PAG]", ...args); }
-  function error(...args) { console.error("[PAG]", ...args); }
+  /* ========================================================
+   * LOG
+   * ======================================================== */
 
-  function dismissSplash() {
-    if (splashScreen) {
-      splashScreen.classList.add("fade-out");
-      appFrame.classList.add("ready");
-    }
+  function log(...args) {
+    console.log("[PAG]", ...args);
   }
+
+  function warn(...args) {
+    console.warn("[PAG]", ...args);
+  }
+
+  function error(...args) {
+    console.error("[PAG]", ...args);
+  }
+
+  /* ========================================================
+   * ERROR UI
+   * ======================================================== */
 
   function showError(message) {
     errorBox.textContent = String(message || "");
@@ -326,8 +446,11 @@
     errorBox.style.display = "none";
   }
 
+  /* ========================================================
+   * LOCK CONTROLS
+   * ======================================================== */
+
   function showLock(title, message, buttonText) {
-    dismissSplash();
     lockTitle.textContent = title || "Notifikasi Diperlukan";
     lockText.textContent = message || "";
     allowButton.textContent = buttonText || "Aktifkan Notifikasi";
@@ -338,27 +461,31 @@
     lock.classList.add("hidden");
   }
 
+  /* ========================================================
+   * OPEN APPLICATION (LANGSUNG TAMPILKAN IFRAME)
+   * ======================================================== */
+
   function openApplication() {
     hideLock();
-
-    // Event penangkap selesainya load iframe (mencegah glitch)
-    appFrame.onload = () => {
-      dismissSplash();
-    };
+    appFrame.style.display = "block";
 
     if (!appFrame.getAttribute("src")) {
       appFrame.src = CONFIG.APP_SCRIPT_URL;
     }
-
-    // Safety timeout: jika dalam 4 detik iframe belum trigger onload, paksa buka splash
-    setTimeout(dismissSplash, 4000);
   }
+
+  /* ========================================================
+   * LOCK APPLICATION (JIKA IZIN DICABUT SAAT DIGUNAKAN)
+   * ======================================================== */
 
   function lockApplicationInstantly() {
-    dismissSplash();
-    appFrame.classList.remove("ready");
+    appFrame.style.display = "none";
     showBlockedState();
   }
+
+  /* ========================================================
+   * DEVICE IDENTIFIER & METADATA
+   * ======================================================== */
 
   function getDeviceId() {
     let id = localStorage.getItem(CONFIG.DEVICE_STORAGE);
@@ -389,12 +516,50 @@
     return Boolean(standalone || iosStandalone);
   }
 
+  /* ========================================================
+   * VAPID CRYPTO UTILS
+   * ======================================================== */
+
   function vapidToUint8Array(base64) {
     const padding = "=".repeat((4 - base64.length % 4) % 4);
     const base64Url = (base64 + padding).replace(/-/g, "+").replace(/_/g, "/");
     const raw = atob(base64Url);
     return Uint8Array.from([...raw].map(char => char.charCodeAt(0)));
   }
+
+  function uint8ToBase64Url(value) {
+    if (!value) return "";
+    const bytes = value instanceof Uint8Array ? value : new Uint8Array(value);
+    let binary = "";
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      binary += String.fromCharCode(...bytes.subarray(i, Math.min(i + chunk, bytes.length)));
+    }
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  }
+
+  function subscriptionUsesCurrentVapid(subscription) {
+    try {
+      if (!subscription) return false;
+      const configuredKey = vapidToUint8Array(CONFIG.VAPID_PUBLIC_KEY);
+      const actualKey = subscription?.options?.applicationServerKey;
+      if (!actualKey) return true;
+
+      const actual = new Uint8Array(actualKey);
+      if (actual.length !== configuredKey.length) return false;
+      for (let i = 0; i < configuredKey.length; i++) {
+        if (actual[i] !== configuredKey[i]) return false;
+      }
+      return true;
+    } catch (errorValue) {
+      warn("Tidak dapat memeriksa applicationServerKey:", errorValue);
+      return true;
+    }
+  }
+
+  /* ========================================================
+   * NETWORK & SUPABASE FETCH
+   * ======================================================== */
 
   async function fetchWithTimeout(url, options = {}, timeout = CONFIG.NETWORK_TIMEOUT) {
     const controller = new AbortController();
@@ -415,6 +580,7 @@
         ...(options.headers || {})
       }
     });
+
     const text = await response.text();
     if (!response.ok) throw new Error("Supabase " + response.status + ": " + text);
     if (!text) return null;
@@ -435,6 +601,10 @@
     throw lastError;
   }
 
+  /* ========================================================
+   * BADGE SYNC
+   * ======================================================== */
+
   async function setBadge(count) {
     const n = Math.max(0, Math.min(999, Number(count) || 0));
     localStorage.setItem(CONFIG.BADGE_STORAGE, String(n));
@@ -447,19 +617,31 @@
           await navigator.clearAppBadge();
         }
       }
-    } catch (badgeError) {}
+    } catch (badgeError) {
+      warn("Badge page:", badgeError);
+    }
 
     try {
       const worker = swRegistration?.active;
       if (worker) {
-        worker.postMessage({ type: n > 0 ? "SET_APP_BADGE" : "CLEAR_APP_BADGE", count: n });
+        worker.postMessage({
+          type: n > 0 ? "SET_APP_BADGE" : "CLEAR_APP_BADGE",
+          count: n
+        });
       }
     } catch (_) {}
   }
 
+  /* ========================================================
+   * SERVICE WORKER & SUBSCRIPTION ENGINE
+   * ======================================================== */
+
   async function getSwVersion() {
     return new Promise(resolve => {
-      if (!swRegistration?.active) { resolve("unknown"); return; }
+      if (!swRegistration?.active) {
+        resolve("unknown");
+        return;
+      }
       const channel = new MessageChannel();
       const timer = setTimeout(() => { resolve("unknown"); }, 1500);
       channel.port1.onmessage = event => {
@@ -478,17 +660,23 @@
   async function cleanupOldDeviceSubscriptions(endpoint) {
     const deviceId = getDeviceId();
     if (!deviceId || !endpoint) return;
+
     try {
       const query = "/rest/v1/web_push_subscriptions?device_id=eq." +
         encodeURIComponent(deviceId) + "&endpoint=neq." + encodeURIComponent(endpoint);
       await supabaseFetch(query, { method: "DELETE" });
-    } catch (errorValue) {}
+      log("Subscription lama pada device dibersihkan.");
+    } catch (errorValue) {
+      warn("Cleanup subscription lama dilewati:", errorValue?.message || errorValue);
+    }
   }
 
   async function saveSubscription(subscription) {
     const json = subscription.toJSON();
     const keys = json.keys || {};
-    if (!json.endpoint || !keys.p256dh || !keys.auth) return;
+    if (!json.endpoint || !keys.p256dh || !keys.auth) {
+      throw new Error("Push subscription tidak lengkap.");
+    }
 
     const row = {
       device_id: getDeviceId(),
@@ -532,16 +720,31 @@
     if (Notification.permission !== "granted") throw new Error("Izin notifikasi belum granted.");
 
     let subscription = await swRegistration.pushManager.getSubscription();
+    if (subscription) {
+      const validKey = subscriptionUsesCurrentVapid(subscription);
+      if (!validKey) {
+        log("Subscription memakai VAPID key lama. Membuat baru...");
+        try { await subscription.unsubscribe(); } catch (e) {}
+        subscription = null;
+      }
+    }
+
     if (!subscription) {
+      log("Mendaftarkan PushSubscription baru ke browser...");
       subscription = await swRegistration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: vapidToUint8Array(CONFIG.VAPID_PUBLIC_KEY)
       });
     }
 
+    if (!subscription) throw new Error("PushSubscription gagal dibuat.");
     health.subscription = true;
     return subscription;
   }
+
+  /* ========================================================
+   * INITIALIZE PUSH (BERJALAN DI BACKGROUND)
+   * ======================================================== */
 
   async function initializePush() {
     if (initialized) return true;
@@ -555,6 +758,7 @@
       }
 
       await registerServiceWorker();
+
       const subscription = await retry(async () => ensurePushSubscription());
       await retry(async () => saveSubscription(subscription));
 
@@ -566,16 +770,22 @@
       return true;
 
     } catch (errorValue) {
-      error("Push init error:", errorValue);
+      error("Push background error:", errorValue);
+      throw errorValue;
     } finally {
       booting = false;
     }
   }
 
+  /* ========================================================
+   * REAL-TIME PERMISSION MONITOR
+   * ======================================================== */
+
   function setupRealtimePermissionMonitor() {
     if (navigator.permissions && navigator.permissions.query) {
       navigator.permissions.query({ name: 'notifications' }).then(permissionStatus => {
         permissionStatus.onchange = () => {
+          log("Status izin berubah real-time:", permissionStatus.state);
           if (permissionStatus.state === 'granted') {
             openApplication();
             initializePush().catch(() => {});
@@ -583,9 +793,15 @@
             lockApplicationInstantly();
           }
         };
-      }).catch(() => {});
+      }).catch(e => {
+        warn("Permission query tidak didukung:", e);
+      });
     }
   }
+
+  /* ========================================================
+   * REQUEST PERMISSION
+   * ======================================================== */
 
   async function requestNotificationPermission() {
     clearError();
@@ -620,16 +836,26 @@
       }
 
     } catch (errorValue) {
+      error("Push init error:", errorValue);
       showError(errorValue?.message || String(errorValue));
+      showLock(
+        "Notifikasi Belum Siap",
+        "Periksa koneksi internet Anda lalu coba lagi.",
+        "Coba Lagi"
+      );
     } finally {
       allowButton.disabled = false;
     }
   }
 
+  /* ========================================================
+   * BLOCKED STATE
+   * ======================================================== */
+
   function showBlockedState() {
     showLock(
       "Aplikasi Diblokir",
-      "Karena izin notifikasi diblokir di browser. Buka pengaturan browser, izinkan notifikasi, lalu muat ulang halaman.",
+      "Karena izin notifikasi telah diblokir di browser. Buka pengaturan browser - Izin - Izinkan Notifikasi - Reload.",
       "Saya Sudah Mengizinkan"
     );
     allowButton.disabled = false;
@@ -637,6 +863,7 @@
 
   async function handleAllowButton() {
     clearError();
+
     if (Notification.permission === "denied") {
       if (Notification.permission === "granted") {
         openApplication();
@@ -646,8 +873,13 @@
       }
       return;
     }
+
     await requestNotificationPermission();
   }
+
+  /* ========================================================
+   * SESSION DARI IFRAME APPS SCRIPT
+   * ======================================================== */
 
   async function handleIframeMessage(event) {
     if (event.source !== appFrame.contentWindow) return;
@@ -657,11 +889,14 @@
     if (data.type === "SYNC_USER_SESSION") {
       session.user_id = data.user_id ?? data.userId ?? data.user?.id ?? null;
       session.role = data.role ?? data.user?.role ?? null;
+      log("Session synced:", session.user_id, session.role);
 
       try {
         const subscription = await swRegistration?.pushManager?.getSubscription();
         if (subscription) await saveSubscription(subscription);
-      } catch (e) {}
+      } catch (errorValue) {
+        warn("Update session error:", errorValue);
+      }
     }
 
     if (data.type === "SET_APP_BADGE") await setBadge(data.count);
@@ -674,14 +909,19 @@
     if (!mobile || isStandalonePWA()) return null;
 
     if (/iPhone|iPad|iPod/i.test(ua)) {
-      return "Untuk menerima notifikasi Aplikasi di iPhone/iPad, tambahkan Aplikasi ke Layar Utama (Add to Home Screen) terlebih dahulu.";
+      return "Untuk menerima notifikasi Aplikasi secara optimal di iPhone/iPad, pasang Aplikasi ke Layar Utama sebagai PWA terlebih dahulu, kemudian buka Aplikasi dari ikon tersebut.";
     }
     return null;
   }
 
+  /* ========================================================
+   * BOOT
+   * ======================================================== */
+
   async function boot() {
     allowButton.addEventListener("click", handleAllowButton);
     window.addEventListener("message", handleIframeMessage);
+
     setupRealtimePermissionMonitor();
 
     if (!window.isSecureContext) {
@@ -691,15 +931,17 @@
     }
 
     if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
-      showLock("Browser Tidak Mendukung", "Browser ini tidak mendukung Web Push. Gunakan Chrome atau Edge.", "Tutup");
+      showLock("Browser Tidak Mendukung", "Browser ini tidak mendukung Web Push. Gunakan browser modern seperti Chrome atau Edge.", "Tutup");
       allowButton.disabled = true;
       return;
     }
 
-    // JIKA IZIN SUDAH DIBERIKAN: LANGSUNG BUKA TANPA GLITCH
+    // JALUR UTAMA: JIKA SUDAH GRANTED, LANGSUNG BUKA IFRAME
     if (Notification.permission === "granted") {
       openApplication();
-      initializePush().catch(() => {});
+      initializePush().catch(err => {
+        warn("Latar belakang inisialisasi push:", err);
+      });
       return;
     }
 
@@ -729,7 +971,9 @@
   }
 
   boot();
+
 })();
+
 </script>
 
 </body>
