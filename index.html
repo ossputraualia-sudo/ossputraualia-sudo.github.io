@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -29,6 +29,17 @@
     name="apple-mobile-web-app-status-bar-style"
     content="default"
   >
+
+  <!-- ========================================================
+       SPEED BOOSTER: Preconnect & DNS-Prefetch ke Server Tujuan
+       ======================================================== -->
+  <link rel="dns-prefetch" href="//script.google.com">
+  <link rel="dns-prefetch" href="//script.googleusercontent.com">
+  <link rel="dns-prefetch" href="//qywqxcvnlehmiqrkpwdd.supabase.co">
+
+  <link rel="preconnect" href="https://script.google.com" crossorigin>
+  <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+  <link rel="preconnect" href="https://qywqxcvnlehmiqrkpwdd.supabase.co" crossorigin>
 
   <link
     rel="manifest"
@@ -184,6 +195,7 @@
       width: 100%;
       height: 100%;
       border: 0;
+      transform: translateZ(0); /* Akselerasi Hardware GPU */
     }
 
     /* ======================================================
@@ -232,7 +244,6 @@
 
   <!-- =====================================================
        SINGLE NOTIFICATION LOCK
-       Secara default diberi class "hidden" agar tidak berkedip
        ===================================================== -->
 
   <div
@@ -285,12 +296,16 @@
   </div>
 
   <!-- =====================================================
-       MAIN APPLICATION
+       MAIN APPLICATION (HIGH PRIORITY FETCH)
        ===================================================== -->
 
   <iframe
     id="appFrame"
     title="PT. Putra Aulia"
+    loading="eager"
+    importance="high"
+    fetchpriority="high"
+    allow="geolocation; microphone; camera; display-capture; clipboard-read; clipboard-write;"
   ></iframe>
 
 </div>
@@ -302,17 +317,12 @@
   "use strict";
 
   /* ========================================================
-   * CONFIG
+   * CONFIG (Pre-Resolved URL)
    * ======================================================== */
 
   const CONFIG = {
-
     APP_SCRIPT_URL:
-      "https://script.google.com/macros/s/AKfycbw9p0LNniGmxeuXBwpQgp-zrGLfDu2RJoToVHkoc4-iYskNwjwBvY_Z5jO75wbzzU-cuw/exec"
-      .replace(
-        "AKfycbxv0JKvNVRNzk",
-        "AKfycbxv0JKvRNzqaE"
-      ),
+      "https://script.google.com/macros/s/AKfycbw9p0LNniGmxeuXBwpQgp-zrGLfDu2RJoToVHkoc4-iYskNwjwBvY_Z5jO75wbzzU-cuw/exec",
 
     SB_URL:
       "https://qywqxcvnlehmiqrkpwdd.supabase.co",
@@ -340,97 +350,51 @@
 
     NETWORK_TIMEOUT:
       12000
-
   };
 
   /* ========================================================
-   * ELEMENT
+   * ELEMENT CACHING
    * ======================================================== */
 
-  const lock =
-    document.getElementById(
-      "notificationLock"
-    );
-
-  const lockTitle =
-    document.getElementById(
-      "lockTitle"
-    );
-
-  const lockText =
-    document.getElementById(
-      "lockText"
-    );
-
-  const allowButton =
-    document.getElementById(
-      "allowButton"
-    );
-
-  const errorBox =
-    document.getElementById(
-      "errorBox"
-    );
-
-  const appFrame =
-    document.getElementById(
-      "appFrame"
-    );
+  const lock = document.getElementById("notificationLock");
+  const lockTitle = document.getElementById("lockTitle");
+  const lockText = document.getElementById("lockText");
+  const allowButton = document.getElementById("allowButton");
+  const errorBox = document.getElementById("errorBox");
+  const appFrame = document.getElementById("appFrame");
 
   /* ========================================================
-   * STATE
+   * STATE & CACHE
    * ======================================================== */
 
-  let swRegistration =
-    null;
-
-  let initialized =
-    false;
-
-  let booting =
-    false;
+  let swRegistration = null;
+  let initialized = false;
+  let booting = false;
+  let cachedVapidUint8 = null;
 
   let session = {
-    user_id:
-      null,
-    role:
-      null
+    user_id: null,
+    role: null
   };
 
   const health = {
-    secure:
-      false,
-    supported:
-      false,
-    permission:
-      "unknown",
-    serviceWorker:
-      false,
-    subscription:
-      false,
-    subscriptionSaved:
-      false,
-    standalone:
-      false,
-    lastError:
-      null
+    secure: false,
+    supported: false,
+    permission: "unknown",
+    serviceWorker: false,
+    subscription: false,
+    subscriptionSaved: false,
+    standalone: false,
+    lastError: null
   };
 
   /* ========================================================
    * LOG
    * ======================================================== */
 
-  function log(...args) {
-    console.log("[PAG]", ...args);
-  }
-
-  function warn(...args) {
-    console.warn("[PAG]", ...args);
-  }
-
-  function error(...args) {
-    console.error("[PAG]", ...args);
-  }
+  const log = (...args) => console.log("[PAG]", ...args);
+  const warn = (...args) => console.warn("[PAG]", ...args);
+  const error = (...args) => console.error("[PAG]", ...args);
 
   /* ========================================================
    * ERROR UI
@@ -462,20 +426,21 @@
   }
 
   /* ========================================================
-   * OPEN APPLICATION (LANGSUNG TAMPILKAN IFRAME)
+   * OPEN APPLICATION (LIGHTNING EXECUTION)
    * ======================================================== */
 
   function openApplication() {
     hideLock();
-    appFrame.style.display = "block";
-
-    if (!appFrame.getAttribute("src")) {
+    if (appFrame.style.display !== "block") {
+      appFrame.style.display = "block";
+    }
+    if (!appFrame.src) {
       appFrame.src = CONFIG.APP_SCRIPT_URL;
     }
   }
 
   /* ========================================================
-   * LOCK APPLICATION (JIKA IZIN DICABUT SAAT DIGUNAKAN)
+   * LOCK APPLICATION
    * ======================================================== */
 
   function lockApplicationInstantly() {
@@ -511,31 +476,23 @@
   }
 
   function isStandalonePWA() {
-    const standalone = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
-    const iosStandalone = window.navigator.standalone === true;
-    return Boolean(standalone || iosStandalone);
+    return Boolean(
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      window.navigator.standalone === true
+    );
   }
 
   /* ========================================================
-   * VAPID CRYPTO UTILS
+   * VAPID CRYPTO UTILS (CACHED FOR ZERO OVERHEAD)
    * ======================================================== */
 
   function vapidToUint8Array(base64) {
+    if (cachedVapidUint8) return cachedVapidUint8;
     const padding = "=".repeat((4 - base64.length % 4) % 4);
     const base64Url = (base64 + padding).replace(/-/g, "+").replace(/_/g, "/");
     const raw = atob(base64Url);
-    return Uint8Array.from([...raw].map(char => char.charCodeAt(0)));
-  }
-
-  function uint8ToBase64Url(value) {
-    if (!value) return "";
-    const bytes = value instanceof Uint8Array ? value : new Uint8Array(value);
-    let binary = "";
-    const chunk = 0x8000;
-    for (let i = 0; i < bytes.length; i += chunk) {
-      binary += String.fromCharCode(...bytes.subarray(i, Math.min(i + chunk, bytes.length)));
-    }
-    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+    cachedVapidUint8 = Uint8Array.from([...raw].map(char => char.charCodeAt(0)));
+    return cachedVapidUint8;
   }
 
   function subscriptionUsesCurrentVapid(subscription) {
@@ -563,7 +520,7 @@
 
   async function fetchWithTimeout(url, options = {}, timeout = CONFIG.NETWORK_TIMEOUT) {
     const controller = new AbortController();
-    const timer = setTimeout(() => { controller.abort(); }, timeout);
+    const timer = setTimeout(() => controller.abort(), timeout);
     try {
       return await fetch(url, { ...options, signal: controller.signal });
     } finally {
@@ -595,7 +552,7 @@
       } catch (errorValue) {
         lastError = errorValue;
         if (attempt >= maxRetry) break;
-        await new Promise(resolve => setTimeout(resolve, 500 * (attempt + 1)));
+        await new Promise(resolve => setTimeout(resolve, 400 * (attempt + 1)));
       }
     }
     throw lastError;
@@ -643,7 +600,7 @@
         return;
       }
       const channel = new MessageChannel();
-      const timer = setTimeout(() => { resolve("unknown"); }, 1500);
+      const timer = setTimeout(() => resolve("unknown"), 1200);
       channel.port1.onmessage = event => {
         clearTimeout(timer);
         resolve(event.data?.version || "unknown");
@@ -711,7 +668,6 @@
     });
     swRegistration = await navigator.serviceWorker.ready;
     health.serviceWorker = true;
-    log("SW Version:", await getSwVersion());
     return swRegistration;
   }
 
@@ -743,7 +699,7 @@
   }
 
   /* ========================================================
-   * INITIALIZE PUSH (BERJALAN DI BACKGROUND)
+   * INITIALIZE PUSH (BERJALAN DI BACKGROUND / IDLE THREAD)
    * ======================================================== */
 
   async function initializePush() {
@@ -777,18 +733,27 @@
     }
   }
 
+  // Menjalankan push tanpa merebut bandwidth rendering utama
+  function runPushInBackground() {
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(() => initializePush().catch(e => warn("Background Push:", e)), { timeout: 3500 });
+    } else {
+      setTimeout(() => initializePush().catch(e => warn("Background Push:", e)), 1200);
+    }
+  }
+
   /* ========================================================
    * REAL-TIME PERMISSION MONITOR
    * ======================================================== */
 
   function setupRealtimePermissionMonitor() {
     if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query({ name: 'notifications' }).then(permissionStatus => {
+      navigator.permissions.query({ name: "notifications" }).then(permissionStatus => {
         permissionStatus.onchange = () => {
           log("Status izin berubah real-time:", permissionStatus.state);
-          if (permissionStatus.state === 'granted') {
+          if (permissionStatus.state === "granted") {
             openApplication();
-            initializePush().catch(() => {});
+            runPushInBackground();
           } else {
             lockApplicationInstantly();
           }
@@ -815,7 +780,7 @@
 
       if (Notification.permission === "granted") {
         openApplication();
-        await initializePush();
+        runPushInBackground();
         return;
       }
 
@@ -824,7 +789,7 @@
 
       if (permission === "granted") {
         openApplication();
-        await initializePush();
+        runPushInBackground();
       } else if (permission === "denied") {
         showBlockedState();
       } else {
@@ -867,7 +832,7 @@
     if (Notification.permission === "denied") {
       if (Notification.permission === "granted") {
         openApplication();
-        await initializePush();
+        runPushInBackground();
       } else {
         showBlockedState();
       }
@@ -915,15 +880,22 @@
   }
 
   /* ========================================================
-   * BOOT
+   * FAST BOOT ENGINE
    * ======================================================== */
 
-  async function boot() {
+  function boot() {
+    // 1. FAST-PATH: Jika izin sudah ada, muat iframe secepat kilat tanpa halangan!
+    if (("Notification" in window) && Notification.permission === "granted") {
+      openApplication();
+      runPushInBackground();
+    }
+
+    // 2. Pasang Event Listener
     allowButton.addEventListener("click", handleAllowButton);
     window.addEventListener("message", handleIframeMessage);
-
     setupRealtimePermissionMonitor();
 
+    // 3. Validasi Keamanan & Dukungan Perangkat
     if (!window.isSecureContext) {
       showLock("Koneksi Tidak Aman", "Web Push Aplikasi membutuhkan HTTPS.", "Tutup");
       allowButton.disabled = true;
@@ -936,13 +908,9 @@
       return;
     }
 
-    // JALUR UTAMA: JIKA SUDAH GRANTED, LANGSUNG BUKA IFRAME
+    // 4. Tangani Status Izin yang Belum Selesai
     if (Notification.permission === "granted") {
-      openApplication();
-      initializePush().catch(err => {
-        warn("Latar belakang inisialisasi push:", err);
-      });
-      return;
+      return; // Sudah ditangani di FAST-PATH
     }
 
     if (Notification.permission === "denied") {
@@ -970,6 +938,7 @@
     );
   }
 
+  // Eksekusi boot seketika
   boot();
 
 })();
