@@ -2,36 +2,15 @@
 <html lang="id">
 
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1,viewport-fit=cover"
-  >
-
-  <meta
-    name="theme-color"
-    content="#0f766e"
-  >
-
-  <meta
-    name="mobile-web-app-capable"
-    content="yes"
-  >
-
-  <meta
-    name="apple-mobile-web-app-capable"
-    content="yes"
-  >
-
-  <meta
-    name="apple-mobile-web-app-status-bar-style"
-    content="default"
-  >
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <!-- ========================================================
-       SPEED BOOSTER: Preconnect & DNS-Prefetch ke Server Tujuan
+       ⚡ SPEED BOOSTER: Preconnect & DNS-Prefetch ke Server
        ======================================================== -->
   <link rel="dns-prefetch" href="//script.google.com">
   <link rel="dns-prefetch" href="//script.googleusercontent.com">
@@ -41,270 +20,153 @@
   <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
   <link rel="preconnect" href="https://qywqxcvnlehmiqrkpwdd.supabase.co" crossorigin>
 
-  <link
-    rel="manifest"
-    href="./manifest.json"
-  >
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png">
 
-  <link
-    rel="icon"
-    href="./icon-192.png"
-  >
-
-  <title> PT. Putra Aulia </title>
+  <title>PT. Putra Aulia</title>
 
   <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0; width: 100%; height: 100%; overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif; background: #0f766e; /* Mencegah flash putih */
+    }
+    #app { width: 100%; height: 100%; position: relative; }
 
-    * {
-      box-sizing: border-box;
+    /* ======================================================
+     * 🚀 ANTI LAYAR PUTIH: SPLASH SCREEN BRANDED PAG
+     * ====================================================== */
+    #pagSplashScreen {
+      position: absolute; inset: 0; z-index: 50;
+      background: #ffffff; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    #pagSplashScreen.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
+    
+    .splash-logo {
+      width: 76px; height: 76px; border-radius: 20px;
+      background: #0f766e; color: #ffffff; font-size: 26px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 12px 30px rgba(15, 118, 110, 0.3);
+      animation: pulseLogo 1.6s infinite ease-in-out;
+    }
+    .splash-title { margin-top: 16px; font-size: 18px; font-weight: 800; color: #0f172a; }
+    .splash-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
+    
+    .progress-bar-wrap {
+      width: 140px; height: 4px; background: #e2e8f0;
+      border-radius: 4px; margin-top: 20px; overflow: hidden; position: relative;
+    }
+    .progress-bar-fill {
+      width: 40%; height: 100%; background: #0f766e;
+      border-radius: 4px; position: absolute;
+      animation: moveProgress 1.2s infinite ease-in-out;
     }
 
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-      background: #ffffff;
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
-
-    #app {
-      width: 100%;
-      height: 100%;
+    @keyframes moveProgress {
+      0% { left: -40%; width: 30%; }
+      50% { width: 60%; }
+      100% { left: 100%; width: 40%; }
     }
 
     /* ======================================================
-     * NOTIFICATION LOCK
+     * NOTIFICATION LOCK (UTUH 100%)
      * ====================================================== */
-
     #notificationLock {
-      position: fixed;
-      inset: 0;
-      z-index: 999999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding:
-        max(
-          24px,
-          env(safe-area-inset-top)
-        )
-        24px
-        max(
-          24px,
-          env(safe-area-inset-bottom)
-        );
+      position: fixed; inset: 0; z-index: 999999;
+      display: flex; align-items: center; justify-content: center;
+      padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
       background: #f4f7f8;
     }
-
-    /* KUNCI ANTI KEDIP: Sembunyikan secara default */
-    #notificationLock.hidden {
-      display: none !important;
-    }
+    #notificationLock.hidden { display: none !important; }
 
     .lockCard {
-      width: min(
-        430px,
-        100%
-      );
-      padding: 30px;
-      border-radius: 20px;
-      background: #ffffff;
-      box-shadow:
-        0 15px 45px
-        rgba(
-          0,
-          0,
-          0,
-          .12
-        );
-      text-align: center;
+      width: min(430px, 100%); padding: 30px; border-radius: 20px;
+      background: #ffffff; box-shadow: 0 15px 45px rgba(0, 0, 0, .12); text-align: center;
     }
-
     .lockLogo {
-      width: 72px;
-      height: 72px;
-      margin:
-        0 auto
-        18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 18px;
-      background: #0f766e;
-      color: white;
-      font-size: 23px;
-      font-weight: 800;
+      width: 72px; height: 72px; margin: 0 auto 18px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 18px; background: #0f766e; color: white; font-size: 23px; font-weight: 800;
     }
-
-    .lockCard h1 {
-      margin:
-        0 0
-        10px;
-      font-size: 21px;
-    }
-
-    .lockCard p {
-      margin:
-        8px 0
-        18px;
-      color: #5f6870;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
+    .lockCard h1 { margin: 0 0 10px; font-size: 21px; }
+    .lockCard p { margin: 8px 0 18px; color: #5f6870; font-size: 14px; line-height: 1.6; }
     .lockButton {
-      width: 100%;
-      padding: 14px 20px;
-      border: 0;
-      border-radius: 11px;
-      background: #0f766e;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
+      width: 100%; padding: 14px 20px; border: 0; border-radius: 11px;
+      background: #0f766e; color: white; font-weight: 700; cursor: pointer;
     }
-
-    .lockButton:disabled {
-      opacity: .55;
-      cursor: default;
-    }
-
-    .lockSmall {
-      font-size: 12px !important;
-      color: #7b858d !important;
-    }
+    .lockButton:disabled { opacity: .55; cursor: default; }
+    .lockSmall { font-size: 12px !important; color: #7b858d !important; }
 
     #errorBox {
-      display: none;
-      margin-top: 14px;
-      padding: 10px;
-      border-radius: 9px;
-      background: #fff1f1;
-      color: #a33;
-      font-size: 12px;
-      text-align: left;
-      word-break: break-word;
+      display: none; margin-top: 14px; padding: 10px; border-radius: 9px;
+      background: #fff1f1; color: #a33; font-size: 12px; text-align: left; word-break: break-word;
     }
 
     #appFrame {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: 0;
+      display: block; width: 100%; height: 100%; border: 0; background: #ffffff;
       transform: translateZ(0); /* Akselerasi Hardware GPU */
     }
 
-    /* ======================================================
-     * MOBILE
-     * ====================================================== */
-
-    @media (max-width: 600px) {
-
-      #notificationLock {
-        padding:
-          max(
-            18px,
-            env(safe-area-inset-top)
-          )
-          16px
-          max(
-            18px,
-            env(safe-area-inset-bottom)
-          );
-      }
-
-      .lockCard {
-        padding: 24px 20px;
-        border-radius: 18px;
-      }
-
-      .lockLogo {
-        width: 64px;
-        height: 64px;
-        margin-bottom: 15px;
-      }
-
-      .lockCard h1 {
-        font-size: 19px;
-      }
-
+    #btnEmergencyReload {
+      display: none; margin-top: 18px; background: transparent;
+      border: 1px solid #cbd5e1; color: #64748b; font-size: 12px;
+      padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;
     }
 
+    @media (max-width: 600px) {
+      #notificationLock { padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom)); }
+      .lockCard { padding: 24px 20px; border-radius: 18px; }
+      .lockLogo { width: 64px; height: 64px; margin-bottom: 15px; }
+      .lockCard h1 { font-size: 19px; }
+    }
   </style>
-
 </head>
 
 <body>
-
 <div id="app">
 
   <!-- =====================================================
-       SINGLE NOTIFICATION LOCK
+       0. SPLASH SCREEN (MENGHAPUS LAYAR PUTIH SEJAK DETIK KE-0)
        ===================================================== -->
-
-  <div
-    id="notificationLock"
-    class="hidden"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="lockTitle"
-  >
-
-    <div class="lockCard">
-
-      <div class="lockLogo">
-        PAG
-      </div>
-
-      <h1 id="lockTitle">
-        Izin Notifikasi Diperlukan
-      </h1>
-
-      <p id="lockText">
-        Aplikasi menggunakan
-        notifikasi browser sebagai
-        satu-satunya sistem
-        pemberitahuan.
-
-        Izinkan notifikasi
-        untuk membuka aplikasi.
-      </p>
-
-      <button
-        id="allowButton"
-        class="lockButton"
-        type="button"
-      >
-        Aktifkan Notifikasi
-      </button>
-
-      <p class="lockSmall">
-        by: Azhar
-      </p>
-
-      <div
-        id="errorBox"
-        role="alert"
-      ></div>
-
-    </div>
-
+  <div id="pagSplashScreen">
+    <div class="splash-logo">PAG</div>
+    <div class="splash-title">PT. PUTRA AULIA</div>
+    <div class="splash-sub">Memuat Sistem Dokumen & Tender...</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+    <button type="button" id="btnEmergencyReload" onclick="forceReloadApp()">Muat Ulang Aplikasi 🔄</button>
   </div>
 
   <!-- =====================================================
-       MAIN APPLICATION (HIGH PRIORITY FETCH)
+       1. SINGLE NOTIFICATION LOCK (UTUH)
        ===================================================== -->
+  <div id="notificationLock" class="hidden" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+    <div class="lockCard">
+      <div class="lockLogo">PAG</div>
+      <h1 id="lockTitle">Izin Notifikasi Diperlukan</h1>
+      <p id="lockText">
+        Aplikasi menggunakan notifikasi browser sebagai satu-satunya sistem pemberitahuan.
+        Izinkan notifikasi untuk membuka aplikasi.
+      </p>
+      <button id="allowButton" class="lockButton" type="button">Aktifkan Notifikasi</button>
+      <p class="lockSmall">by: Azhar</p>
+      <div id="errorBox" role="alert"></div>
+    </div>
+  </div>
 
+  <!-- =====================================================
+       2. MAIN APPLICATION (HIGH PRIORITY FETCH)
+       ===================================================== -->
   <iframe
     id="appFrame"
     title="PT. Putra Aulia"
     src="https://script.google.com/macros/s/AKfycbw9p0LNniGmxeuXBwpQgp-zrGLfDu2RJoToVHkoc4-iYskNwjwBvY_Z5jO75wbzzU-cuw/exec"
     loading="eager"
-    importance="high"
     fetchpriority="high"
     allow="geolocation; microphone; camera; display-capture; clipboard-read; clipboard-write;"
   ></iframe>
@@ -312,62 +174,40 @@
 </div>
 
 <script>
-
 (() => {
-
   "use strict";
 
   /* ========================================================
-   * CONFIG (Pre-Resolved URL)
+   * CONFIG (UTUH 100%)
    * ======================================================== */
-
   const CONFIG = {
-    APP_SCRIPT_URL:
-      "https://script.google.com/macros/s/AKfycbw9p0LNniGmxeuXBwpQgp-zrGLfDu2RJoToVHkoc4-iYskNwjwBvY_Z5jO75wbzzU-cuw/exec",
-
-    SB_URL:
-      "https://qywqxcvnlehmiqrkpwdd.supabase.co",
-
-    SB_KEY:
-      "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq",
-
-    VAPID_PUBLIC_KEY:
-      "BJA7AZcYbZ-m23nmGsoICga9u-MhkIOfaL4ZuYTF0lO0PyUQKztgodNHp3EjQxKXTfMq0eO0nIDEyi5SHlKEZPg",
-
-    SW_PATH:
-      "./sw.js",
-
-    SW_SCOPE:
-      "./",
-
-    DEVICE_STORAGE:
-      "PAG_DOCS_PUSH_DEVICE_ID",
-
-    BADGE_STORAGE:
-      "PAG_DOCS_UNREAD_COUNT",
-
-    MAX_RETRY:
-      2,
-
-    NETWORK_TIMEOUT:
-      12000
+    APP_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw9p0LNniGmxeuXBwpQgp-zrGLfDu2RJoToVHkoc4-iYskNwjwBvY_Z5jO75wbzzU-cuw/exec",
+    SB_URL: "https://qywqxcvnlehmiqrkpwdd.supabase.co",
+    SB_KEY: "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq",
+    VAPID_PUBLIC_KEY: "BJA7AZcYbZ-m23nmGsoICga9u-MhkIOfaL4ZuYTF0lO0PyUQKztgodNHp3EjQxKXTfMq0eO0nIDEyi5SHlKEZPg",
+    SW_PATH: "./sw.js",
+    SW_SCOPE: "./",
+    DEVICE_STORAGE: "PAG_DOCS_PUSH_DEVICE_ID",
+    BADGE_STORAGE: "PAG_DOCS_UNREAD_COUNT",
+    MAX_RETRY: 2,
+    NETWORK_TIMEOUT: 12000
   };
 
   /* ========================================================
    * ELEMENT CACHING
    * ======================================================== */
-
   const lock = document.getElementById("notificationLock");
   const lockTitle = document.getElementById("lockTitle");
   const lockText = document.getElementById("lockText");
   const allowButton = document.getElementById("allowButton");
   const errorBox = document.getElementById("errorBox");
   const appFrame = document.getElementById("appFrame");
+  const splash = document.getElementById("pagSplashScreen");
+  const btnEmergency = document.getElementById("btnEmergencyReload");
 
   /* ========================================================
-   * STATE & CACHE
+   * STATE & CACHE (UTUH 100%)
    * ======================================================== */
-
   let swRegistration = null;
   let initialized = false;
   let booting = false;
@@ -390,16 +230,11 @@
   };
 
   /* ========================================================
-   * LOG
+   * LOG & ERROR UI (UTUH)
    * ======================================================== */
-
   const log = (...args) => console.log("[PAG]", ...args);
   const warn = (...args) => console.warn("[PAG]", ...args);
   const error = (...args) => console.error("[PAG]", ...args);
-
-  /* ========================================================
-   * ERROR UI
-   * ======================================================== */
 
   function showError(message) {
     errorBox.textContent = String(message || "");
@@ -412,14 +247,15 @@
   }
 
   /* ========================================================
-   * LOCK CONTROLS
+   * LOCK CONTROLS (UTUH)
    * ======================================================== */
-
   function showLock(title, message, buttonText) {
     lockTitle.textContent = title || "Notifikasi Diperlukan";
     lockText.textContent = message || "";
     allowButton.textContent = buttonText || "Aktifkan Notifikasi";
     lock.classList.remove("hidden");
+    // Sembunyikan splash screen agar lock terlihat jelas
+    if (splash) splash.classList.add("loaded");
   }
 
   function hideLock() {
@@ -427,9 +263,8 @@
   }
 
   /* ========================================================
-   * OPEN APPLICATION (LIGHTNING EXECUTION)
+   * OPEN / LOCK APPLICATION (DIPERCEPAT TANPA KEDIP PUTIH)
    * ======================================================== */
-
   function openApplication() {
     hideLock();
     if (appFrame.style.display !== "block") {
@@ -440,19 +275,33 @@
     }
   }
 
-  /* ========================================================
-   * LOCK APPLICATION
-   * ======================================================== */
-
   function lockApplicationInstantly() {
     appFrame.style.display = "none";
     showBlockedState();
   }
 
-  /* ========================================================
-   * DEVICE IDENTIFIER & METADATA
-   * ======================================================== */
+  /* ⚡ LIFECYCLE: Hilangkan splash saat iframe selesai render */
+  appFrame.onload = () => {
+    setTimeout(() => {
+      if (splash) splash.classList.add("loaded");
+    }, 200);
+  };
 
+  // Watchdog: Jika Google Apps Script loading > 7 detik, munculkan tombol darurat
+  setTimeout(() => {
+    if (splash && !splash.classList.contains("loaded") && btnEmergency) {
+      btnEmergency.style.display = "inline-block";
+    }
+  }, 7000);
+
+  window.forceReloadApp = function() {
+    if (splash) splash.classList.remove("loaded");
+    appFrame.src = CONFIG.APP_SCRIPT_URL + (CONFIG.APP_SCRIPT_URL.indexOf("?") === -1 ? "?" : "&") + "t=" + Date.now();
+  };
+
+  /* ========================================================
+   * DEVICE IDENTIFIER & METADATA (UTUH)
+   * ======================================================== */
   function getDeviceId() {
     let id = localStorage.getItem(CONFIG.DEVICE_STORAGE);
     if (!id) {
@@ -484,9 +333,8 @@
   }
 
   /* ========================================================
-   * VAPID CRYPTO UTILS (CACHED FOR ZERO OVERHEAD)
+   * VAPID CRYPTO UTILS (UTUH)
    * ======================================================== */
-
   function vapidToUint8Array(base64) {
     if (cachedVapidUint8) return cachedVapidUint8;
     const padding = "=".repeat((4 - base64.length % 4) % 4);
@@ -516,9 +364,8 @@
   }
 
   /* ========================================================
-   * NETWORK & SUPABASE FETCH
+   * NETWORK & SUPABASE FETCH (UTUH)
    * ======================================================== */
-
   async function fetchWithTimeout(url, options = {}, timeout = CONFIG.NETWORK_TIMEOUT) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeout);
@@ -560,9 +407,8 @@
   }
 
   /* ========================================================
-   * BADGE SYNC
+   * BADGE SYNC (UTUH)
    * ======================================================== */
-
   async function setBadge(count) {
     const n = Math.max(0, Math.min(999, Number(count) || 0));
     localStorage.setItem(CONFIG.BADGE_STORAGE, String(n));
@@ -591,9 +437,8 @@
   }
 
   /* ========================================================
-   * SERVICE WORKER & SUBSCRIPTION ENGINE
+   * SERVICE WORKER & SUBSCRIPTION ENGINE (UTUH 100%)
    * ======================================================== */
-
   async function getSwVersion() {
     return new Promise(resolve => {
       if (!swRegistration?.active) {
@@ -659,7 +504,7 @@
     });
 
     health.subscriptionSaved = true;
-    log("Push subscription tersimpan di Supabase.");
+    log("Push subscription tersimpan di Supabase:", session.user_id, session.role);
   }
 
   async function registerServiceWorker() {
@@ -700,9 +545,8 @@
   }
 
   /* ========================================================
-   * INITIALIZE PUSH (BERJALAN DI BACKGROUND / IDLE THREAD)
+   * INITIALIZE PUSH (NON-BLOCKING IDLE EXECUTION)
    * ======================================================== */
-
   async function initializePush() {
     if (initialized) return true;
     if (booting) return false;
@@ -743,31 +587,31 @@
   }
 
   /* ========================================================
-   * REAL-TIME PERMISSION MONITOR
+   * REAL-TIME PERMISSION MONITOR (UTUH)
    * ======================================================== */
-
   function setupRealtimePermissionMonitor() {
-    if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query({ name: "notifications" }).then(permissionStatus => {
-        permissionStatus.onchange = () => {
-          log("Status izin berubah real-time:", permissionStatus.state);
-          if (permissionStatus.state === "granted") {
-            openApplication();
-            runPushInBackground();
-          } else {
-            lockApplicationInstantly();
-          }
-        };
-      }).catch(e => {
-        warn("Permission query tidak didukung:", e);
-      });
-    }
+    try {
+      if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: "notifications" }).then(permissionStatus => {
+          permissionStatus.onchange = () => {
+            log("Status izin berubah real-time:", permissionStatus.state);
+            if (permissionStatus.state === "granted") {
+              openApplication();
+              runPushInBackground();
+            } else {
+              lockApplicationInstantly();
+            }
+          };
+        }).catch(e => {
+          warn("Permission query tidak didukung:", e);
+        });
+      }
+    } catch(errQuery) {}
   }
 
   /* ========================================================
-   * REQUEST PERMISSION
+   * REQUEST PERMISSION (UTUH)
    * ======================================================== */
-
   async function requestNotificationPermission() {
     clearError();
     allowButton.disabled = true;
@@ -814,9 +658,8 @@
   }
 
   /* ========================================================
-   * BLOCKED STATE
+   * BLOCKED STATE (UTUH)
    * ======================================================== */
-
   function showBlockedState() {
     showLock(
       "Aplikasi Diblokir",
@@ -843,9 +686,8 @@
   }
 
   /* ========================================================
-   * SESSION DARI IFRAME APPS SCRIPT
+   * SESSION DARI IFRAME APPS SCRIPT (UTUH 100%)
    * ======================================================== */
-
   async function handleIframeMessage(event) {
     if (event.source !== appFrame.contentWindow) return;
     const data = event.data || {};
@@ -880,9 +722,8 @@
   }
 
   /* ========================================================
-   * FAST BOOT ENGINE
+   * FAST BOOT ENGINE (UTUH 100%)
    * ======================================================== */
-
   function boot() {
     if (("Notification" in window) && Notification.permission === "granted") {
       openApplication();
@@ -937,8 +778,6 @@
   boot();
 
 })();
-
 </script>
-
 </body>
 </html>
