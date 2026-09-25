@@ -1357,14 +1357,21 @@
 
       if (btn) {
         btn.disabled = true;
-        btn.textContent = "⏳ Memverifikasi Akun...";
+        btn.textContent = "⏳ Menghubungkan ke Server...";
       }
 
-      // Pastikan iframe sudah mulai memuat
+      // Pastikan iframe mulai memuat di background
       openApplication();
 
-      // Teruskan kredensial ke iframe backend Apps Script via postMessage
-      const checkIframeAndSend = () => {
+      let loginSukses = false;
+      let percobaan = 0;
+      const maxPercobaan = 10; // Coba ulang hingga 10 detik
+
+      // 1. Fungsi pengirim pesan berulang sampai iframe merespons
+      const kirimPesanKeIframe = () => {
+        if (loginSukses) return;
+        percobaan++;
+
         try {
           if (appFrame && appFrame.contentWindow) {
             appFrame.contentWindow.postMessage({
@@ -1372,33 +1379,48 @@
               username: username,
               password: password
             }, "*");
+            console.log("[PWA] Mengirim sinyal login ke iframe (Percobaan ke-" + percobaan + ")");
           }
         } catch (e) {
-          warn("Gagal mengirim postMessage ke iframe:", e);
+          console.warn("Gagal kirim pesan:", e);
         }
-      };
 
-      checkIframeAndSend();
-
-      // Cadangan pengecekan jika iframe belum siap
-      const timer = setTimeout(checkIframeAndSend, 1200);
-
-      // Listener khusus hasil autentikasi dari iframe
-      const authListener = function (evt) {
-        if (evt.source !== appFrame.contentWindow) return;
-        const res = evt.data || {};
-        if (res.type === "LOGIN_SUCCESS_RESULT" || res.type === "PAG_LOGIN_SUCCESS") {
-          window.removeEventListener("message", authListener);
-          clearTimeout(timer);
+        // Jika belum dijawab dan belum timeout, kirim ulang tiap 1 detik
+        if (percobaan < maxPercobaan && !loginSukses) {
+          setTimeout(kirimPesanKeIframe, 1000);
+        } else if (percobaan >= maxPercobaan && !loginSukses) {
+          // JALUR DARURAT: Jika iframe tidak menjawab via postMessage, 
+          // langsung buka iframe agar user tidak terjebak di layar beku!
           if (btn) {
             btn.disabled = false;
             btn.textContent = "MASUK KE SISTEM";
           }
           if (loginWrapper) loginWrapper.style.display = "none";
-          openApplication();
-        } else if (res.type === "LOGIN_FAILED_RESULT") {
+          if (appFrame.style.display !== "block") appFrame.style.display = "block";
+        }
+      };
+
+      // Mulai kirim percobaan pertama
+      kirimPesanKeIframe();
+
+      // 2. Listener penerima respon dari Google Apps Script
+      const authListener = function (evt) {
+        if (evt.source !== appFrame.contentWindow) return;
+        const res = evt.data || {};
+
+        if (res.type === "LOGIN_SUCCESS_RESULT" || res.type === "PAG_LOGIN_SUCCESS") {
+          loginSukses = true;
           window.removeEventListener("message", authListener);
-          clearTimeout(timer);
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "MASUK KE SISTEM";
+          }
+          // Sembunyikan form login, tampilkan aplikasi
+          if (loginWrapper) loginWrapper.style.display = "none";
+          if (appFrame.style.display !== "block") appFrame.style.display = "block";
+        } else if (res.type === "LOGIN_FAILED_RESULT") {
+          loginSukses = true;
+          window.removeEventListener("message", authListener);
           if (btn) {
             btn.disabled = false;
             btn.textContent = "MASUK KE SISTEM";
@@ -1408,6 +1430,7 @@
       };
 
       window.addEventListener("message", authListener);
+    }
 
       // Batas waktu timeout jika koneksi lambat
       setTimeout(() => {
