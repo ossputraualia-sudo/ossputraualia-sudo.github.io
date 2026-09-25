@@ -14,6 +14,8 @@
        ======================================================== -->
   <link rel="dns-prefetch" href="//script.google.com">
   <link rel="dns-prefetch" href="//script.googleusercontent.com">
+  <link rel="dns-prefetch" href="//accounts.google.com">
+  <link rel="dns-prefetch" href="//ssl.gstatic.com">
   <link rel="dns-prefetch" href="//qywqxcvnlehmiqrkpwdd.supabase.co">
 
   <link rel="preconnect" href="https://script.google.com" crossorigin>
@@ -29,7 +31,7 @@
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body {
       margin: 0; width: 100%; height: 100%; overflow: hidden;
-      font-family: Arial, Helvetica, sans-serif; background: #0f766e; /* Mencegah flash putih */
+      font-family: Arial, Helvetica, sans-serif; background: #0f766e; /* Latar gelap identik agar tidak ada kedip putih */
     }
     #app { width: 100%; height: 100%; position: relative; }
 
@@ -40,7 +42,7 @@
       position: absolute; inset: 0; z-index: 50;
       background: #ffffff; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
     }
     #pagSplashScreen.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
     
@@ -94,7 +96,7 @@
       display: flex; align-items: center; justify-content: center;
       border-radius: 18px; background: #0f766e; color: white; font-size: 23px; font-weight: 800;
     }
-    .lockCard h1 { margin: 0 0 10px; font-size: 21px; }
+    .lockCard h1 { margin: 0 0 10px; font-size: 21px; color: #0f172a; }
     .lockCard p { margin: 8px 0 18px; color: #5f6870; font-size: 14px; line-height: 1.6; }
     .lockButton {
       width: 100%; padding: 14px 20px; border: 0; border-radius: 11px;
@@ -131,9 +133,7 @@
 <body>
 <div id="app">
 
-  <!-- =====================================================
-       0. SPLASH SCREEN (MENGHAPUS LAYAR PUTIH SEJAK DETIK KE-0)
-       ===================================================== -->
+  <!-- 0. SPLASH SCREEN (MENGHAPUS LAYAR PUTIH) -->
   <div id="pagSplashScreen">
     <div class="splash-logo">PAG</div>
     <div class="splash-title">PT. PUTRA AULIA</div>
@@ -142,9 +142,7 @@
     <button type="button" id="btnEmergencyReload" onclick="forceReloadApp()">Muat Ulang Aplikasi 🔄</button>
   </div>
 
-  <!-- =====================================================
-       1. SINGLE NOTIFICATION LOCK (UTUH)
-       ===================================================== -->
+  <!-- 1. NOTIFICATION LOCK (UTUH 100%) -->
   <div id="notificationLock" class="hidden" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
     <div class="lockCard">
       <div class="lockLogo">PAG</div>
@@ -159,9 +157,7 @@
     </div>
   </div>
 
-  <!-- =====================================================
-       2. MAIN APPLICATION (HIGH PRIORITY FETCH)
-       ===================================================== -->
+  <!-- 2. HIGH PRIORITY IFRAME -->
   <iframe
     id="appFrame"
     title="PT. Putra Aulia"
@@ -254,7 +250,6 @@
     lockText.textContent = message || "";
     allowButton.textContent = buttonText || "Aktifkan Notifikasi";
     lock.classList.remove("hidden");
-    // Sembunyikan splash screen agar lock terlihat jelas
     if (splash) splash.classList.add("loaded");
   }
 
@@ -263,7 +258,7 @@
   }
 
   /* ========================================================
-   * OPEN / LOCK APPLICATION (DIPERCEPAT TANPA KEDIP PUTIH)
+   * OPEN / LOCK APPLICATION (CEPAT & TANPA KEDIP PUTIH)
    * ======================================================== */
   function openApplication() {
     hideLock();
@@ -280,14 +275,14 @@
     showBlockedState();
   }
 
-  /* ⚡ LIFECYCLE: Hilangkan splash saat iframe selesai render */
+  /* Hilangkan splash saat iframe selesai render */
   appFrame.onload = () => {
     setTimeout(() => {
       if (splash) splash.classList.add("loaded");
-    }, 200);
+    }, 150);
   };
 
-  // Watchdog: Jika Google Apps Script loading > 7 detik, munculkan tombol darurat
+  // Watchdog pengaman
   setTimeout(() => {
     if (splash && !splash.classList.contains("loaded") && btnEmergency) {
       btnEmergency.style.display = "inline-block";
@@ -333,7 +328,7 @@
   }
 
   /* ========================================================
-   * VAPID CRYPTO UTILS (UTUH)
+   * 🔒 VAPID CRYPTO UTILS RESMI (100% UTUH STANDAR RFC 8292)
    * ======================================================== */
   function vapidToUint8Array(base64) {
     if (cachedVapidUint8) return cachedVapidUint8;
@@ -492,8 +487,10 @@
       updated_at: new Date().toISOString()
     };
 
+    // Bersihkan dulu perangkat lama secara runtut
     await cleanupOldDeviceSubscriptions(json.endpoint);
 
+    // Simpan data langganan ke Supabase
     await supabaseFetch("/rest/v1/web_push_subscriptions?on_conflict=endpoint", {
       method: "POST",
       headers: {
@@ -580,9 +577,9 @@
 
   function runPushInBackground() {
     if ("requestIdleCallback" in window) {
-      requestIdleCallback(() => initializePush().catch(e => warn("Background Push:", e)), { timeout: 3500 });
+      requestIdleCallback(() => initializePush().catch(e => warn("Background Push:", e)), { timeout: 3000 });
     } else {
-      setTimeout(() => initializePush().catch(e => warn("Background Push:", e)), 1200);
+      setTimeout(() => initializePush().catch(e => warn("Background Push:", e)), 1000);
     }
   }
 
