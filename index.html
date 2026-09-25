@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -75,6 +75,7 @@
     #app {
       width: 100%;
       height: 100%;
+      position: relative;
     }
 
     /* ======================================================
@@ -234,6 +235,236 @@
 
     }
 
+    /* =============================================================
+     * SISTEM GAYA TERSINKRONISASI - MODUL LOGIN & REGISTRASI
+     * VERSI OPTIMASI ULTRA SPEED (SAT-SET) - GPU COMPOSITED
+     * ============================================================= */
+
+    .login-container {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+      width: 100%;
+      box-sizing: border-box;
+      background: #f8fafc;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .login-card {
+      background: var(--glass-bg, #ffffff) !important;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      width: 100%;
+      max-width: 440px;
+      border-radius: var(--radius-lg, 20px);
+      padding: 36px 30px;
+      box-shadow: var(--shadow-float, 0 20px 25px -5px rgba(0,0,0,0.1)), var(--mica-edge, inset 0 0 0 1px rgba(255,255,255,0.2));
+      border: 1px solid var(--glass-border, #e2e8f0);
+      text-align: center;
+      transform: translateZ(0);
+      will-change: transform, opacity;
+      animation: modalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      margin: auto;
+      box-sizing: border-box;
+    }
+
+    .brand-badge-box {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary, #0d9488) 0%, var(--primary-hover, #0f766e) 100%);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 20px;
+      padding: 8px 18px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+    }
+
+    .login-brand {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main, #0f172a);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .login-subtitle {
+      color: var(--text-muted, #64748b);
+      font-size: 13px;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: var(--tbl-th-bg, #f8fafc);
+      padding: 4px;
+      border-radius: var(--radius-sm, 10px);
+      margin-bottom: 24px;
+      border: 1px solid var(--border-data, #e2e8f0);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: var(--text-muted, #64748b);
+      border-radius: var(--radius-xs, 6px);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .auth-tab.active {
+      background: var(--input-bg, #ffffff);
+      color: var(--primary, #0d9488);
+      box-shadow: var(--shadow-sm, 0 1px 2px 0 rgba(0,0,0,0.05));
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .form-group span {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    .login-input:focus {
+      border-color: var(--primary, #0d9488);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
+
+    .input-wrapper .login-input {
+      padding-right: 42px !important;
+    }
+
+    .toggle-pwd-btn {
+      position: absolute;
+      right: 12px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-subtle, #94a3b8);
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .role-select {
+      cursor: pointer;
+      padding-right: 14px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .role-hint {
+      margin-top: 8px;
+      text-align: left;
+      font-size: 11.5px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      line-height: 1.4;
+    }
+
+    .alert-info { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+    .alert-success { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+    .alert-danger { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+
+    #loginFeedbackBox {
+      display: none;
+      margin-top: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    @media (max-width: 600px) {
+      .login-container {
+        align-items: flex-start;
+        padding: 20px 16px 60px 16px;
+      }
+
+      .login-card {
+        padding: 28px 20px;
+        border-radius: 20px;
+      }
+
+      .brand-badge-box {
+        font-size: 18px;
+        padding: 6px 14px;
+      }
+
+      .login-brand {
+        font-size: 18px;
+      }
+
+      .login-subtitle {
+        font-size: 12px;
+        margin-bottom: 20px;
+      }
+
+      .auth-tab {
+        font-size: 12px;
+        padding: 8px 10px;
+      }
+
+      .login-input {
+        font-size: 14px !important;
+        padding: 12px 14px !important;
+      }
+
+      .input-wrapper .login-input {
+        padding-right: 42px !important;
+      }
+    }
+
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
   </style>
 
 </head>
@@ -293,6 +524,97 @@
 
     </div>
 
+  </div>
+
+  <!-- =====================================================
+       MODUL FORM LOGIN & REGISTRASI (INSTAN 0 DETIK)
+       ===================================================== -->
+
+  <div class="login-container" id="loginContainerWrapper">
+    <div class="login-card">
+      
+      <!-- BRAND LOGO -->
+      <div id="authBrandHeader">
+        <div class="brand-badge-box">P.A.G</div>
+        <div class="login-brand" id="authNamaPerusahaan">PT. PUTRA AULIA GROUP</div>
+        <div class="login-subtitle">Sistem Manajemen Dokumen Terpadu (Supabase Engine)</div>
+      </div>
+
+      <!-- TABS PILIHAN (LOGIN / DAFTAR) -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="tabBtnLogin" onclick="Login.switchTab('login')">
+          🔐 Masuk
+        </button>
+        <button type="button" class="auth-tab" id="tabBtnRegister" onclick="Login.switchTab('register')">
+          📝 Daftar
+        </button>
+      </div>
+
+      <!-- PANEL 1: FORM LOGIN -->
+      <div id="panelLogin" style="display:block;">
+        <form id="formMasuk" onsubmit="event.preventDefault(); Login.submitLogin();">
+          <label class="fld form-group">
+            <span>Username / Email</span>
+            <input type="text" id="log_user" class="login-input" placeholder="contoh@gmail.com" autocomplete="username" required>
+          </label>
+
+          <label class="fld form-group" style="position:relative;">
+            <span>Password</span>
+            <div class="input-wrapper">
+              <input type="password" id="log_pass" class="login-input" placeholder="Masukkan password" autocomplete="current-password" required>
+              <button type="button" class="toggle-pwd-btn" onclick="Login.togglePassword('log_pass', this)" title="Lihat password">👁️</button>
+            </div>
+          </label>
+
+          <button type="submit" id="btnSubmitLogin" class="btn" style="width:100%; padding:14px; margin-top:10px; background:#0d9488; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">
+            MASUK KE SISTEM
+          </button>
+        </form>
+      </div>
+
+      <!-- PANEL 2: FORM DAFTAR AKUN BARU -->
+      <div id="panelRegister" style="display:none;">
+        <form id="formDaftar" onsubmit="event.preventDefault(); Login.submitRegister();">
+          <label class="fld form-group">
+            <span>Nama Lengkap</span>
+            <input type="text" id="reg_nama" class="login-input" placeholder="Contoh: M. Azhar, S.T." autocomplete="name" required>
+          </label>
+
+          <label class="fld form-group">
+            <span>Email Google (Gmail)</span>
+            <input type="email" id="reg_email" class="login-input" placeholder="nama@gmail.com" autocomplete="email" required>
+          </label>
+
+          <label class="fld form-group" style="position:relative;">
+            <span>Password</span>
+            <div class="input-wrapper">
+              <input type="password" id="reg_pass" class="login-input" placeholder="Buat password akun (min. 8 karakter)" autocomplete="new-password" required>
+              <button type="button" class="toggle-pwd-btn" onclick="Login.togglePassword('reg_pass', this)" title="Lihat password">👁️</button>
+            </div>
+          </label>
+
+          <label class="fld form-group">
+            <span>Role / Hak Akses yang Diminta</span>
+            <select id="reg_role" class="login-input role-select" onchange="Login.updateRoleHint()" required>
+              <option value="superuser">Superuser</option>
+              <option value="user teknik">User Teknik</option>
+              <option value="user tender">User Tender</option>
+              <option value="user biasa" selected>User Biasa</option>
+            </select>
+            <div id="roleHintBox" class="role-hint alert-info">
+              👁️ <b>User Biasa:</b> Akses lihat data tender, paket, & personil (Read-Only).
+            </div>
+          </label>
+
+          <button type="submit" id="btnSubmitRegister" class="btn" style="width:100%; padding:14px; margin-top:10px; background:#0d9488; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">
+            📝 AJUKAN PENDAFTARAN
+          </button>
+        </form>
+      </div>
+
+      <div id="loginFeedbackBox"></div>
+
+    </div>
   </div>
 
   <!-- =====================================================
@@ -362,6 +684,7 @@
   const allowButton = document.getElementById("allowButton");
   const errorBox = document.getElementById("errorBox");
   const appFrame = document.getElementById("appFrame");
+  const loginWrapper = document.getElementById("loginContainerWrapper");
 
   /* ========================================================
    * STATE & CACHE
@@ -866,6 +1189,12 @@
 
     if (data.type === "SET_APP_BADGE") await setBadge(data.count);
     if (data.type === "CLEAR_APP_BADGE") await setBadge(0);
+
+    // KETIKA USER LOGIN SUKSES DI DALAM APLIKASI
+    if (data.type === "PAG_LOGIN_SUCCESS") {
+      if (loginWrapper) loginWrapper.style.display = "none";
+      if (appFrame.style.display !== "block") appFrame.style.display = "block";
+    }
   }
 
   function getPlatformMessage() {
@@ -940,6 +1269,235 @@
 
   // Eksekusi boot seketika
   boot();
+
+  /* ========================================================
+   * CONTROLLER LOGIN & REGISTER (INTEGRASI PENUH DI PWA SHELL)
+   * ======================================================== */
+
+  window.Login = (function () {
+
+    function setFeedback(msg, isError) {
+      const fb = document.getElementById("loginFeedbackBox");
+      if (!fb) return;
+      if (!msg) {
+        fb.style.display = "none";
+        fb.textContent = "";
+        return;
+      }
+      fb.className = isError ? "alert-box alert-danger" : "alert-box alert-success";
+      fb.textContent = msg;
+      fb.style.display = "block";
+    }
+
+    function switchTab(tabName) {
+      setFeedback("", false);
+      const pLogin = document.getElementById("panelLogin");
+      const pReg = document.getElementById("panelRegister");
+      const tLogin = document.getElementById("tabBtnLogin");
+      const tReg = document.getElementById("tabBtnRegister");
+
+      if (tabName === "register") {
+        if (pLogin) pLogin.style.display = "none";
+        if (pReg) pReg.style.display = "block";
+        if (tLogin) tLogin.classList.remove("active");
+        if (tReg) tReg.classList.add("active");
+      } else {
+        if (pLogin) pLogin.style.display = "block";
+        if (pReg) pReg.style.display = "none";
+        if (tLogin) tLogin.classList.add("active");
+        if (tReg) tReg.classList.remove("active");
+      }
+    }
+
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === "password") {
+        input.type = "text";
+        btn.textContent = "🙈";
+      } else {
+        input.type = "password";
+        btn.textContent = "👁️";
+      }
+    }
+
+    function updateRoleHint() {
+      const roleEl = document.getElementById("reg_role");
+      if (!roleEl) return;
+      const r = roleEl.value;
+      const hint = document.getElementById("roleHintBox");
+      if (!hint) return;
+
+      hint.className = "role-hint " + (r === "superuser" ? "alert-danger" : r === "user teknik" ? "alert-success" : "alert-info");
+
+      if (r === "superuser") {
+        hint.innerHTML = "👑 <b>Superuser:</b> Akses seluruh menu, persetujuan pendaftar, dan broadcast.";
+      } else if (r === "user teknik") {
+        hint.innerHTML = "🛠️ <b>User Teknik:</b> Kelola Data Perusahaan, Tender, Paket, Personil, dan Master.";
+      } else if (r === "user tender") {
+        hint.innerHTML = "📊 <b>User Tender:</b> Input Tender & Personil (Anti-Download & Anti-Screenshot).";
+      } else {
+        hint.innerHTML = "👁️ <b>User Biasa:</b> Akses lihat data saja (Read-Only).";
+      }
+    }
+
+    function submitLogin() {
+      setFeedback("", false);
+      const userEl = document.getElementById("log_user");
+      const passEl = document.getElementById("log_pass");
+      const btn = document.getElementById("btnSubmitLogin");
+
+      const username = userEl ? String(userEl.value).trim() : "";
+      const password = passEl ? String(passEl.value).trim() : "";
+
+      if (!username || !password) {
+        setFeedback("Username dan password wajib diisi.", true);
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ Memverifikasi Akun...";
+      }
+
+      // Pastikan iframe sudah mulai memuat
+      openApplication();
+
+      // Teruskan kredensial ke iframe backend Apps Script via postMessage
+      const checkIframeAndSend = () => {
+        try {
+          if (appFrame && appFrame.contentWindow) {
+            appFrame.contentWindow.postMessage({
+              action: "FAST_LOGIN",
+              username: username,
+              password: password
+            }, "*");
+          }
+        } catch (e) {
+          warn("Gagal mengirim postMessage ke iframe:", e);
+        }
+      };
+
+      checkIframeAndSend();
+
+      // Cadangan pengecekan jika iframe belum siap
+      const timer = setTimeout(checkIframeAndSend, 1200);
+
+      // Listener khusus hasil autentikasi dari iframe
+      const authListener = function (evt) {
+        if (evt.source !== appFrame.contentWindow) return;
+        const res = evt.data || {};
+        if (res.type === "LOGIN_SUCCESS_RESULT" || res.type === "PAG_LOGIN_SUCCESS") {
+          window.removeEventListener("message", authListener);
+          clearTimeout(timer);
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "MASUK KE SISTEM";
+          }
+          if (loginWrapper) loginWrapper.style.display = "none";
+          openApplication();
+        } else if (res.type === "LOGIN_FAILED_RESULT") {
+          window.removeEventListener("message", authListener);
+          clearTimeout(timer);
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "MASUK KE SISTEM";
+          }
+          setFeedback(res.message || "Username atau password salah.", true);
+        }
+      };
+
+      window.addEventListener("message", authListener);
+
+      // Batas waktu timeout jika koneksi lambat
+      setTimeout(() => {
+        if (btn && btn.disabled) {
+          btn.disabled = false;
+          btn.textContent = "MASUK KE SISTEM";
+          setFeedback("Proses verifikasi sedang berjalan di server...", false);
+        }
+      }, 7000);
+    }
+
+    function submitRegister() {
+      setFeedback("", false);
+      const namaEl = document.getElementById("reg_nama");
+      const emailEl = document.getElementById("reg_email");
+      const passEl = document.getElementById("reg_pass");
+      const roleEl = document.getElementById("reg_role");
+      const btn = document.getElementById("btnSubmitRegister");
+
+      const nama = namaEl ? String(namaEl.value).trim() : "";
+      const email = emailEl ? String(emailEl.value).trim().toLowerCase() : "";
+      const password = passEl ? String(passEl.value).trim() : "";
+      const role = roleEl ? String(roleEl.value).trim().toLowerCase() : "user biasa";
+
+      if (!nama || !email || !password) {
+        setFeedback("Nama lengkap, email, dan password wajib diisi.", true);
+        return;
+      }
+
+      if (password.length < 8) {
+        setFeedback("Password minimal 8 karakter.", true);
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ Menyimpan Akun...";
+      }
+
+      openApplication();
+
+      const regPayload = {
+        action: "FAST_REGISTER",
+        user: { nama: nama, email: email, password: password, role: role }
+      };
+
+      const sendRegister = () => {
+        try {
+          if (appFrame && appFrame.contentWindow) {
+            appFrame.contentWindow.postMessage(regPayload, "*");
+          }
+        } catch (_) {}
+      };
+
+      sendRegister();
+      setTimeout(sendRegister, 1200);
+
+      const regListener = function (evt) {
+        if (evt.source !== appFrame.contentWindow) return;
+        const res = evt.data || {};
+        if (res.type === "REGISTER_SUCCESS_RESULT") {
+          window.removeEventListener("message", regListener);
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "📝 AJUKAN PENDAFTARAN";
+          }
+          setFeedback("✅ Pendaftaran berhasil! Silakan masuk.", false);
+          setTimeout(() => switchTab("login"), 1500);
+        } else if (res.type === "REGISTER_FAILED_RESULT") {
+          window.removeEventListener("message", regListener);
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "📝 AJUKAN PENDAFTARAN";
+          }
+          setFeedback(res.message || "Gagal mengajukan pendaftaran.", true);
+        }
+      };
+
+      window.addEventListener("message", regListener);
+    }
+
+    return {
+      switchTab: switchTab,
+      togglePassword: togglePassword,
+      updateRoleHint: updateRoleHint,
+      submitLogin: submitLogin,
+      submitRegister: submitRegister
+    };
+
+  })();
 
 })();
 
