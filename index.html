@@ -10,16 +10,21 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <!-- ========================================================
-       ⚡ SPEED BOOSTER: Preconnect & DNS-Prefetch ke Server
+       🚀 ULTRA PRELOAD: Download Iframe di Milidetik ke-0
        ======================================================== -->
-  <link rel="dns-prefetch" href="//script.google.com">
-  <link rel="dns-prefetch" href="//script.googleusercontent.com">
-  <link rel="dns-prefetch" href="//accounts.google.com">
-  <link rel="dns-prefetch" href="//ssl.gstatic.com">
-  <link rel="dns-prefetch" href="//qywqxcvnlehmiqrkpwdd.supabase.co">
+  <link rel="preload" as="document" href="https://script.google.com/macros/s/AKfycbzSB9Nxg5tvWPI3Jrfrow9Mxs3ebSV31eoQ6TJW7o43oFx7m5MdK5WqVKbMDoig8hCVrA/exec">
 
-  <link rel="preconnect" href="https://script.google.com" crossorigin>
-  <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+  <!-- ========================================================
+       ⚡ OPTIMAL PRECONNECT: Koreksi CORS (Bebas Koneksi Ganda)
+       ======================================================== -->
+  <link rel="dns-prefetch" href="https://script.google.com">
+  <link rel="dns-prefetch" href="https://script.googleusercontent.com">
+  <link rel="dns-prefetch" href="https://qywqxcvnlehmiqrkpwdd.supabase.co">
+
+  <!-- Tanpa crossorigin untuk navigasi Iframe (Jalur TCP Langsung) -->
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com">
+  <!-- Crossorigin hanya untuk API Supabase (Fetch CORS) -->
   <link rel="preconnect" href="https://qywqxcvnlehmiqrkpwdd.supabase.co" crossorigin>
 
   <link rel="manifest" href="./manifest.json">
@@ -31,18 +36,19 @@
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body {
       margin: 0; width: 100%; height: 100%; overflow: hidden;
-      font-family: Arial, Helvetica, sans-serif; background: #0f766e; /* Latar gelap identik agar tidak ada kedip putih */
+      font-family: Arial, Helvetica, sans-serif; background: #0f766e;
     }
     #app { width: 100%; height: 100%; position: relative; }
 
     /* ======================================================
-     * 🚀 ANTI LAYAR PUTIH: SPLASH SCREEN BRANDED PAG
+     * 🚀 SPLASH SCREEN ANTI-KEDIP (HARDWARE ACCELERATED)
      * ====================================================== */
     #pagSplashScreen {
       position: absolute; inset: 0; z-index: 50;
       background: #ffffff; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      transition: opacity 0.25s ease, visibility 0.25s ease;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
+      will-change: opacity, visibility;
     }
     #pagSplashScreen.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
     
@@ -77,7 +83,7 @@
     }
 
     /* ======================================================
-     * NOTIFICATION LOCK (UTUH 100%)
+     * NOTIFICATION LOCK
      * ====================================================== */
     #notificationLock {
       position: fixed; inset: 0; z-index: 999999;
@@ -112,7 +118,7 @@
 
     #appFrame {
       display: block; width: 100%; height: 100%; border: 0; background: #ffffff;
-      transform: translateZ(0); /* Akselerasi Hardware GPU */
+      transform: translateZ(0);
     }
 
     #btnEmergencyReload {
@@ -133,7 +139,7 @@
 <body>
 <div id="app">
 
-  <!-- 0. SPLASH SCREEN (MENGHAPUS LAYAR PUTIH) -->
+  <!-- 0. SPLASH SCREEN -->
   <div id="pagSplashScreen">
     <div class="splash-logo">PAG</div>
     <div class="splash-title">PT. PUTRA AULIA</div>
@@ -142,7 +148,7 @@
     <button type="button" id="btnEmergencyReload" onclick="forceReloadApp()">Muat Ulang Aplikasi 🔄</button>
   </div>
 
-  <!-- 1. NOTIFICATION LOCK (UTUH 100%) -->
+  <!-- 1. NOTIFICATION LOCK -->
   <div id="notificationLock" class="hidden" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
     <div class="lockCard">
       <div class="lockLogo">PAG</div>
@@ -173,9 +179,6 @@
 (() => {
   "use strict";
 
-  /* ========================================================
-   * CONFIG (UTUH 100%)
-   * ======================================================== */
   const CONFIG = {
     APP_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzSB9Nxg5tvWPI3Jrfrow9Mxs3ebSV31eoQ6TJW7o43oFx7m5MdK5WqVKbMDoig8hCVrA/exec",
     SB_URL: "https://qywqxcvnlehmiqrkpwdd.supabase.co",
@@ -189,9 +192,6 @@
     NETWORK_TIMEOUT: 12000
   };
 
-  /* ========================================================
-   * ELEMENT CACHING
-   * ======================================================== */
   const lock = document.getElementById("notificationLock");
   const lockTitle = document.getElementById("lockTitle");
   const lockText = document.getElementById("lockText");
@@ -201,9 +201,6 @@
   const splash = document.getElementById("pagSplashScreen");
   const btnEmergency = document.getElementById("btnEmergencyReload");
 
-  /* ========================================================
-   * STATE & CACHE (UTUH 100%)
-   * ======================================================== */
   let swRegistration = null;
   let initialized = false;
   let booting = false;
@@ -225,9 +222,6 @@
     lastError: null
   };
 
-  /* ========================================================
-   * LOG & ERROR UI (UTUH)
-   * ======================================================== */
   const log = (...args) => console.log("[PAG]", ...args);
   const warn = (...args) => console.warn("[PAG]", ...args);
   const error = (...args) => console.error("[PAG]", ...args);
@@ -242,24 +236,24 @@
     errorBox.style.display = "none";
   }
 
-  /* ========================================================
-   * LOCK CONTROLS (UTUH)
-   * ======================================================== */
   function showLock(title, message, buttonText) {
     lockTitle.textContent = title || "Notifikasi Diperlukan";
     lockText.textContent = message || "";
     allowButton.textContent = buttonText || "Aktifkan Notifikasi";
     lock.classList.remove("hidden");
-    if (splash) splash.classList.add("loaded");
+    dismissSplashFast();
   }
 
   function hideLock() {
     lock.classList.add("hidden");
   }
 
-  /* ========================================================
-   * OPEN / LOCK APPLICATION (CEPAT & TANPA KEDIP PUTIH)
-   * ======================================================== */
+  function dismissSplashFast() {
+    if (splash && !splash.classList.contains("loaded")) {
+      splash.classList.add("loaded");
+    }
+  }
+
   function openApplication() {
     hideLock();
     if (appFrame.style.display !== "block") {
@@ -275,28 +269,23 @@
     showBlockedState();
   }
 
-  /* Hilangkan splash saat iframe selesai render */
+  /* ⚡ Hilangkan splash screen seketika tanpa jeda 150ms */
   appFrame.onload = () => {
-    setTimeout(() => {
-      if (splash) splash.classList.add("loaded");
-    }, 150);
+    dismissSplashFast();
   };
 
-  // Watchdog pengaman
+  // Watchdog pengaman dipercepat ke 5 detik (dari 7 detik)
   setTimeout(() => {
     if (splash && !splash.classList.contains("loaded") && btnEmergency) {
       btnEmergency.style.display = "inline-block";
     }
-  }, 7000);
+  }, 5000);
 
   window.forceReloadApp = function() {
     if (splash) splash.classList.remove("loaded");
     appFrame.src = CONFIG.APP_SCRIPT_URL + (CONFIG.APP_SCRIPT_URL.indexOf("?") === -1 ? "?" : "&") + "t=" + Date.now();
   };
 
-  /* ========================================================
-   * DEVICE IDENTIFIER & METADATA (UTUH)
-   * ======================================================== */
   function getDeviceId() {
     let id = localStorage.getItem(CONFIG.DEVICE_STORAGE);
     if (!id) {
@@ -327,9 +316,6 @@
     );
   }
 
-  /* ========================================================
-   * 🔒 VAPID CRYPTO UTILS RESMI (100% UTUH STANDAR RFC 8292)
-   * ======================================================== */
   function vapidToUint8Array(base64) {
     if (cachedVapidUint8) return cachedVapidUint8;
     const padding = "=".repeat((4 - base64.length % 4) % 4);
@@ -358,9 +344,6 @@
     }
   }
 
-  /* ========================================================
-   * NETWORK & SUPABASE FETCH (UTUH)
-   * ======================================================== */
   async function fetchWithTimeout(url, options = {}, timeout = CONFIG.NETWORK_TIMEOUT) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeout);
@@ -401,9 +384,6 @@
     throw lastError;
   }
 
-  /* ========================================================
-   * BADGE SYNC (UTUH)
-   * ======================================================== */
   async function setBadge(count) {
     const n = Math.max(0, Math.min(999, Number(count) || 0));
     localStorage.setItem(CONFIG.BADGE_STORAGE, String(n));
@@ -431,30 +411,6 @@
     } catch (_) {}
   }
 
-  /* ========================================================
-   * SERVICE WORKER & SUBSCRIPTION ENGINE (UTUH 100%)
-   * ======================================================== */
-  async function getSwVersion() {
-    return new Promise(resolve => {
-      if (!swRegistration?.active) {
-        resolve("unknown");
-        return;
-      }
-      const channel = new MessageChannel();
-      const timer = setTimeout(() => resolve("unknown"), 1200);
-      channel.port1.onmessage = event => {
-        clearTimeout(timer);
-        resolve(event.data?.version || "unknown");
-      };
-      try {
-        swRegistration.active.postMessage({ type: "PAG_SW_PING" }, [channel.port2]);
-      } catch (errorValue) {
-        clearTimeout(timer);
-        resolve("unknown");
-      }
-    });
-  }
-
   async function cleanupOldDeviceSubscriptions(endpoint) {
     const deviceId = getDeviceId();
     if (!deviceId || !endpoint) return;
@@ -463,9 +419,9 @@
       const query = "/rest/v1/web_push_subscriptions?device_id=eq." +
         encodeURIComponent(deviceId) + "&endpoint=neq." + encodeURIComponent(endpoint);
       await supabaseFetch(query, { method: "DELETE" });
-      log("Subscription lama pada device dibersihkan.");
+      log("Subscription lama dibersihkan.");
     } catch (errorValue) {
-      warn("Cleanup subscription lama dilewati:", errorValue?.message || errorValue);
+      warn("Cleanup dilewati:", errorValue?.message || errorValue);
     }
   }
 
@@ -487,10 +443,8 @@
       updated_at: new Date().toISOString()
     };
 
-    // Bersihkan dulu perangkat lama secara runtut
     await cleanupOldDeviceSubscriptions(json.endpoint);
 
-    // Simpan data langganan ke Supabase
     await supabaseFetch("/rest/v1/web_push_subscriptions?on_conflict=endpoint", {
       method: "POST",
       headers: {
@@ -501,7 +455,7 @@
     });
 
     health.subscriptionSaved = true;
-    log("Push subscription tersimpan di Supabase:", session.user_id, session.role);
+    log("Push subscription aktif di Supabase.");
   }
 
   async function registerServiceWorker() {
@@ -522,14 +476,12 @@
     if (subscription) {
       const validKey = subscriptionUsesCurrentVapid(subscription);
       if (!validKey) {
-        log("Subscription memakai VAPID key lama. Membuat baru...");
         try { await subscription.unsubscribe(); } catch (e) {}
         subscription = null;
       }
     }
 
     if (!subscription) {
-      log("Mendaftarkan PushSubscription baru ke browser...");
       subscription = await swRegistration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: vapidToUint8Array(CONFIG.VAPID_PUBLIC_KEY)
@@ -541,9 +493,6 @@
     return subscription;
   }
 
-  /* ========================================================
-   * INITIALIZE PUSH (NON-BLOCKING IDLE EXECUTION)
-   * ======================================================== */
   async function initializePush() {
     if (initialized) return true;
     if (booting) return false;
@@ -552,7 +501,7 @@
     try {
       if (!window.isSecureContext) throw new Error("Aplikasi membutuhkan HTTPS.");
       if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
-        throw new Error("Browser tidak mendukung Service Worker / Web Push.");
+        throw new Error("Browser tidak mendukung Web Push.");
       }
 
       await registerServiceWorker();
@@ -564,7 +513,6 @@
       if (oldBadge > 0) await setBadge(oldBadge);
 
       initialized = true;
-      log("Push system READY.");
       return true;
 
     } catch (errorValue) {
@@ -579,19 +527,15 @@
     if ("requestIdleCallback" in window) {
       requestIdleCallback(() => initializePush().catch(e => warn("Background Push:", e)), { timeout: 3000 });
     } else {
-      setTimeout(() => initializePush().catch(e => warn("Background Push:", e)), 1000);
+      setTimeout(() => initializePush().catch(e => warn("Background Push:", e)), 800);
     }
   }
 
-  /* ========================================================
-   * REAL-TIME PERMISSION MONITOR (UTUH)
-   * ======================================================== */
   function setupRealtimePermissionMonitor() {
     try {
       if (navigator.permissions && navigator.permissions.query) {
         navigator.permissions.query({ name: "notifications" }).then(permissionStatus => {
           permissionStatus.onchange = () => {
-            log("Status izin berubah real-time:", permissionStatus.state);
             if (permissionStatus.state === "granted") {
               openApplication();
               runPushInBackground();
@@ -599,16 +543,11 @@
               lockApplicationInstantly();
             }
           };
-        }).catch(e => {
-          warn("Permission query tidak didukung:", e);
-        });
+        }).catch(() => {});
       }
     } catch(errQuery) {}
   }
 
-  /* ========================================================
-   * REQUEST PERMISSION (UTUH)
-   * ======================================================== */
   async function requestNotificationPermission() {
     clearError();
     allowButton.disabled = true;
@@ -642,7 +581,6 @@
       }
 
     } catch (errorValue) {
-      error("Push init error:", errorValue);
       showError(errorValue?.message || String(errorValue));
       showLock(
         "Notifikasi Belum Siap",
@@ -654,9 +592,6 @@
     }
   }
 
-  /* ========================================================
-   * BLOCKED STATE (UTUH)
-   * ======================================================== */
   function showBlockedState() {
     showLock(
       "Aplikasi Diblokir",
@@ -683,17 +618,19 @@
   }
 
   /* ========================================================
-   * SESSION DARI IFRAME APPS SCRIPT (UTUH 100%)
+   * ⚡ ULTRA RESPONSIVE POSTMESSAGE: LEPAS SPLASH SCREEN INSTAN
    * ======================================================== */
   async function handleIframeMessage(event) {
     if (event.source !== appFrame.contentWindow) return;
     const data = event.data || {};
     if (typeof data !== "object") return;
 
+    // 🌟 Jika iframe sudah memuat sesi atau mengirim pesan ready, singkirkan splash screen seketika!
+    dismissSplashFast();
+
     if (data.type === "SYNC_USER_SESSION") {
       session.user_id = data.user_id ?? data.userId ?? data.user?.id ?? null;
       session.role = data.role ?? data.user?.role ?? null;
-      log("Session synced:", session.user_id, session.role);
 
       try {
         const subscription = await swRegistration?.pushManager?.getSubscription();
@@ -718,9 +655,6 @@
     return null;
   }
 
-  /* ========================================================
-   * FAST BOOT ENGINE (UTUH 100%)
-   * ======================================================== */
   function boot() {
     if (("Notification" in window) && Notification.permission === "granted") {
       openApplication();
