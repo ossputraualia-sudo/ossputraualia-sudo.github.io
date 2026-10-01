@@ -269,6 +269,12 @@
     if (!appFrame.src) {
       appFrame.src = buildIframeUrl();
     }
+    
+    // ⚡ BYPASS SPLASH SCREEN DI TAB BARU:
+    // Jika sudah pernah membuka PWA (ada session), matikan splash screen dalam 0.3 detik!
+    if (localStorage.getItem("PAG_DOCS_ACTIVE_USER") || sessionStorage.getItem("PAG_PWA_HOST")) {
+      setTimeout(dismissSplashFast, 300);
+    }
   }
 
   function lockApplicationInstantly() {
