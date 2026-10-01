@@ -1,724 +1,1497 @@
-<!DOCTYPE html>
-<html lang="id">
+<style>
+  /* Sembunyikan halaman login secara default untuk mencegah kedipan saat reload */
+  #loginPage {
+    display: none !important;
+  }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
-  <meta name="theme-color" content="#0f766e">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  /* =========================================================
+   * CSS MODAL NOTIFIKASI ELEGAN & DUAL TAB
+   * ========================================================= */
+  .notif-tab-nav {
+    display: flex;
+    gap: 8px;
+    background: var(--tbl-th-bg);
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid var(--border-data);
+    margin-bottom: 16px;
+  }
 
-  <!-- ========================================================
-       ⚡ OPTIMAL PRECONNECT: Koreksi CORS
-       ======================================================== -->
-  <link rel="dns-prefetch" href="https://script.google.com">
-  <link rel="dns-prefetch" href="https://script.googleusercontent.com">
-  <link rel="dns-prefetch" href="https://qywqxcvnlehmiqrkpwdd.supabase.co">
+  .notif-tab-btn {
+    flex: 1;
+    padding: 8px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 12.5px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
 
-  <link rel="preconnect" href="https://script.google.com">
-  <link rel="preconnect" href="https://script.googleusercontent.com">
-  <link rel="preconnect" href="https://qywqxcvnlehmiqrkpwdd.supabase.co" crossorigin>
+  .notif-tab-btn.active {
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+  }
 
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./icon-192.png">
+  .notif-card {
+    background: var(--input-bg);
+    border: 1px solid var(--border-data);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
 
-  <title>PT. Putra Aulia</title>
+  .notif-card:hover {
+    border-color: var(--primary);
+  }
 
-  <style>
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body {
-      margin: 0; width: 100%; height: 100%; overflow: hidden;
-      font-family: Arial, Helvetica, sans-serif; background: #0f766e;
-    }
-    #app { width: 100%; height: 100%; position: relative; }
+  .notif-card.unread {
+    border-left: 4px solid var(--primary);
+    background: rgba(15, 118, 110, 0.03);
+  }
 
-    /* SPLASH SCREEN ANTI-KEDIP */
-    #pagSplashScreen {
-      position: absolute; inset: 0; z-index: 50;
-      background: #ffffff; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
-      will-change: opacity, visibility;
-    }
-    #pagSplashScreen.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
-    
-    .splash-logo {
-      width: 76px; height: 76px; border-radius: 20px;
-      background: #0f766e; color: #ffffff; font-size: 26px; font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 12px 30px rgba(15, 118, 110, 0.3);
-      animation: pulseLogo 1.6s infinite ease-in-out;
-    }
-    .splash-title { margin-top: 16px; font-size: 18px; font-weight: 800; color: #0f172a; }
-    .splash-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
-    
-    .progress-bar-wrap {
-      width: 140px; height: 4px; background: #e2e8f0;
-      border-radius: 4px; margin-top: 20px; overflow: hidden; position: relative;
-    }
-    .progress-bar-fill {
-      width: 40%; height: 100%; background: #0f766e;
-      border-radius: 4px; position: absolute;
-      animation: moveProgress 1.2s infinite ease-in-out;
-    }
+  .notif-quote-box {
+    background: var(--tbl-th-bg);
+    border-left: 3px solid var(--primary);
+    padding: 8px 12px;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
 
-    @keyframes pulseLogo {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-    @keyframes moveProgress {
-      0% { left: -40%; width: 30%; }
-      50% { width: 60%; }
-      100% { left: 100%; width: 40%; }
-    }
-
-    /* NOTIFICATION LOCK */
-    #notificationLock {
-      position: fixed; inset: 0; z-index: 999999;
-      display: flex; align-items: center; justify-content: center;
-      padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
-      background: #f4f7f8;
-    }
-    #notificationLock.hidden { display: none !important; }
-
-    .lockCard {
-      width: min(430px, 100%); padding: 30px; border-radius: 20px;
-      background: #ffffff; box-shadow: 0 15px 45px rgba(0, 0, 0, .12); text-align: center;
-    }
-    .lockLogo {
-      width: 72px; height: 72px; margin: 0 auto 18px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 18px; background: #0f766e; color: white; font-size: 23px; font-weight: 800;
-    }
-    .lockCard h1 { margin: 0 0 10px; font-size: 21px; color: #0f172a; }
-    .lockCard p { margin: 8px 0 18px; color: #5f6870; font-size: 14px; line-height: 1.6; }
-    .lockButton {
-      width: 100%; padding: 14px 20px; border: 0; border-radius: 11px;
-      background: #0f766e; color: white; font-weight: 700; cursor: pointer;
-    }
-    .lockButton:disabled { opacity: .55; cursor: default; }
-    .lockSmall { font-size: 12px !important; color: #7b858d !important; }
-
-    #errorBox {
-      display: none; margin-top: 14px; padding: 10px; border-radius: 9px;
-      background: #fff1f1; color: #a33; font-size: 12px; text-align: left; word-break: break-word;
-    }
-
-    #appFrame {
-      display: block; width: 100%; height: 100%; border: 0; background: #ffffff;
-      transform: translateZ(0);
-    }
-
-    #btnEmergencyReload {
-      display: none; margin-top: 18px; background: transparent;
-      border: 1px solid #cbd5e1; color: #64748b; font-size: 12px;
-      padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;
-    }
-
-    @media (max-width: 600px) {
-      #notificationLock { padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom)); }
-      .lockCard { padding: 24px 20px; border-radius: 18px; }
-      .lockLogo { width: 64px; height: 64px; margin-bottom: 15px; }
-      .lockCard h1 { font-size: 19px; }
-    }
-  </style>
-</head>
-
-<body>
-<div id="app">
-
-  <!-- 0. SPLASH SCREEN -->
-  <div id="pagSplashScreen">
-    <div class="splash-logo">P.A.G</div>
-    <div class="splash-title">PT. PUTRA AULIA</div>
-    <div class="splash-sub">Memuat Sistem Dokumen & Tender...</div>
-    <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
-    <button type="button" id="btnEmergencyReload" onclick="forceReloadApp()">Muat Ulang Aplikasi 🔄</button>
-  </div>
-
-  <!-- 1. NOTIFICATION LOCK -->
-  <div id="notificationLock" class="hidden" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
-    <div class="lockCard">
-      <div class="lockLogo">P.A.G</div>
-      <h1 id="lockTitle">Izin Notifikasi Diperlukan</h1>
-      <p id="lockText">
-        Aplikasi menggunakan notifikasi browser sebagai satu-satunya sistem pemberitahuan.
-        Izinkan notifikasi untuk membuka aplikasi.
-      </p>
-      <button id="allowButton" class="lockButton" type="button">Aktifkan Notifikasi</button>
-      <p class="lockSmall">by: Azhar</p>
-      <div id="errorBox" role="alert"></div>
-    </div>
-  </div>
-
-  <!-- 2. HIGH PRIORITY IFRAME (SRC DIISI OTOMATIS OLEH JS) -->
-  <iframe
-    id="appFrame"
-    title="PT. Putra Aulia"
-    loading="eager"
-    fetchpriority="high"
-    allow="geolocation; microphone; camera; display-capture; clipboard-read; clipboard-write;"
-  ></iframe>
-
-</div>
+  .notif-role-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(15, 118, 110, 0.12);
+    color: var(--primary);
+  }
+</style>
 
 <script>
-(() => {
-  "use strict";
+/**
+ * =========================================================================
+ * 🚫 ZERO-CACHE ENGINE: HILANGKAN INDEXED-DB TOTAL (100% DIRECT LIVE SERVER)
+ * PT. PUTRA AULIA GROUP
+ * =========================================================================
+ */
 
-  const CONFIG = {
-    APP_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzSB9Nxg5tvWPI3Jrfrow9Mxs3ebSV31eoQ6TJW7o43oFx7m5MdK5WqVKbMDoig8hCVrA/exec",
-    SB_URL: "https://qywqxcvnlehmiqrkpwdd.supabase.co",
-    SB_KEY: "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq",
-    VAPID_PUBLIC_KEY: "BJA7AZcYbZ-m23nmGsoICga9u-MhkIOfaL4ZuYTF0lO0PyUQKztgodNHp3EjQxKXTfMq0eO0nIDEyi5SHlKEZPg",
-    SW_PATH: "./sw.js",
-    SW_SCOPE: "./",
-    DEVICE_STORAGE: "PAG_DOCS_PUSH_DEVICE_ID",
-    BADGE_STORAGE: "PAG_DOCS_UNREAD_COUNT",
-    MAX_RETRY: 2,
-    NETWORK_TIMEOUT: 12000
+if (window.indexedDB) {
+  try { window.indexedDB.deleteDatabase('PAG_Master_DB'); } catch(e){}
+}
+
+window.AppStorage = {
+  getAll: function() { return Promise.resolve([]); },
+  get: function() { return Promise.resolve(null); },
+  put: function() { return Promise.resolve(true); },
+  putBulk: function() { return Promise.resolve(true); },
+  del: function() { return Promise.resolve(true); },
+  delWhere: function() { return Promise.resolve(true); },
+  clear: function() { return Promise.resolve(true); },
+  clearAll: function() { return Promise.resolve(true); }
+};
+
+window.AppStorageBank       = window.AppStorage;
+window.AppStorageKak        = window.AppStorage;
+window.AppStoragePaket      = window.AppStorage;
+window.AppStoragePrsh       = window.AppStorage;
+window.AppStoragePerusahaan = window.AppStorage;
+window.AppStorageRab        = window.AppStorage;
+window.AppStoragePorto      = window.AppStorage;
+
+/****************---------------------------------------------
+ * PAG DOCS - JS_Core.html (MASTER ENGINE FRONTEND & CORE ROUTER)
+ * VERSI PERBAIKAN TOTAL: DUKUNGAN TAB BARU APPS SCRIPT & PWA GITHUB
+ * PT. PUTRA AULIA KONSULTAN
+ *******************-------------------------------------------- */
+
+var Core = (function () {
+  var S = { 
+    sessionToken: null,
+    user: null, 
+    permissions: null, 
+    settings: {}, 
+    master: { skk: [], jenjang: [], jenis_laporan: [] }, 
+    menu: 'dashboard', 
+    filterAwal: null 
   };
+  var _booting = false, _eventsReady = false, _initialized = false;
+  var TABLES = {}, TABLE_TIMERS = {}, FILES = {};
+  var LAST_MENU_KEY = 'PAG_DOCS_LAST_MENU', USER_SESSION_KEY = 'PAG_DOCS_ACTIVE_USER', SESSION_TOKEN_KEY = 'PAG_DOCS_SESSION_TOKEN';
 
-  const lock = document.getElementById("notificationLock");
-  const lockTitle = document.getElementById("lockTitle");
-  const lockText = document.getElementById("lockText");
-  const allowButton = document.getElementById("allowButton");
-  const errorBox = document.getElementById("errorBox");
-  const appFrame = document.getElementById("appFrame");
-  const splash = document.getElementById("pagSplashScreen");
-  const btnEmergency = document.getElementById("btnEmergencyReload");
+  var _notifTimer = null;
+  var _knownNotifIds = {};
+  var _firstLoadNotif = true;
+  var supabaseRealtimeClient = null;
+  var _sharedAudioCtx = null;
 
-  let swRegistration = null;
-  let initialized = false;
-  let booting = false;
-  let cachedVapidUint8 = null;
+  // ⚡ URL APPS SCRIPT ANDA SEBAGAI GARANSI RESMI
+  var OFFICIAL_GAS_URL = "https://script.google.com/macros/s/AKfycbzSB9Nxg5tvWPI3Jrfrow9Mxs3ebSV31eoQ6TJW7o43oFx7m5MdK5WqVKbMDoig8hCVrA/exec";
 
-  let session = {
-    user_id: null,
-    role: null
-  };
-
-  const health = {
-    secure: false,
-    supported: false,
-    permission: "unknown",
-    serviceWorker: false,
-    subscription: false,
-    subscriptionSaved: false,
-    standalone: false,
-    lastError: null
-  };
-
-  const log = (...args) => console.log("[PAG]", ...args);
-  const warn = (...args) => console.warn("[PAG]", ...args);
-  const error = (...args) => console.error("[PAG]", ...args);
-
-  // ⚡ 1. KONSTRUKSI URL IFRAME YANG MENERUSKAN ALAMAT PWA & PARAMETER TAB BARU
-  function buildIframeUrl() {
-    const pwaHostUrl = window.location.origin + window.location.pathname;
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // Kirim alamat PWA ini ke Apps Script agar link menu mengarah ke PWA GitHub
-    urlParams.set("pwa_host", pwaHostUrl);
-
-    const separator = CONFIG.APP_SCRIPT_URL.indexOf("?") === -1 ? "?" : "&";
-    return CONFIG.APP_SCRIPT_URL + separator + urlParams.toString();
-  }
-
-  // Set URL iframe segera
-  appFrame.src = buildIframeUrl();
-
-  function showError(message) {
-    errorBox.textContent = String(message || "");
-    errorBox.style.display = "block";
-  }
-
-  function clearError() {
-    errorBox.textContent = "";
-    errorBox.style.display = "none";
-  }
-
-  function showLock(title, message, buttonText) {
-    lockTitle.textContent = title || "Notifikasi Diperlukan";
-    lockText.textContent = message || "";
-    allowButton.textContent = buttonText || "Aktifkan Notifikasi";
-    lock.classList.remove("hidden");
-    dismissSplashFast();
-  }
-
-  function hideLock() {
-    lock.classList.add("hidden");
-  }
-
-  function dismissSplashFast() {
-    if (splash && !splash.classList.contains("loaded")) {
-      splash.classList.add("loaded");
-    }
-  }
-
-  function openApplication() {
-    hideLock();
-    if (appFrame.style.display !== "block") {
-      appFrame.style.display = "block";
-    }
-    if (!appFrame.src) {
-      appFrame.src = buildIframeUrl();
-    }
-  }
-
-  function lockApplicationInstantly() {
-    appFrame.style.display = "none";
-    showBlockedState();
-  }
-
-  appFrame.onload = () => {
-    dismissSplashFast();
-  };
-
-  setTimeout(() => {
-    if (splash && !splash.classList.contains("loaded") && btnEmergency) {
-      btnEmergency.style.display = "inline-block";
-    }
-  }, 5000);
-
-  window.forceReloadApp = function() {
-    if (splash) splash.classList.remove("loaded");
-    appFrame.src = buildIframeUrl() + "&t=" + Date.now();
-  };
-
-  function getDeviceId() {
-    let id = localStorage.getItem(CONFIG.DEVICE_STORAGE);
-    if (!id) {
-      if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-        id = crypto.randomUUID();
-      } else {
-        id = "pag-" + Date.now() + "-" + Math.random().toString(36).slice(2);
-      }
-      localStorage.setItem(CONFIG.DEVICE_STORAGE, id);
-    }
-    return id;
-  }
-
-  function getDeviceLabel() {
-    const ua = navigator.userAgent || "";
-    if (/Android/i.test(ua)) return "Android";
-    if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
-    if (/Windows/i.test(ua)) return "Windows";
-    if (/Macintosh|Mac OS/i.test(ua)) return "macOS";
-    if (/Linux/i.test(ua)) return "Linux";
-    return "Browser";
-  }
-
-  function isStandalonePWA() {
-    return Boolean(
-      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-      window.navigator.standalone === true
-    );
-  }
-
-  function vapidToUint8Array(base64) {
-    if (cachedVapidUint8) return cachedVapidUint8;
-    const padding = "=".repeat((4 - base64.length % 4) % 4);
-    const base64Url = (base64 + padding).replace(/-/g, "+").replace(/_/g, "/");
-    const raw = atob(base64Url);
-    cachedVapidUint8 = Uint8Array.from([...raw].map(char => char.charCodeAt(0)));
-    return cachedVapidUint8;
-  }
-
-  function subscriptionUsesCurrentVapid(subscription) {
+  function cacheGet(key) {
     try {
-      if (!subscription) return false;
-      const configuredKey = vapidToUint8Array(CONFIG.VAPID_PUBLIC_KEY);
-      const actualKey = subscription?.options?.applicationServerKey;
-      if (!actualKey) return true;
-
-      const actual = new Uint8Array(actualKey);
-      if (actual.length !== configuredKey.length) return false;
-      for (let i = 0; i < configuredKey.length; i++) {
-        if (actual[i] !== configuredKey[i]) return false;
-      }
-      return true;
-    } catch (errorValue) {
-      warn("Tidak dapat memeriksa applicationServerKey:", errorValue);
-      return true;
-    }
+      var val = localStorage.getItem('PAG_CACHE_' + key);
+      return val ? JSON.parse(val) : null;
+    } catch(e) { return null; }
   }
 
-  async function fetchWithTimeout(url, options = {}, timeout = CONFIG.NETWORK_TIMEOUT) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeout);
+  function cacheSet(key, val) {
     try {
-      return await fetch(url, { ...options, signal: controller.signal });
-    } finally {
-      clearTimeout(timer);
-    }
+      localStorage.setItem('PAG_CACHE_' + key, JSON.stringify(val));
+    } catch(e) {}
   }
 
-  async function supabaseFetch(path, options = {}) {
-    const response = await fetchWithTimeout(CONFIG.SB_URL + path, {
-      ...options,
+  function getSbConfig_() {
+    if (window._SUPABASE_CONFIG_ && window._SUPABASE_CONFIG_.url && window._SUPABASE_CONFIG_.key) {
+      return window._SUPABASE_CONFIG_;
+    }
+    return {
+      url: 'https://qywqxcvnlehmiqrkpwdd.supabase.co',
+      key: 'sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq'
+    };
+  }
+
+  function sbDirect(endpoint, method, payload, onOk, opt) {
+    opt = opt || {};
+    var cfg = getSbConfig_();
+    var url = cfg.url + '/rest/v1/' + endpoint;
+    var httpMethod = method || 'GET';
+
+    var options = {
+      method: httpMethod,
       headers: {
-        apikey: CONFIG.SB_KEY,
-        Accept: "application/json",
-        ...(options.headers || {})
+        'apikey': cfg.key,
+        'Authorization': 'Bearer ' + cfg.key,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
       }
-    });
-
-    const text = await response.text();
-    if (!response.ok) throw new Error("Supabase " + response.status + ": " + text);
-    if (!text) return null;
-    try { return JSON.parse(text); } catch (_) { return text; }
-  }
-
-  async function retry(fn, maxRetry = CONFIG.MAX_RETRY) {
-    let lastError = null;
-    for (let attempt = 0; attempt <= maxRetry; attempt++) {
-      try {
-        return await fn(attempt);
-      } catch (errorValue) {
-        lastError = errorValue;
-        if (attempt >= maxRetry) break;
-        await new Promise(resolve => setTimeout(resolve, 400 * (attempt + 1)));
-      }
-    }
-    throw lastError;
-  }
-
-  async function setBadge(count) {
-    const n = Math.max(0, Math.min(999, Number(count) || 0));
-    localStorage.setItem(CONFIG.BADGE_STORAGE, String(n));
-
-    try {
-      if (typeof navigator.setAppBadge === "function") {
-        if (n > 0) {
-          await navigator.setAppBadge(n);
-        } else if (typeof navigator.clearAppBadge === "function") {
-          await navigator.clearAppBadge();
-        }
-      }
-    } catch (badgeError) {
-      warn("Badge page:", badgeError);
-    }
-
-    try {
-      const worker = swRegistration?.active;
-      if (worker) {
-        worker.postMessage({
-          type: n > 0 ? "SET_APP_BADGE" : "CLEAR_APP_BADGE",
-          count: n
-        });
-      }
-    } catch (_) {}
-  }
-
-  async function cleanupOldDeviceSubscriptions(endpoint) {
-    const deviceId = getDeviceId();
-    if (!deviceId || !endpoint) return;
-
-    try {
-      const query = "/rest/v1/web_push_subscriptions?device_id=eq." +
-        encodeURIComponent(deviceId) + "&endpoint=neq." + encodeURIComponent(endpoint);
-      await supabaseFetch(query, { method: "DELETE" });
-      log("Subscription lama dibersihkan.");
-    } catch (errorValue) {
-      warn("Cleanup dilewati:", errorValue?.message || errorValue);
-    }
-  }
-
-  async function saveSubscription(subscription) {
-    const json = subscription.toJSON();
-    const keys = json.keys || {};
-    if (!json.endpoint || !keys.p256dh || !keys.auth) {
-      throw new Error("Push subscription tidak lengkap.");
-    }
-
-    const row = {
-      device_id: getDeviceId(),
-      user_id: session.user_id || null,
-      role: session.role || null,
-      endpoint: json.endpoint,
-      keys_p256dh: keys.p256dh,
-      keys_auth: keys.auth,
-      device_label: getDeviceLabel(),
-      updated_at: new Date().toISOString()
     };
 
-    await cleanupOldDeviceSubscriptions(json.endpoint);
-
-    await supabaseFetch("/rest/v1/web_push_subscriptions?on_conflict=endpoint", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Prefer": "resolution=merge-duplicates,return=minimal"
-      },
-      body: JSON.stringify(row)
-    });
-
-    health.subscriptionSaved = true;
-    log("Push subscription aktif di Supabase.");
-  }
-
-  async function registerServiceWorker() {
-    swRegistration = await navigator.serviceWorker.register(CONFIG.SW_PATH, {
-      scope: CONFIG.SW_SCOPE,
-      updateViaCache: "none"
-    });
-    swRegistration = await navigator.serviceWorker.ready;
-    health.serviceWorker = true;
-    return swRegistration;
-  }
-
-  async function ensurePushSubscription() {
-    if (!swRegistration) throw new Error("Service Worker belum siap.");
-    if (Notification.permission !== "granted") throw new Error("Izin notifikasi belum granted.");
-
-    let subscription = await swRegistration.pushManager.getSubscription();
-    if (subscription) {
-      const validKey = subscriptionUsesCurrentVapid(subscription);
-      if (!validKey) {
-        try { await subscription.unsubscribe(); } catch (e) {}
-        subscription = null;
-      }
+    if (payload && (httpMethod === 'POST' || httpMethod === 'PATCH' || httpMethod === 'PUT')) {
+      options.body = JSON.stringify(payload);
     }
 
-    if (!subscription) {
-      subscription = await swRegistration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: vapidToUint8Array(CONFIG.VAPID_PUBLIC_KEY)
-      });
-    }
-
-    if (!subscription) throw new Error("PushSubscription gagal dibuat.");
-    health.subscription = true;
-    return subscription;
-  }
-
-  async function initializePush() {
-    if (initialized) return true;
-    if (booting) return false;
-    booting = true;
-
-    try {
-      if (!window.isSecureContext) throw new Error("Aplikasi membutuhkan HTTPS.");
-      if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
-        throw new Error("Browser tidak mendukung Web Push.");
-      }
-
-      await registerServiceWorker();
-
-      const subscription = await retry(async () => ensurePushSubscription());
-      await retry(async () => saveSubscription(subscription));
-
-      const oldBadge = Number(localStorage.getItem(CONFIG.BADGE_STORAGE) || 0);
-      if (oldBadge > 0) await setBadge(oldBadge);
-
-      initialized = true;
-      return true;
-
-    } catch (errorValue) {
-      error("Push background error:", errorValue);
-      throw errorValue;
-    } finally {
-      booting = false;
-    }
-  }
-
-  function runPushInBackground() {
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(() => initializePush().catch(e => warn("Background Push:", e)), { timeout: 3000 });
-    } else {
-      setTimeout(() => initializePush().catch(e => warn("Background Push:", e)), 800);
-    }
-  }
-
-  function setupRealtimePermissionMonitor() {
-    try {
-      if (navigator.permissions && navigator.permissions.query) {
-        navigator.permissions.query({ name: "notifications" }).then(permissionStatus => {
-          permissionStatus.onchange = () => {
-            if (permissionStatus.state === "granted") {
-              openApplication();
-              runPushInBackground();
-            } else {
-              lockApplicationInstantly();
-            }
-          };
-        }).catch(() => {});
-      }
-    } catch(errQuery) {}
-  }
-
-  async function requestNotificationPermission() {
-    clearError();
-    allowButton.disabled = true;
-
-    try {
-      if (Notification.permission === "denied") {
-        showBlockedState();
-        return;
-      }
-
-      if (Notification.permission === "granted") {
-        openApplication();
-        runPushInBackground();
-        return;
-      }
-
-      const permission = await Notification.requestPermission();
-      health.permission = permission;
-
-      if (permission === "granted") {
-        openApplication();
-        runPushInBackground();
-      } else if (permission === "denied") {
-        showBlockedState();
-      } else {
-        showLock(
-          "Notifikasi Belum Diizinkan",
-          "Izinkan notifikasi agar Aplikasi dapat mengirim pemberitahuan penting.",
-          "Aktifkan Notifikasi"
-        );
-      }
-
-    } catch (errorValue) {
-      showError(errorValue?.message || String(errorValue));
-      showLock(
-        "Notifikasi Belum Siap",
-        "Periksa koneksi internet Anda lalu coba lagi.",
-        "Coba Lagi"
-      );
-    } finally {
-      allowButton.disabled = false;
-    }
-  }
-
-  function showBlockedState() {
-    showLock(
-      "Aplikasi Diblokir",
-      "Karena izin notifikasi telah diblokir di browser. Buka pengaturan browser - Izin - Izinkan Notifikasi - Reload.",
-      "Saya Sudah Mengizinkan"
-    );
-    allowButton.disabled = false;
-  }
-
-  async function handleAllowButton() {
-    clearError();
-
-    if (Notification.permission === "denied") {
-      if (Notification.permission === "granted") {
-        openApplication();
-        runPushInBackground();
-      } else {
-        showBlockedState();
-      }
-      return;
-    }
-
-    await requestNotificationPermission();
-  }
-
-  /* ========================================================
-   * ⚡ ULTRA RESPONSIVE POSTMESSAGE & SINKRONISASI URL PWA
-   * ======================================================== */
-  async function handleIframeMessage(event) {
-    if (event.source !== appFrame.contentWindow) return;
-    const data = event.data || {};
-    if (typeof data !== "object") return;
-
-    dismissSplashFast();
-
-    // ⚡ Sinkronkan address bar PWA saat pengguna berpindah menu di dalam iframe
-    if (data.type === "PAG_SET_URL" && data.page) {
-      const pwaBase = window.location.origin + window.location.pathname;
-      const newPwaUrl = pwaBase + "?page=" + encodeURIComponent(data.page);
-      window.history.replaceState({ page: data.page }, "", newPwaUrl);
-      if (data.title) {
-        document.title = data.title;
-      }
-    }
-
-    if (data.type === "SYNC_USER_SESSION") {
-      session.user_id = data.user_id ?? data.userId ?? data.user?.id ?? null;
-      session.role = data.role ?? data.user?.role ?? null;
-
-      try {
-        const subscription = await swRegistration?.pushManager?.getSubscription();
-        if (subscription) await saveSubscription(subscription);
-      } catch (errorValue) {
-        warn("Update session error:", errorValue);
-      }
-    }
-
-    if (data.type === "SET_APP_BADGE") await setBadge(data.count);
-    if (data.type === "CLEAR_APP_BADGE") await setBadge(0);
-  }
-
-  function getPlatformMessage() {
-    const ua = navigator.userAgent || "";
-    const mobile = /Android|iPhone|iPad|iPod/i.test(ua);
-    if (!mobile || isStandalonePWA()) return null;
-
-    if (/iPhone|iPad|iPod/i.test(ua)) {
-      return "Untuk menerima notifikasi Aplikasi secara optimal di iPhone/iPad, pasang Aplikasi ke Layar Utama sebagai PWA terlebih dahulu, kemudian buka Aplikasi dari ikon tersebut.";
-    }
-    return null;
-  }
-
-  function boot() {
-    if (("Notification" in window) && Notification.permission === "granted") {
-      openApplication();
-      runPushInBackground();
-    }
-
-    allowButton.addEventListener("click", handleAllowButton);
-    window.addEventListener("message", handleIframeMessage);
-    setupRealtimePermissionMonitor();
-
-    if (!window.isSecureContext) {
-      showLock("Koneksi Tidak Aman", "Web Push Aplikasi membutuhkan HTTPS.", "Tutup");
-      allowButton.disabled = true;
-      return;
-    }
-
-    if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
-      showLock("Browser Tidak Mendukung", "Browser ini tidak mendukung Web Push. Gunakan browser modern seperti Chrome atau Edge.", "Tutup");
-      allowButton.disabled = true;
-      return;
-    }
-
-    if (Notification.permission === "granted") {
-      return;
-    }
-
-    if (Notification.permission === "denied") {
-      showBlockedState();
-      return;
-    }
-
-    const mobileMessage = getPlatformMessage();
-    if (mobileMessage) {
-      showLock("Pasang Aplikasi Terlebih Dahulu", mobileMessage, "Saya Sudah Memasang");
-      allowButton.addEventListener("click", async () => {
-        if (isStandalonePWA()) {
-          await requestNotificationPermission();
-        } else {
-          showLock("Aplikasi Belum Terpasang", mobileMessage, "Saya Sudah Memasang");
+    fetch(url, options)
+      .then(function (res) {
+        if (!res.ok) {
+          return res.text().then(function (errText) {
+            throw new Error(errText || ('HTTP ' + res.status));
+          });
         }
-      }, { once: true });
+        var contentType = res.headers.get('content-type');
+        if (contentType && contentType.indexOf('application/json') !== -1) {
+          return res.json();
+        }
+        return res.text();
+      })
+      .then(function (data) {
+        if (opt.sukses) toast(opt.sukses, 'ok');
+        if (typeof onOk === 'function') onOk(data);
+      })
+      .catch(function (err) {
+        if (typeof opt.gagal === 'function') {
+          opt.gagal(err);
+        } else {
+          var msg = (err && err.message) ? err.message : 'Kesalahan komunikasi Supabase.';
+          toast('❌ ' + msg, 'err');
+        }
+      });
+  }
+
+  function playNotifChime_() {
+    try {
+      var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      
+      if (!_sharedAudioCtx) {
+        _sharedAudioCtx = new AudioContextClass();
+      }
+      if (_sharedAudioCtx.state === 'suspended') {
+        _sharedAudioCtx.resume();
+      }
+
+      var osc = _sharedAudioCtx.createOscillator();
+      var gain = _sharedAudioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, _sharedAudioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, _sharedAudioCtx.currentTime + 0.12);
+
+      gain.gain.setValueAtTime(0.2, _sharedAudioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, _sharedAudioCtx.currentTime + 0.35);
+
+      osc.connect(gain);
+      gain.connect(_sharedAudioCtx.destination);
+      osc.start();
+      osc.stop(_sharedAudioCtx.currentTime + 0.35);
+    } catch (eSound) {}
+  }
+
+  function tampilkanNotifikasiOS(judul, pesan, targetUrl) {
+    playNotifChime_();
+    try {
+      var targetInduk = window.top || window.parent;
+      if (targetInduk && targetInduk !== window) {
+        targetInduk.postMessage({
+          type: 'SHOW_OS_NOTIFICATION',
+          judul: judul || 'PT. Putra Aulia - Pemberitahuan',
+          pesan: pesan || '',
+          url: targetUrl || '#'
+        }, '*');
+      }
+    } catch (eBridge) {}
+  }
+
+  function initUniversalRealtimeSync() {
+    var cfg = getSbConfig_();
+    if (typeof supabase === 'undefined') return;
+    if (supabaseRealtimeClient) return;
+
+    try {
+      supabaseRealtimeClient = supabase.createClient(cfg.url, cfg.key);
+      var globalChannel = supabaseRealtimeClient.channel('global-db-changes');
+
+      globalChannel.on(
+        'postgres_changes',
+        { event: '*', schema: 'public' },
+        function(payload) {
+          var activeMenu = S.menu || 'dashboard';
+          var isPerusahaanActive = (activeMenu === 'perusahaan' || activeMenu === 'portofolio');
+          var isTenderActive = (activeMenu === 'tender' || activeMenu === 'dokumenpq');
+          var isRadarActive = (activeMenu === 'radartender');
+          var isPaketActive = (activeMenu === 'paket');
+          var isPersonilActive = (activeMenu === 'personil');
+          var isBankRefActive = (activeMenu === 'bankref');
+
+          if (payload.table === 'notifikasi_tender') {
+            if (isRadarActive && typeof RadarTender !== 'undefined' && typeof RadarTender.muatData === 'function') {
+              RadarTender.muatData();
+            }
+          } else if (payload.table === 'perusahaan' || payload.table === 'perusahaan_dokumen') {
+            if (isPerusahaanActive && typeof Perusahaan !== 'undefined' && typeof Perusahaan.render === 'function') {
+              Perusahaan.render(el('content'));
+            }
+          } else if (payload.table === 'personil' || payload.table === 'personil_dokumen') {
+            if (isPersonilActive && typeof Personil !== 'undefined' && typeof Personil.render === 'function') {
+              Personil.render(el('content'));
+            }
+          } else if (payload.table === 'tender') {
+            if (isTenderActive && typeof Tender !== 'undefined' && typeof Tender.render === 'function') {
+              Tender.render(el('content'));
+            }
+          } else if (payload.table === 'paket_berjalan' || payload.table === 'paket_dokumen') {
+            if (isPaketActive && typeof Paket !== 'undefined' && typeof Paket.render === 'function') {
+              Paket.render(el('content'));
+            }
+          } else if (payload.table === 'portofolio_sikap') {
+            if (activeMenu === 'portofolio' && typeof PortofolioSikap !== 'undefined' && typeof PortofolioSikap.render === 'function') {
+              PortofolioSikap.render(el('content'));
+            }
+          } else if (payload.table.indexOf('bank_referensi') !== -1 || payload.table.indexOf('bank_ref_') !== -1) {
+            if (isBankRefActive && typeof BankReferensi !== 'undefined' && typeof BankReferensi.render === 'function') {
+              BankReferensi.render(el('content'));
+            }
+          } else if (payload.table === 'master_surat') {
+            if (activeMenu === 'surat' && typeof Surat !== 'undefined' && typeof Surat.render === 'function') {
+              Surat.render(el('content'));
+            }
+          } else if (payload.table === 'notifikasi_internal') {
+            if (payload.eventType === 'INSERT' && payload.new) {
+              var newNotif = payload.new;
+              if (!_knownNotifIds[newNotif.id]) {
+                _knownNotifIds[newNotif.id] = true;
+                tampilkanNotifikasiOS(newNotif.judul || 'Pemberitahuan Baru', newNotif.pesan || '', newNotif.link || '#');
+              }
+            }
+            cekNotifikasiBaru();
+          }
+
+          if (activeMenu === 'dashboard' && typeof Dashboard !== 'undefined' && typeof Dashboard.render === 'function') {
+            Dashboard.render(el('content'));
+          }
+        }
+      );
+
+      globalChannel.subscribe();
+    } catch (e) {
+      console.error('Gagal menginisialisasi Supabase Realtime:', e);
+    }
+  }
+
+  var MENU = [
+    { id: 'dashboard', label: 'Dashboard', render: function (h, f) { if (typeof Dashboard !== 'undefined' && Dashboard && typeof Dashboard.render === 'function') Dashboard.render(h, f); } },
+    { id: 'perusahaan', label: 'Data Perusahaan', render: function (h, f) { if (typeof Perusahaan !== 'undefined' && Perusahaan && typeof Perusahaan.render === 'function') Perusahaan.render(h, f); } },
+    { 
+      id: 'radartender', 
+      label: 'Radar SPSE', 
+      render: function (h, f) { 
+        if (typeof RadarTender !== 'undefined' && RadarTender && typeof RadarTender.render === 'function') {
+          RadarTender.render(h, f); 
+        } else {
+          h.innerHTML = '<div class="card" style="padding:24px; text-align:center;"><h3 style="color:#dc2626;">Modul Radar SPSE Belum Dimuat</h3></div>';
+        }
+      } 
+    },
+    { id: 'tender', label: 'Data Tender', render: function (h, f) { if (typeof Tender !== 'undefined' && Tender && typeof Tender.render === 'function') Tender.render(h, f); } },    
+    { id: 'personil', label: 'Data Personil', render: function (h, f) { if (typeof Personil !== 'undefined' && Personil && typeof Personil.render === 'function') Personil.render(h, f); } },
+    { 
+      id: 'kaktanggapan', 
+      label: 'AI KAK', 
+      render: function (h, f) { 
+        if (typeof KakTanggapan !== 'undefined' && KakTanggapan && typeof KakTanggapan.render === 'function') {
+          KakTanggapan.render(h, f); 
+        } else {
+          h.innerHTML = '<div class="card" style="padding:24px; text-align:center;"><h3 style="color:#dc2626;">Modul AI Dokumen Belum Dimuat</h3></div>';
+        }
+      } 
+    },
+    { 
+      id: 'rab', 
+      label: 'Pembuat RAB', 
+      render: function (h, f) { 
+        if (typeof ModulRab !== 'undefined' && ModulRab && typeof ModulRab.render === 'function') {
+          ModulRab.render(h, f); 
+        } else {
+          h.innerHTML = '<div class="card" style="padding:24px; text-align:center;"><h3 style="color:#dc2626;">Modul RAB Belum Dimuat</h3></div>';
+        }
+      } 
+    },
+    { id: 'paket', label: 'Data Paket Berjalan', render: function (h, f) { if (typeof Paket !== 'undefined' && Paket && typeof Paket.render === 'function') Paket.render(h, f); } },
+    { id: 'pantaupersonil', label: 'Pantau Personil', render: function (h, f) { if (typeof PantauPersonil !== 'undefined' && PantauPersonil && typeof PantauPersonil.render === 'function') PantauPersonil.render(h, f); } },
+    { id: 'surat', label: 'Master Surat', render: function (h, f) { if (typeof Surat !== 'undefined' && Surat && typeof Surat.render === 'function') Surat.render(h, f); } },
+    { 
+      id: 'bankref', 
+      label: 'Bank Referensi', 
+      render: function (h, f) { 
+        if (typeof BankReferensi !== 'undefined' && BankReferensi && typeof BankReferensi.render === 'function') {
+          BankReferensi.render(h, f); 
+        } else {
+          h.innerHTML = '<div class="card" style="padding:24px; text-align:center;"><h3 style="color:#dc2626;">Modul Bank Referensi Belum Dimuat</h3></div>';
+        }
+      } 
+    },
+    { id: 'pengaturan', label: '⚙ Pengaturan', render: function (h, f) { if (typeof Pengaturan !== 'undefined' && Pengaturan && typeof Pengaturan.render === 'function') Pengaturan.render(h, f); } }
+  ];
+
+  function el(id) { return document.getElementById(id); }
+  function safeString(v) { return String(v === null || v === undefined ? '' : v); }
+  function safeArray(v) { return Array.isArray(v) ? v : []; }
+  function safeObject(v) { return (v && typeof v === 'object' && !Array.isArray(v)) ? v : {}; }
+  function esc(s) { return safeString(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+  function getEffectiveRole() { return (S.user && S.user.role) ? String(S.user.role).toLowerCase().trim() : 'guest'; }
+  function isSuperuser() { var r = getEffectiveRole(); return r === 'superuser' || r === 'admin'; }
+  function isTeknik() { var r = getEffectiveRole(); return isSuperuser() || r === 'user teknik' || r === 'teknik'; }
+  function isTender() { var r = getEffectiveRole(); return r === 'user tender' || r === 'tender'; }
+  function isBiasa() { var r = getEffectiveRole(); return r === 'user biasa' || r === 'biasa'; }
+
+  function canInput() { 
+    if (S.permissions && typeof S.permissions.canInput === 'boolean') return S.permissions.canInput;
+    return isSuperuser() || isTeknik() || isTender(); 
+  }
+  function canDeleteDirect() { 
+    if (S.permissions && typeof S.permissions.canDeleteDirect === 'boolean') return S.permissions.canDeleteDirect;
+    return isSuperuser() || isTeknik(); 
+  }
+  function canRequestDelete() { 
+    if (S.permissions && typeof S.permissions.canRequestDelete === 'boolean') return S.permissions.canRequestDelete;
+    return isTender(); 
+  }
+  function canDownload() { 
+    if (S.permissions && typeof S.permissions.canDownload === 'boolean') return S.permissions.canDownload;
+    return isSuperuser() || isTeknik(); 
+  }
+
+  function isMenuAllowed(id) {
+    if (!id) return false;
+    if (id === 'dashboard' || id === 'radartender') return true;
+    
+    var keyMap = {
+      'perusahaan': 'perusahaan', 'portofolio': 'portofolio', 'radartender': 'tender',
+      'personil': 'personil', 'tender': 'tender', 'dokumenpq': 'dokumenpq',
+      'paket': 'paket', 'pantaupersonil': 'pantaupersonil', 'surat': 'surat',
+      'kaktanggapan': 'kaktanggapan', 'rab': 'rab', 'bankref': 'bankref', 'pengaturan': 'pengaturan'
+    };
+
+    var menuKey = keyMap[id] || id;
+    if (S.permissions && S.permissions.menus) {
+      if (typeof S.permissions.menus[menuKey] !== 'undefined') {
+        return !!S.permissions.menus[menuKey];
+      }
+    }
+
+    var r = getEffectiveRole();
+    return (r === 'superuser' || r === 'admin');
+  }
+
+  function saveLastMenu(id) {
+    if (!id || !isMenuAllowed(id)) return;
+    try { localStorage.setItem(LAST_MENU_KEY, id); } catch (e) {}
+    S.menu = id;
+  }
+
+  function getLastMenu() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var qPage = params.get('page') || params.get('p') || params.get('tab');
+      if (qPage && isMenuAllowed(qPage)) return qPage;
+    } catch (eParams) {}
+
+    try { 
+      var hash = safeString(window.location.hash).replace(/^#/, '').trim(); 
+      if (hash && isMenuAllowed(hash)) return hash; 
+    } catch (eHash) {}
+
+    try { 
+      var stored = localStorage.getItem(LAST_MENU_KEY); 
+      if (stored && isMenuAllowed(stored)) return stored; 
+    } catch (eStore) {}
+
+    return 'dashboard';
+  }
+
+  function init() {
+    setupEvents();
+    if (_initialized || _booting) return;
+    _initialized = true;
+    _booting = true;
+
+    var boot = safeObject(window._INITIAL_BOOT_);
+    if (boot.settings) S.settings = safeObject(boot.settings);
+    if (boot.master) {
+      var m = safeObject(boot.master);
+      S.master = { skk: safeArray(m.skk), jenjang: safeArray(m.jenjang), jenis_laporan: safeArray(m.jenis_laporan) };
+    }
+    applyTheme();
+
+    var savedToken = null;
+    try { savedToken = localStorage.getItem(SESSION_TOKEN_KEY); } catch (e) {}
+
+    var localCachedUser = null;
+    try {
+      var rawUser = localStorage.getItem(USER_SESSION_KEY);
+      if (rawUser) localCachedUser = JSON.parse(rawUser);
+    } catch (eUser) {}
+
+    if (savedToken && localCachedUser && (localCachedUser.id || localCachedUser.email)) {
+      _booting = false;
+      S.sessionToken = savedToken;
+      S.user = localCachedUser;
+      if (typeof window.applySecurityAndRole === 'function') window.applySecurityAndRole(S.user);
+      showApp();
+      var last = getLastMenu();
+      saveLastMenu(last);
+      go(last);
+      startRealtimeNotif();
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.withSuccessHandler(function (res) {
+          if (res && res.ok && res.user) {
+            S.user = res.user;
+            S.permissions = res.permissions || null;
+            try { localStorage.setItem(USER_SESSION_KEY, JSON.stringify(res.user)); } catch (e) {}
+          } else {
+            logout(true);
+          }
+        }).validateSession(savedToken);
+      }
       return;
     }
 
-    showLock(
-      "Izin Notifikasi Diperlukan",
-      "Aplikasi menggunakan notifikasi browser sebagai satu-satunya sistem pemberitahuan. Izinkan notifikasi untuk membuka aplikasi.",
-      "Aktifkan Notifikasi"
-    );
+    if (!savedToken) {
+      _booting = false;
+      S.user = null;
+      S.sessionToken = null;
+      showLogin();
+      return;
+    }
+
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.withSuccessHandler(function (res) {
+        _booting = false;
+        if (res && res.ok && res.user) {
+          S.sessionToken = savedToken;
+          S.user = res.user;
+          S.permissions = res.permissions || null;
+          try { localStorage.setItem(USER_SESSION_KEY, JSON.stringify(res.user)); } catch (e) {}
+
+          if (typeof window.applySecurityAndRole === 'function') {
+            window.applySecurityAndRole(S.user);
+          }
+
+          showApp();
+          var lastMenu = getLastMenu();
+          saveLastMenu(lastMenu);
+          go(lastMenu);
+          startRealtimeNotif();
+        } else {
+          logout(true);
+        }
+      }).withFailureHandler(function () {
+        _booting = false;
+        showLogin();
+      }).validateSession(savedToken);
+      return;
+    }
+
+    _booting = false;
+    showLogin();
   }
 
-  boot();
+  function applyBootData(b) {
+    b = safeObject(b);
+    S.settings = safeObject(b.settings);
+    var master = safeObject(b.master);
+    S.master = { skk: safeArray(master.skk), jenjang: safeArray(master.jenjang), jenis_laporan: safeArray(master.jenis_laporan) };
+    applyTheme();
 
+    var savedToken = null;
+    try { savedToken = localStorage.getItem(SESSION_TOKEN_KEY); } catch (e) {}
+
+    if (savedToken && typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.withSuccessHandler(function (res) {
+        if (res && res.ok && res.user) {
+          S.sessionToken = savedToken;
+          S.user = res.user;
+          S.permissions = res.permissions || null;
+          try { localStorage.setItem(USER_SESSION_KEY, JSON.stringify(res.user)); } catch (e) {}
+          if (typeof window.applySecurityAndRole === 'function') window.applySecurityAndRole(S.user);
+          showApp();
+          var last = getLastMenu();
+          saveLastMenu(last);
+          go(last);
+          startRealtimeNotif();
+        } else {
+          logout(true);
+        }
+      }).withFailureHandler(function () {
+        showLogin();
+      }).validateSession(savedToken);
+    } else {
+      S.user = null;
+      S.sessionToken = null;
+      showLogin();
+    }
+  }
+
+  function setSessionUser(userData, sessionToken) {
+    S.user = userData;
+    if (sessionToken) {
+      S.sessionToken = sessionToken;
+      try { localStorage.setItem(SESSION_TOKEN_KEY, sessionToken); } catch (e) {}
+    }
+    try {
+      localStorage.setItem(USER_SESSION_KEY, JSON.stringify(userData));
+      var d = new Date();
+      d.setTime(d.getTime() + (7*24*60*60*1000));
+      document.cookie = USER_SESSION_KEY + "=" + encodeURIComponent(JSON.stringify(userData)) + ";expires=" + d.toUTCString() + ";path=/";
+    } catch (e) {}
+    startRealtimeNotif();
+  }
+
+  function showApp() {
+    var login = el('loginPage'), app = el('appPage');
+    if (login) { login.classList.add('hidden'); login.style.setProperty('display', 'none', 'important'); }
+    if (app) { app.classList.remove('hidden'); app.style.setProperty('display', 'flex', 'important'); }
+    renderAppHeader(); 
+    buildMenu(); 
+    startRealtimeNotif();
+    setTimeout(initUniversalRealtimeSync, 400);
+  }
+
+  function showLogin() {
+    var login = el('loginPage'), app = el('appPage');
+    if (app) { app.classList.add('hidden'); app.style.setProperty('display', 'none', 'important'); }
+    if (login) { login.classList.remove('hidden'); login.style.setProperty('display', 'block', 'important'); }
+    var wm = el('watermarkLayer'); if (wm) wm.style.display = 'none';
+    document.body.classList.remove('protected-mode');
+    if (_notifTimer) clearInterval(_notifTimer);
+  }
+
+  function renderAppHeader() {
+    var userLabel = el('userLabel');
+    if (userLabel && S.user) userLabel.textContent = (S.user.nama || S.user.username);
+  }
+
+  function logout(silent) {
+    var tokenToDelete = S.sessionToken || null;
+    if (!tokenToDelete) {
+      try { tokenToDelete = localStorage.getItem(SESSION_TOKEN_KEY); } catch (e) {}
+    }
+
+    S.user = null;
+    S.sessionToken = null;
+    S.permissions = null;
+    if (_notifTimer) clearInterval(_notifTimer);
+
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      try {
+        google.script.run.logoutSession(tokenToDelete);
+      } catch (eLogout) {}
+    }
+
+    try {
+      localStorage.removeItem(SESSION_TOKEN_KEY);
+      localStorage.removeItem(USER_SESSION_KEY);
+      localStorage.removeItem(LAST_MENU_KEY);
+      localStorage.removeItem('PAG_CACHE_DASHBOARD_DATA');
+      localStorage.removeItem('PAG_CACHE_PERSONIL_INIT_DATA');
+      document.cookie = USER_SESSION_KEY + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
+    } catch (e) {}
+
+    showLogin();
+    if (!silent) toast('Anda telah keluar dari sistem.', 'inf');
+  }
+
+  function startRealtimeNotif() {
+    if (_notifTimer) clearInterval(_notifTimer);
+    cekNotifikasiBaru();
+    _notifTimer = setInterval(cekNotifikasiBaru, 30000);
+  }
+
+  function cekNotifikasiBaru() {
+    if (!S.user) return;
+
+    sbDirect('notifikasi_internal?select=id,judul,pesan,link,dibaca&order=created_at.desc&limit=50', 'GET', null, function (data) {
+      data = Array.isArray(data) ? data : [];
+      var badge = el('notifBadge');
+      var adaBelumDibaca = false;
+      var newIncoming = null;
+      var unreadCount = 0;
+
+      data.forEach(function (n) {
+        var isBelum = String(n.dibaca || '').toUpperCase() !== 'YA';
+        if (isBelum) {
+          adaBelumDibaca = true; 
+          unreadCount++;
+          if (!_firstLoadNotif && !_knownNotifIds[n.id]) newIncoming = n;
+        }
+        _knownNotifIds[n.id] = true;
+      });
+
+      _firstLoadNotif = false;
+
+      if (badge) {
+        if (adaBelumDibaca) { 
+          badge.classList.remove('hidden'); 
+          badge.style.display = 'block'; 
+        } else { 
+          badge.classList.add('hidden'); 
+          badge.style.display = 'none'; 
+        }
+      }
+
+      try { 
+        window.parent.postMessage({ type: 'SET_APP_BADGE', count: unreadCount }, '*'); 
+      } catch (e) {}
+      
+      if (newIncoming) { 
+        tampilkanNotifikasiOS(newIncoming.judul || 'Pemberitahuan Baru', newIncoming.pesan || '', newIncoming.link || '#');
+      }
+    });
+  }
+
+  var NOTIF_CACHE_LIST = [];
+  var NOTIF_ACTIVE_TAB = 'sistem';
+
+  function bukaNotifikasi(tabAwal) {
+    if (tabAwal) NOTIF_ACTIVE_TAB = tabAwal;
+
+    modal(
+      '🔔 Pusat Pemberitahuan & Pesan',
+      '<div id="notifBoxContent" style="padding:24px; text-align:center; color:var(--text-muted);">Memuat riwayat dari server...</div>',
+      ''
+    );
+
+    sbDirect('notifikasi_internal?select=*&order=created_at.desc&limit=100', 'GET', null, function (data) {
+      NOTIF_CACHE_LIST = Array.isArray(data) ? data : [];
+      renderNotifikasiModal_();
+    });
+  }
+
+  function setNotifTab(tabName) {
+    NOTIF_ACTIVE_TAB = tabName;
+    renderNotifikasiModal_();
+  }
+
+  function renderNotifikasiModal_() {
+    var box = el('notifBoxContent');
+    if (!box) return;
+
+    var dataSistem = [];
+    var dataPesan = [];
+
+    NOTIF_CACHE_LIST.forEach(function(n) {
+      var cat = String(n.category || n.module || '').toUpperCase();
+      if (cat === 'SYSTEM' || cat === 'SISTEM' || n.module === 'TEST' || (n.pengirim_nama && n.pengirim_nama !== 'PT. Putra Aulia' && n.pengirim_nama !== 'PAG Docs')) {
+        dataPesan.push(n);
+      } else {
+        dataSistem.push(n);
+      }
+    });
+
+    var countUnreadSistem = dataSistem.filter(function(x) { return String(x.dibaca || '').toUpperCase() !== 'YA'; }).length;
+    var countUnreadPesan = dataPesan.filter(function(x) { return String(x.dibaca || '').toUpperCase() !== 'YA'; }).length;
+
+    var activeList = (NOTIF_ACTIVE_TAB === 'sistem') ? dataSistem : dataPesan;
+
+    var html = 
+      '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">' +
+        '<div class="notif-tab-nav" style="margin:0; flex:1; min-width:260px;">' +
+          '<button type="button" class="notif-tab-btn ' + (NOTIF_ACTIVE_TAB === 'sistem' ? 'active' : '') + '" onclick="Core.setNotifTab(\'sistem\')">' +
+            '🔔 Aktivitas Sistem ' + (countUnreadSistem > 0 ? '<span class="badge b-red" style="font-size:10px; padding:2px 6px;">' + countUnreadSistem + '</span>' : '') +
+          '</button>' +
+          '<button type="button" class="notif-tab-btn ' + (NOTIF_ACTIVE_TAB === 'pesan' ? 'active' : '') + '" onclick="Core.setNotifTab(\'pesan\')">' +
+            '💬 Pesan Antar Staf ' + (countUnreadPesan > 0 ? '<span class="badge b-red" style="font-size:10px; padding:2px 6px;">' + countUnreadPesan + '</span>' : '') +
+          '</button>' +
+        '</div>' +
+        '<div style="display:flex; gap:6px;">' +
+          '<button type="button" class="btn sm sec" onclick="Core.tandaiSemuaSudahDibaca()" style="border-radius:18px; font-size:11.5px;">✓ Tandai Semua Dibaca</button>' +
+          '<button type="button" class="btn sm" onclick="Core.formTulisPesanBaru()" style="border-radius:18px; font-size:11.5px;">✉️ Tulis Pesan</button>' +
+        '</div>' +
+      '</div>';
+
+    if (!activeList.length) {
+      html += '<div style="padding:48px 20px; text-align:center; color:var(--text-muted); border:2px dashed var(--border-data); border-radius:14px; background:var(--tbl-th-bg);">' +
+                '<div style="font-size:32px; margin-bottom:8px;">📭</div>' +
+                '<div style="font-weight:700; color:var(--text-main);">Belum ada ' + (NOTIF_ACTIVE_TAB === 'sistem' ? 'pemberitahuan sistem' : 'pesan antar staf') + '</div>' +
+                '<p style="font-size:12px; margin-top:4px;">Semua log pembaruan dan pesan akan tercatat di sini.</p>' +
+              '</div>';
+    } else {
+      html += '<div style="max-height:430px; overflow-y:auto; padding-right:6px;">';
+      
+      activeList.forEach(function(n) {
+        var isUnread = String(n.dibaca || '').toUpperCase() !== 'YA';
+        var pNama = esc(n.pengirim_nama || 'Sistem');
+        var pRole = esc(n.pengirim_role || 'SISTEM');
+        var waktu = esc(n.created_at ? n.created_at.substring(0, 16).replace('T', ' ') : '');
+        var linkUrl = n.link || '#';
+        var hasLink = (linkUrl && linkUrl !== '#');
+
+        var rawPesan = esc(n.pesan || '');
+        var quotedBox = '';
+
+        var replyMatch = rawPesan.match(/\[REPLY:(.*?)\](.*?)\[\/REPLY\]\s*([\s\S]*)/);
+        if (replyMatch) {
+          var rSender = replyMatch[1];
+          var rQuote = replyMatch[2];
+          var rBody = replyMatch[3];
+
+          quotedBox = 
+            '<div class="notif-quote-box">' +
+              '<div style="font-weight:700; color:var(--primary); font-size:11px; margin-bottom:2px;">💬 Membalas ' + rSender + ':</div>' +
+              '<div style="font-style:italic;">"' + rQuote + '"</div>' +
+            '</div>';
+          rawPesan = rBody;
+        }
+
+        rawPesan = rawPesan.replace(/\n/g, '<br>');
+
+        html += 
+          '<div class="notif-card ' + (isUnread ? 'unread' : '') + '">' +
+            '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">' +
+              '<div style="display:flex; align-items:center; gap:8px;">' +
+                '<span style="font-weight:800; font-size:12.5px; color:var(--text-main);">' + pNama + '</span>' +
+                '<span class="notif-role-badge">' + pRole + '</span>' +
+              '</div>' +
+              '<span style="font-size:11px; color:var(--text-subtle);">' + waktu + '</span>' +
+            '</div>' +
+            
+            '<div style="font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:6px;">' + esc(n.judul || 'Pemberitahuan') + '</div>' +
+            quotedBox +
+            '<div style="font-size:12.5px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">' + rawPesan + '</div>' +
+            
+            '<div style="display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--border-data); padding-top:8px;">' +
+              (hasLink ? '<button type="button" class="btn sm" style="font-size:11px; border-radius:14px; padding:4px 12px;" onclick="Core.bukaLinkNotif(\'' + esc(linkUrl) + '\', \'' + esc(n.id) + '\')">Buka Modul 👉</button>' : '') +
+              '<button type="button" class="btn sm sec" style="font-size:11px; border-radius:14px; padding:4px 12px;" onclick="Core.formBalasNotif(\'' + esc(n.id) + '\', \'' + pNama + '\', \'' + pRole + '\', \'' + esc(n.judul) + '\', \'' + encodeURIComponent(n.pesan || '') + '\')">💬 Balas</button>' +
+            '</div>' +
+          '</div>';
+      });
+
+      html += '</div>';
+    }
+
+    box.innerHTML = html;
+  }
+
+  function bukaLinkNotif(url, notifId) {
+    tandaiDibaca(notifId);
+    closeModal();
+    if (url && url !== '#') {
+      go(String(url).replace(/^[#/]+/, ''));
+    }
+  }
+
+  function tandaiSemuaSudahDibaca() {
+    call('tandaiSemuaNotifikasiDibaca', [], function(res) {
+      if (res && res.ok) {
+        toast('✅ Semua notifikasi ditandai sudah dibaca', 'ok');
+        NOTIF_CACHE_LIST.forEach(function(item) { item.dibaca = 'YA'; });
+        renderNotifikasiModal_();
+        var badge = el('notifBadge');
+        if (badge) badge.classList.add('hidden');
+        try { window.parent.postMessage({ type: 'SET_APP_BADGE', count: 0 }, '*'); } catch (e) {}
+      }
+    });
+  }
+
+  function formTulisPesanBaru() {
+    var myName = (S.user ? (S.user.nama || S.user.username) : 'Pengguna');
+    var myRole = (S.user && S.user.role) ? S.user.role.toUpperCase() : 'USER';
+    
+    var html = 
+      '<div style="display:flex; flex-direction:column; gap:12px; text-align:left;">' +
+        '<div style="padding:10px 14px; background:var(--tbl-th-bg); border-radius:10px; font-size:12px; color:var(--primary); border:1px solid var(--border-data);">' +
+          'Pengirim: <b>' + esc(myName) + '</b> (' + myRole + ')' +
+        '</div>' +
+        '<label class="fld" style="margin:0;"><span>Judul Pesan / Perihal *</span>' +
+          '<input type="text" id="new_msg_judul" placeholder="Contoh: Diskusi Perhitungan RAB / Info Dokumen" class="login-input">' +
+        '</label>' +
+        '<label class="fld" style="margin:0;"><span>Isi Pesan *</span>' +
+          '<textarea id="new_msg_pesan" rows="4" placeholder="Ketik pesan yang ingin disampaikan ke tim..." class="login-input" style="width:100%; font-family:inherit; border-radius:10px; padding:10px;"></textarea>' +
+        '</label>' +
+      '</div>';
+
+    var foot = 
+      '<button class="btn sec" style="border-radius:18px;" onclick="Core.bukaNotifikasi(\'pesan\')">Kembali</button>' +
+      '<button class="btn" style="border-radius:18px; padding:8px 20px;" onclick="Core.kirimPesanBaru()">🚀 Kirim ke Tim</button>';
+
+    modal('✉️ Tulis Pesan Antar Staf', html, foot);
+  }
+
+  function kirimPesanBaru() {
+    var judul = el('new_msg_judul') ? el('new_msg_judul').value.trim() : '';
+    var pesan = el('new_msg_pesan') ? el('new_msg_pesan').value.trim() : '';
+
+    if (!judul || !pesan) {
+      toast('Judul dan isi pesan wajib diisi.', 'err');
+      return;
+    }
+
+    call('kirimNotifikasiPusat', [judul, pesan, '#', { module: 'SYSTEM', category: 'SISTEM' }], function(res) {
+      if (res && res.ok) {
+        toast('✅ Pesan berhasil dikirim ke seluruh tim!', 'ok');
+        bukaNotifikasi('pesan');
+        cekNotifikasiBaru();
+      } else {
+        toast((res && res.message) || 'Gagal mengirim pesan.', 'err');
+      }
+    }, { progress: 'Mengirim pesan...' });
+  }
+
+  function formBalasNotif(notifId, targetNama, targetRole, judulAsli, pesanAsliEncoded) {
+    tandaiDibaca(notifId);
+    var judulBalas = 'Re: ' + judulAsli.replace(/^Re:\s*/i, '');
+    var rawPesanAsli = decodeURIComponent(pesanAsliEncoded || '');
+    var cleanPesanAsli = rawPesanAsli.replace(/\[REPLY:.*?\](.*?)\[\/REPLY\]\n?/g, '').trim();
+    if (cleanPesanAsli.length > 120) cleanPesanAsli = cleanPesanAsli.substring(0, 120) + '...';
+    
+    var html = 
+      '<div style="display:flex; flex-direction:column; gap:12px; text-align:left;">' +
+        '<div style="padding:10px 14px; background:var(--tbl-th-bg); border-radius:10px; font-size:12px; border:1px solid var(--border-data);">' +
+          '<div style="font-weight:700; color:var(--primary); margin-bottom:4px;">💬 Membalas kepada: ' + esc(targetNama) + ' (' + esc(targetRole) + ')</div>' +
+          '<div style="font-style:italic; color:var(--text-muted);">"' + esc(cleanPesanAsli) + '"</div>' +
+        '</div>' +
+        '<input type="hidden" id="reply_pesan_asli" value="' + esc(cleanPesanAsli) + '">' +
+        '<input type="hidden" id="reply_target_nama" value="' + esc(targetNama) + '">' +
+        '<label class="fld" style="margin:0;"><span>Judul Balasan</span>' +
+          '<input type="text" id="reply_judul" value="' + esc(judulBalas) + '" class="login-input">' +
+        '</label>' +
+        '<label class="fld" style="margin:0;"><span>Isi Pesan Balasan *</span>' +
+          '<textarea id="reply_pesan" rows="4" placeholder="Ketik balasan Anda di sini..." class="login-input" style="width:100%; font-family:inherit; border-radius:10px; padding:10px;"></textarea>' +
+        '</label>' +
+      '</div>';
+
+    var foot = 
+      '<button class="btn sec" style="border-radius:18px;" onclick="Core.bukaNotifikasi(\'pesan\')">Kembali</button>' +
+      '<button class="btn" style="border-radius:18px; padding:8px 20px;" onclick="Core.kirimBalasanNotif()">🚀 Kirim Balasan</button>';
+
+    modal('Balas Pesan', html, foot);
+  }
+
+  function kirimBalasanNotif() {
+    var judul = el('reply_judul') ? el('reply_judul').value.trim() : '';
+    var pesan = el('reply_pesan') ? el('reply_pesan').value.trim() : '';
+    var pesanAsli = el('reply_pesan_asli') ? el('reply_pesan_asli').value.trim() : '';
+    var targetNama = el('reply_target_nama') ? el('reply_target_nama').value.trim() : '';
+
+    if (!pesan) {
+      toast('Pesan balasan wajib diisi.', 'err');
+      return;
+    }
+
+    var finalPesan = pesan;
+    if (pesanAsli) {
+      finalPesan = '[REPLY:' + targetNama + ']' + pesanAsli + '[/REPLY]\n' + pesan;
+    }
+
+    call('kirimNotifikasiPusat', [judul, finalPesan, '#', { module: 'SYSTEM', category: 'SISTEM' }], function(res) {
+      if (res && res.ok) {
+        toast('✅ Balasan berhasil dikirim!', 'ok');
+        bukaNotifikasi('pesan');
+        cekNotifikasiBaru();
+      } else {
+        toast((res && res.message) || 'Gagal mengirim balasan.', 'err');
+      }
+    }, { progress: 'Mengirim balasan...' });
+  }
+
+  function tandaiDibaca(id) {
+    if (!id) return;
+    call('tandaiNotifikasiDibaca', [id], function(res) {
+      if (res && (res.ok === true || res === true)) {
+        cekNotifikasiBaru();
+      }
+    });
+  }
+
+  function toggleMenu(e) { 
+    if (e && e.stopPropagation) { 
+      e.stopPropagation(); 
+      e.preventDefault(); 
+    }
+    var nav = document.getElementById('navbar'); 
+    if (!nav) return; 
+    nav.classList.toggle('open');
+  }
+
+  function closeMenu() { 
+    var nav = document.getElementById('navbar'); 
+    if (nav) {
+      nav.classList.remove('open');
+    }
+  }
+
+  /* =========================================================
+   * BUILD NAVBAR (PWA-FRIENDLY & ANTI-LEMPAR KE BROWSER)
+   * ========================================================= */
+
+  function getBaseExecUrl() {
+    // 1. Cek parameter pwa_host yang dikirim dari PWA GitHub
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var pwaHost = params.get('pwa_host');
+      if (pwaHost) {
+        sessionStorage.setItem('PAG_PWA_HOST', pwaHost);
+        return pwaHost;
+      }
+      var cachedHost = sessionStorage.getItem('PAG_PWA_HOST');
+      if (cachedHost) return cachedHost;
+    } catch(eParam) {}
+
+    // 2. Deteksi dari document.referrer jika dibuka di dalam wrapper PWA GitHub
+    try {
+      if (document.referrer && document.referrer.indexOf('http') === 0) {
+        var ref = document.referrer.split('?')[0].split('#')[0];
+        if (ref.indexOf('google.com') === -1 && ref.indexOf('googleusercontent.com') === -1) {
+          return ref;
+        }
+      }
+    } catch(eRef) {}
+
+    // 3. JIKA SEDANG DI DALAM IFRAME PWA (tanpa pwa_host):
+    // Jangan gunakan script.google.com sebagai href agar PWA tidak menganggapnya domain luar!
+    if (window.self !== window.top) {
+      return ''; 
+    }
+
+    // 4. Fallback jika dibuka langsung di browser Apps Script
+    if (window._WEB_APP_URL_) {
+      return window._WEB_APP_URL_;
+    }
+
+    return '';
+  }
+
+  function handleMenuClick(e, pageId) {
+    // Jika user sengaja menekan Ctrl, Cmd, Shift, atau Middle-click pada Laptop/PC:
+    // Biarkan browser membuka tab baru
+    if (e && (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1)) {
+      return true;
+    }
+
+    // PENTING: Pada klik kiri normal / layar sentuh HP PWA:
+    // WAJIB batalkan event default agar PWA TIDAK melempar ke browser Chrome!
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
+
+    go(pageId);
+    closeMenu();
+    return false;
+  }
+
+  function buildMenu() {
+    var nav = el('navbar'); if (!nav) return;
+    var frag = document.createDocumentFragment();
+    var baseUrl = getBaseExecUrl();
+
+    MENU.forEach(function (m) {
+      if (!m || !isMenuAllowed(m.id)) return;
+
+      if (m.id === 'perusahaan') {
+        var dropWrap = document.createElement('div');
+        dropWrap.style.cssText = 'position:relative; display:inline-block;';
+
+        var a = document.createElement('a');
+        var linkDefPrsh = baseUrl ? (baseUrl + '?page=perusahaan') : '#perusahaan';
+        a.href = linkDefPrsh;
+        a.id = 'nav-perusahaan';
+        a.target = '_self'; // ⚡ Netralisir <base target="_top"> agar tidak melempar ke browser
+        a.className = 'nav-link' + (m.id === S.menu || S.menu === 'portofolio' ? ' active' : '');
+        
+        var labelP = (S.menu === 'portofolio') ? 'Data Pengalaman' : m.label;
+        a.innerHTML = esc(labelP) + ' <span style="font-size:10px; margin-left:2px;">▾</span>';
+        
+        a.onclick = function (e) { 
+          if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return true;
+          e.preventDefault(); 
+          var sub = el('subDropdownPerusahaan');
+          var subTender = el('subDropdownTender');
+          if (subTender) subTender.style.display = 'none';
+          if (sub) sub.style.display = sub.style.display === 'block' ? 'none' : 'block';
+        };
+        dropWrap.appendChild(a);
+
+        var subDiv = document.createElement('div');
+        subDiv.id = 'subDropdownPerusahaan';
+        subDiv.style.cssText = 'display:none; position:absolute; top:100%; left:0; background:var(--input-bg); box-shadow:var(--shadow-float); border-radius:12px; min-width:190px; padding:6px; z-index:100; border:1px solid var(--glass-border); margin-top:4px;';
+        
+        var linkPrsh = baseUrl ? (baseUrl + '?page=perusahaan') : '#perusahaan';
+        var linkPorto = baseUrl ? (baseUrl + '?page=portofolio') : '#portofolio';
+
+        subDiv.innerHTML = 
+          '<a href="' + linkPrsh + '" target="_self" onclick="return Core.handleMenuClick(event, \'perusahaan\')" style="display:block; padding:10px 14px; color:var(--text-main); font-size:13px; font-weight:500; border-radius:8px; text-decoration:none;">📁 Legalitas & Dokumen</a>' +
+          '<a href="' + linkPorto + '" target="_self" onclick="return Core.handleMenuClick(event, \'portofolio\')" style="display:block; padding:10px 14px; color:var(--text-main); font-size:13px; font-weight:500; border-radius:8px; text-decoration:none; margin-top:2px;">📊 Data Pengalaman</a>';
+        dropWrap.appendChild(subDiv);
+        frag.appendChild(dropWrap);
+
+      } 
+      else if (m.id === 'tender') {
+        var dropWrapTender = document.createElement('div');
+        dropWrapTender.style.cssText = 'position:relative; display:inline-block;';
+
+        var aTender = document.createElement('a');
+        var linkDefTnd = baseUrl ? (baseUrl + '?page=tender') : '#tender';
+        aTender.href = linkDefTnd;
+        aTender.id = 'nav-tender';
+        aTender.target = '_self'; // ⚡ Netralisir <base target="_top">
+        aTender.className = 'nav-link' + (m.id === S.menu || S.menu === 'dokumenpq' ? ' active' : '');
+        
+        var labelT = (S.menu === 'dokumenpq') ? 'PQ Anggota KSO' : m.label;
+        aTender.innerHTML = esc(labelT) + ' <span style="font-size:10px; margin-left:2px;">▾</span>';
+        
+        aTender.onclick = function (e) { 
+          if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return true;
+          e.preventDefault(); 
+          var subTender = el('subDropdownTender');
+          var subPrsh = el('subDropdownPerusahaan');
+          if (subPrsh) subPrsh.style.display = 'none';
+          if (subTender) subTender.style.display = subTender.style.display === 'block' ? 'none' : 'block';
+        };
+        dropWrapTender.appendChild(aTender);
+
+        var subDivTender = document.createElement('div');
+        subDivTender.id = 'subDropdownTender';
+        subDivTender.style.cssText = 'display:none; position:absolute; top:100%; left:0; background:var(--input-bg); box-shadow:var(--shadow-float); border-radius:12px; min-width:200px; padding:6px; z-index:100; border:1px solid var(--glass-border); margin-top:4px;';
+        
+        var linkTender = baseUrl ? (baseUrl + '?page=tender') : '#tender';
+        var linkPQ = baseUrl ? (baseUrl + '?page=dokumenpq') : '#dokumenpq';
+
+        subDivTender.innerHTML = 
+          '<a href="' + linkTender + '" target="_self" onclick="return Core.handleMenuClick(event, \'tender\')" style="display:block; padding:10px 14px; color:var(--text-main); font-size:13px; font-weight:500; border-radius:8px; text-decoration:none;">📋 Database Tender</a>' +
+          '<a href="' + linkPQ + '" target="_self" onclick="return Core.handleMenuClick(event, \'dokumenpq\')" style="display:block; padding:10px 14px; color:var(--text-main); font-size:13px; font-weight:500; border-radius:8px; text-decoration:none; margin-top:2px;">📑 PQ Anggota KSO</a>';
+        dropWrapTender.appendChild(subDivTender);
+        frag.appendChild(dropWrapTender);
+
+      } else {
+        var aDefault = document.createElement('a');
+        var targetLink = baseUrl ? (baseUrl + '?page=' + encodeURIComponent(m.id)) : ('#' + m.id);
+        aDefault.href = targetLink;
+        aDefault.id = 'nav-' + m.id;
+        aDefault.target = '_self'; // ⚡ Netralisir <base target="_top">
+        aDefault.className = 'nav-link' + (m.id === S.menu ? ' active' : '');
+        aDefault.textContent = m.label;
+        aDefault.onclick = (function(menuId) {
+          return function(e) {
+            return handleMenuClick(e, menuId);
+          };
+        })(m.id);
+        frag.appendChild(aDefault);
+      }
+    });
+
+    nav.innerHTML = ''; nav.appendChild(frag);
+  }
+
+  /* =========================================================
+   * GO / ROUTING
+   * ========================================================= */
+  function go(id, filterAwal) {
+    if (!isMenuAllowed(id)) id = 'dashboard';
+    var m = null;
+    
+    if (id === 'portofolio') {
+      m = { 
+        id: 'portofolio', 
+        label: 'Data Pengalaman', 
+        render: function(h, f) { 
+          if (typeof PortofolioSikap !== 'undefined' && PortofolioSikap && typeof PortofolioSikap.render === 'function') {
+            PortofolioSikap.render(h, f);
+          } else {
+            h.innerHTML = '<div class="card" style="padding:24px; text-align:center; color:#dc2626;"><h4>Modul Data Pengalaman belum dimuat</h4></div>';
+          }
+        } 
+      };
+    } else if (id === 'dokumenpq') {
+      m = { 
+        id: 'dokumenpq', 
+        label: 'Dokumen PQ', 
+        render: function(h, f) { 
+          if (typeof DokumenPQ !== 'undefined' && DokumenPQ && typeof DokumenPQ.render === 'function') {
+            DokumenPQ.render(h, f);
+          } else {
+            h.innerHTML = '<div class="card" style="padding:24px; text-align:center; color:#dc2626;"><h4>Modul Dokumen PQ belum dimuat</h4></div>';
+          }
+        } 
+      };
+    } else {
+      for (var i = 0; i < MENU.length; i++) { if (MENU[i] && MENU[i].id === id) { m = MENU[i]; break; } }
+    }
+
+    if (!m) { id = 'dashboard'; m = MENU[0]; }
+    S.menu = id; S.filterAwal = filterAwal || null; saveLastMenu(id);
+
+    // ⚡ GANTI BLOK LAMA DENGAN INI:
+    // Kirim sinyal ke PWA GitHub di luar iframe agar address bar PWA terupdate secara realtime
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: 'PAG_SET_URL',
+          page: id,
+          title: (m.label || id) + ' - PT. Putra Aulia'
+        }, '*');
+      } else {
+        // Jika dibuka langsung di browser tanpa PWA
+        var baseUrl = getBaseExecUrl();
+        if (baseUrl) {
+          var targetFullUrl = baseUrl + '?page=' + encodeURIComponent(id);
+          window.history.replaceState({ page: id }, '', targetFullUrl);
+        }
+      }
+    } catch (eMsg) {}
+
+    var mq = el('marquee');
+    if (mq && id !== 'dashboard') {
+      mq.classList.add('hidden');
+    }
+
+    var navPerusahaan = el('nav-perusahaan');
+    if (navPerusahaan) {
+      if (id === 'portofolio') {
+        navPerusahaan.innerHTML = 'Data Pengalaman <span style="font-size:10px; margin-left:2px;">▾</span>';
+      } else {
+        navPerusahaan.innerHTML = 'Data Perusahaan <span style="font-size:10px; margin-left:2px;">▾</span>';
+      }
+    }
+
+    var navTender = el('nav-tender');
+    if (navTender) {
+      if (id === 'dokumenpq') {
+        navTender.innerHTML = 'PQ Anggota KSO <span style="font-size:10px; margin-left:2px;">▾</span>';
+      } else {
+        navTender.innerHTML = 'Data Tender <span style="font-size:10px; margin-left:2px;">▾</span>';
+      }
+    }
+
+    MENU.forEach(function (x) { 
+      if (!x) return; 
+      var menuLink = el('nav-' + x.id); 
+      if (menuLink) {
+        menuLink.classList.toggle('active', x.id === id || (id === 'portofolio' && x.id === 'perusahaan') || (id === 'dokumenpq' && x.id === 'tender')); 
+      }
+    });
+
+    var host = el('content'); if (!host) return;
+
+    var renderTimer = setTimeout(function() {
+      if (host.querySelector('.loader-container')) {
+        host.innerHTML = '<div class="card" style="padding:24px; text-align:center;"><h3 style="color:#ef4444; margin-bottom:8px;">⚠️ Waktu Memuat Habis</h3><p style="color:var(--text-muted); font-size:13px; margin-bottom:16px;">Gagal mengambil data dari server.</p><button class="btn sm" onclick="Core.go(\'' + id + '\')">🔄 Muat Ulang Halaman</button></div>';
+      }
+    }, 8000);
+
+    try { 
+      if (m && typeof m.render === 'function') { 
+        m.render(host, filterAwal); 
+        clearTimeout(renderTimer); 
+      } else { 
+        clearTimeout(renderTimer); 
+        host.innerHTML = '<div class="card" style="padding:20px; text-align:center;">Modul belum ada.</div>'; 
+      }
+    } catch (err) { 
+      clearTimeout(renderTimer); 
+      console.error('Render error:', err);
+      host.innerHTML = '<div class="card" style="padding:24px; color:#dc2626"><h4>Gagal memuat halaman</h4><p style="font-size:12px;">' + esc(err.message) + '</p></div>'; 
+    }
+
+    window.scrollTo(0, 0);
+  }
+
+  function setupEvents() {
+    if (_eventsReady) return; _eventsReady = true;
+
+    // Popstate listener untuk navigasi tombol Back/Forward browser
+    window.addEventListener('popstate', function (e) {
+      var targetPage = getLastMenu();
+      if (targetPage && isMenuAllowed(targetPage) && targetPage !== S.menu) {
+        go(targetPage);
+      }
+    });
+
+    window.addEventListener('hashchange', function () { 
+      var hash = safeString(window.location.hash).replace(/^#/, ''); 
+      if (hash && isMenuAllowed(hash)) go(hash); 
+    });
+    
+    document.addEventListener('click', function (e) { 
+      var navbar = document.getElementById('navbar');
+      var hamburger = document.getElementById('hamburgerBtn') || document.querySelector('.hamburger');
+      var subDropPrsh = el('subDropdownPerusahaan');
+      var subDropTender = el('subDropdownTender');
+
+      if (subDropPrsh && !e.target.closest('#nav-perusahaan') && !subDropPrsh.contains(e.target)) {
+        subDropPrsh.style.display = 'none';
+      }
+      if (subDropTender && !e.target.closest('#nav-tender') && !subDropTender.contains(e.target)) {
+        subDropTender.style.display = 'none';
+      }
+
+      if (hamburger && (hamburger === e.target || hamburger.contains(e.target))) {
+        return;
+      }
+
+      if (navbar && navbar.classList.contains('open')) {
+        if (!navbar.contains(e.target)) {
+          closeMenu();
+        }
+      }
+    });
+    
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+  }
+
+  function applyTheme() { 
+    var s = safeObject(S.settings); 
+    var brandEl = el('appBrand'); 
+    if (brandEl) brandEl.textContent = s.nama_perusahaan || 'PT. PUTRA AULIA GROUP'; 
+  }
+
+  function toggleTema() { if (document.body) document.body.classList.toggle('dark'); }
+
+  function toast(msg, type) { 
+    var host = el('toast'); if (!host) return; 
+    var d = document.createElement('div'); d.className = 'toast ' + (type || 'ok'); d.textContent = safeString(msg); host.appendChild(d); 
+    setTimeout(function () { if (d && d.parentNode) d.remove(); }, 3500); 
+  }
+
+  function modal(title, bodyHtml, footHtml, wide) { 
+    var host = el('modalHost'); if (!host) return; 
+    var footerString = footHtml ? '<div class="modal-foot">' + footHtml + '</div>' : '';
+    host.innerHTML = '<div class="modal" id="modalNow"><div class="modal-box ' + (wide ? 'wide' : '') + '"><div class="modal-head"><h3>' + safeString(title) + '</h3><button class="close-btn-x" onclick="Core.closeModal()">✕</button></div><div class="modal-body">' + (bodyHtml || '') + '</div>' + footerString + '</div></div>'; 
+  }
+  function closeModal() { var host = el('modalHost'); if (host) host.innerHTML = ''; }
+
+  function preview(fileId, nama) { 
+    if (!fileId) { toast('Belum ada file.', 'err'); return; } 
+    var id = encodeURIComponent(fileId); 
+    var btnDrive = canDownload() ? '<a class="btn" target="_blank" href="https://drive.google.com/file/d/' + id + '/view">Buka di Drive</a>' : ''; 
+    
+    modal(
+      'Preview: ' + esc(nama || ''), 
+      '<div style="width:100%; height:75vh; min-height:500px; display:flex; flex-direction:column;"><iframe class="preview" style="width:100%; height:100%; border:none; flex:1;" src="https://drive.google.com/file/d/' + id + '/preview"></iframe></div>', 
+      btnDrive, 
+      true
+    ); 
+  }
+
+  function fileField(key, label) { 
+    if (!canInput()) return ''; 
+    return '<label class="fld"><span>' + esc(label) + '</span><input type="file" id="f_' + esc(key) + '" onchange="Core.bacaFile(\'' + esc(key) + '\')"></label>'; 
+  }
+
+  function bacaFile(key) { 
+    key = safeString(key); 
+    var input = el('f_' + key); 
+    if (!input || !input.files || !input.files.length) return; 
+    
+    var file = input.files[0]; 
+    var rd = new FileReader(); 
+    
+    var btns = document.querySelectorAll('.btn:not(.close-btn-x)');
+    btns.forEach(function(b){ b.disabled = true; b.style.opacity = '0.5'; });
+    
+    rd.onload = function () { 
+      var result = safeString(rd.result); 
+      FILES[key] = { 
+        base64: result.indexOf(',') !== -1 ? result.split(',')[1] : result, 
+        mimeType: file.type || 'application/octet-stream', 
+        fileName: file.name || 'file' 
+      }; 
+      btns.forEach(function(b){ b.disabled = false; b.style.opacity = '1'; });
+      toast('Berkas siap diunggah', 'ok'); 
+    }; 
+    rd.readAsDataURL(file); 
+  }
+
+  function getFile(key) { return (FILES[safeString(key)] || null); }
+  function clearFiles() { FILES = {}; }
+
+  function table(cfg) {
+    if (!cfg || !cfg.id) return ''; TABLES[cfg.id] = cfg;
+    var filterHtml = (cfg.filters || []).map(function (f) {
+      if (!f || !f.key) return ''; 
+      var values = uniq((cfg.rows || []).map(function (r) { return r ? r[f.key] : ''; })).sort();
+      return '<select id="' + esc(cfg.id) + '_fl_' + esc(f.key) + '" onchange="Core.tableRefresh(\'' + esc(cfg.id) + '\')"><option value="">' + esc(f.label || f.key) + ': Semua</option>' + values.map(function (o) { return '<option value="' + esc(o) + '">' + esc(o) + '</option>'; }).join('') + '</select>';
+    }).join('');
+    var exportBtnHtml = canDownload() ? '<button class="btn warn btn-download" onclick="Core.exportCSV(\'' + esc(cfg.id) + '\')">⬇ Export CSV</button>' : '';
+    var addBtnHtml = canInput() ? (cfg.addButton || '') : '';
+    return '<div class="card">' + (cfg.judul ? '<h3>' + esc(cfg.judul) + '</h3>' : '') + '<div class="toolbar no-print"><input type="search" id="' + esc(cfg.id) + '_q" placeholder="🔍 Cari…" oninput="Core.tableSearchDebounced(\'' + esc(cfg.id) + '\')">' + filterHtml + (cfg.toolbarExtra || '') + addBtnHtml + '<span class="spacer" style="flex:1"></span><button class="btn sec" onclick="Core.tableReset(\'' + esc(cfg.id) + '\')">Reset</button>' + exportBtnHtml + '<span id="' + esc(cfg.id) + '_cnt" class="chip"></span></div><div class="tbl-wrap" id="' + esc(cfg.id) + '_wrap"></div></div>';
+  }
+
+  function uniq(a) { var result = [], seen = {}; safeArray(a).forEach(function (v) { if (v === '' || v === undefined || v === null) return; var key = safeString(v); if (!seen[key]) { seen[key] = true; result.push(v); } }); return result; }
+  
+  function tableData(id) {
+    var cfg = TABLES[id]; if (!cfg) return []; 
+    var qEl = el(id + '_q'), q = qEl ? safeString(qEl.value).toLowerCase().trim() : ''; 
+    return safeArray(cfg.rows).filter(function (r) { 
+      var filters = safeArray(cfg.filters); 
+      for (var i = 0; i < filters.length; i++) { 
+        var f = filters[i]; if (!f || !f.key) continue; 
+        var sel = el(id + '_fl_' + f.key); if (sel && sel.value && safeString(r[f.key]) !== sel.value) return false; 
+      } 
+      if (q) { 
+        var cols = safeArray(cfg.columns), found = false; 
+        for (var j = 0; j < cols.length; j++) { var c = cols[j]; if (!c) continue; var value = safeString(r[c.key]).toLowerCase(); if (value.indexOf(q) !== -1) { found = true; break; } } 
+        if (!found) return false; 
+      } 
+      return true; 
+    });
+  }
+
+  function tableRefresh(id) {
+    var cfg = TABLES[id]; if (!cfg) return; 
+    var wrap = el(id + '_wrap'); if (!wrap) return; 
+    var rows = tableData(id), columns = safeArray(cfg.columns); 
+    var html = '<table class="tbl"><thead><tr><th>No</th>' + columns.map(function (c) { return '<th>' + esc(c && c.label ? c.label : '') + '</th>'; }).join('') + (cfg.actions ? '<th>Aksi</th>' : '') + '</tr></thead><tbody>'; 
+    if (!rows.length) { html += '<tr><td colspan="' + (columns.length + 1 + (cfg.actions ? 1 : 0)) + '" style="text-align:center;padding:24px;color:var(--text-muted)">Belum ada data.</td></tr>'; } 
+    else { 
+      for (var i = 0; i < rows.length; i++) { 
+        var r = rows[i] || {}; html += '<tr><td>' + (i + 1) + '</td>'; 
+        for (var j = 0; j < columns.length; j++) { var c = columns[j] || {}; var value = typeof c.render === 'function' ? c.render(r) : esc(r[c.key]); html += '<td>' + (value || '') + '</td>'; } 
+        if (typeof cfg.actions === 'function') { html += '<td>' + (cfg.actions(r) || '') + '</td>'; } 
+        html += '</tr>'; 
+      } 
+    } 
+    html += '</tbody></table>'; wrap.innerHTML = html; 
+    var counter = el(id + '_cnt'); if (counter) counter.textContent = rows.length + ' data'; 
+  }
+
+  function tableSearchDebounced(id) { if (TABLE_TIMERS[id]) clearTimeout(TABLE_TIMERS[id]); TABLE_TIMERS[id] = setTimeout(function () { tableRefresh(id); delete TABLE_TIMERS[id]; }, 200); }
+  function tableReset(id) { var cfg = TABLES[id]; if (!cfg) return; var q = el(id + '_q'); if (q) q.value = ''; safeArray(cfg.filters).forEach(function (f) { if (!f || !f.key) return; var s = el(id + '_fl_' + f.key); if (s) s.value = ''; }); tableRefresh(id); }
+
+  function exportCSV(id) { 
+    if (!canDownload()) { toast('⚠️ Hak akses Anda dibatasi.', 'err'); return; } 
+    var cfg = TABLES[id]; if (!cfg) return; 
+    var rows = tableData(id), columns = safeArray(cfg.columns), csv = []; 
+    csv.push(columns.map(function (c) { return '"' + safeString(c && c.label ? c.label : '').replace(/"/g, '""') + '"'; }).join(',')); 
+    rows.forEach(function (r) { r = r || {}; csv.push(columns.map(function (c) { return '"' + safeString(r[c.key]).replace(/"/g, '""') + '"'; }).join(',')); }); 
+    var blob = new Blob(['\ufeff' + csv.join('\n')], { type: 'text/csv;charset=utf-8;' }); var url = URL.createObjectURL(blob); 
+    var a = document.createElement('a'); a.href = url; a.download = safeString(cfg.judul || 'export').replace(/\s+/g, '_') + '.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000); toast('Export CSV berhasil', 'ok'); 
+  }
+
+  function call(fn, args, onOk, opt) { 
+    opt = opt || {}; if (!fn || typeof fn !== 'string') return; 
+    if (typeof google === 'undefined' || !google.script || !google.script.run) { if (typeof opt.gagal === 'function') opt.gagal({ message: 'Google Script Environment tidak tersedia' }); return; }
+    var runner = google.script.run.withSuccessHandler(function (r) { if (opt.sukses) toast(opt.sukses, 'ok'); if (typeof onOk === 'function') onOk(r); }).withFailureHandler(function (e) { var msg = e && e.message ? e.message : 'Kesalahan server.'; toast(msg, 'err'); if (typeof opt.gagal === 'function') opt.gagal(e); }); 
+    try { runner[fn].apply(runner, safeArray(args)); } catch (err) { toast(err.message || 'Gagal menjalankan server.', 'err'); if (typeof opt.gagal === 'function') opt.gagal(err); } 
+  }
+
+  function sisaHari(tgl) { if (!tgl) return null; var e = new Date(tgl); if (isNaN(e.getTime())) return null; var t = new Date(); t.setHours(0, 0, 0, 0); return Math.ceil((e - t) / 86400000); }
+  function badgeSisa(tgl) { var s = sisaHari(tgl); if (s === null) return ''; if (s < 0) return '<span class="badge b-red">Kadaluarsa</span>'; if (s <= 7) return '<span class="badge b-red">' + s + ' hari</span>'; if (s <= 14) return '<span class="badge b-org">' + s + ' hari</span>'; if (s <= 30) return '<span class="badge b-yel">' + s + ' hari</span>'; return '<span class="badge b-grn">' + s + ' hari</span>'; }
+
+  return { 
+    state: S, el: el, esc: esc, init: init, applyBootData: applyBootData, setSessionUser: setSessionUser, showApp: showApp, showLogin: showLogin, logout: logout, 
+    renderAppHeader: renderAppHeader, buildMenu: buildMenu, renderNavbar: buildMenu, go: go, nav: go, 
+    handleMenuClick: handleMenuClick, 
+    toggleTema: toggleTema, applyTheme: applyTheme, 
+    toggleMenu: toggleMenu, closeMenu: closeMenu,
+    toast: toast, modal: modal, closeModal: closeModal, preview: preview, fileField: fileField, bacaFile: bacaFile, getFile: getFile, clearFiles: clearFiles, table: table, tableRefresh: tableRefresh, tableSearchDebounced: tableSearchDebounced, tableReset: tableReset, exportCSV: exportCSV, call: call, sbDirect: sbDirect, cacheGet: cacheGet, cacheSet: cacheSet, badgeSisa: badgeSisa, sisaHari: sisaHari, isSuperuser: isSuperuser, isTeknik: isTeknik, isTender: isTender, isBiasa: isBiasa, canInput: canInput, canDeleteDirect: canDeleteDirect, canRequestDelete: canRequestDelete, canDownload: canDownload, getEffectiveRole: getEffectiveRole, saveLastMenu: saveLastMenu, getLastMenu: getLastMenu, isMenuAllowed: isMenuAllowed, bukaNotifikasi: bukaNotifikasi, formTulisPesanBaru: formTulisPesanBaru, kirimPesanBaru: kirimPesanBaru, formBalasNotif: formBalasNotif, kirimBalasanNotif: kirimBalasanNotif, tandaiDibaca: tandaiDibaca, cekNotifikasiBaru: cekNotifikasiBaru, tampilkanNotifikasiOS: tampilkanNotifikasiOS, setNotifTab: setNotifTab, tandaiSemuaSudahDibaca: tandaiSemuaSudahDibaca, bukaLinkNotif: bukaLinkNotif, getMaster: function () { return S.master; }, getUser: function () { return S.user; }, getSessionToken: function () { return S.sessionToken; }, getRole: getEffectiveRole,
+    storage: window.AppStorage 
+  };
 })();
+
+/* =========================================================
+ * FUNGSI PENGATUR RESIZE KIRI-KANAN (DUAL FORM)
+ * ========================================================= */
+function initResizableSplit(containerId) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+
+  var panes = container.querySelectorAll('.split-pane');
+  if (panes.length < 2) return;
+
+  var leftPane = panes[0];
+  var rightPane = panes[1];
+
+  var resizer = container.querySelector('.split-resizer');
+  if (!resizer) {
+    resizer = document.createElement('div');
+    resizer.className = 'split-resizer';
+    container.insertBefore(resizer, rightPane);
+  }
+
+  var isResizing = false;
+
+  resizer.addEventListener('mousedown', function (e) {
+    isResizing = true;
+    resizer.classList.add('active');
+    document.body.style.cursor = 'col-resize';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (!isResizing) return;
+    if (window.innerWidth <= 900) return;
+
+    var containerRect = container.getBoundingClientRect();
+    var offsetX = e.clientX - containerRect.left;
+    var totalWidth = containerRect.width;
+
+    var percentage = (offsetX / totalWidth) * 100;
+    if (percentage < 20) percentage = 20;
+    if (percentage > 80) percentage = 80;
+
+    leftPane.style.flex = '0 0 ' + percentage + '%';
+    rightPane.style.flex = '0 0 ' + (100 - percentage) + '%';
+  });
+
+  document.addEventListener('mouseup', function () {
+    if (isResizing) {
+      isResizing = false;
+      resizer.classList.remove('active');
+      document.body.style.cursor = 'default';
+    }
+  });
+}
 </script>
-</body>
-</html>
