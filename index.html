@@ -25,6 +25,16 @@
 
   <title>PT. Putra Aulia</title>
 
+  <!-- ========================================================
+       ⚡ 1. INSTANT-KILL SPLASH SCREEN DI NEW TAB (0 MILIDETIK)
+       ======================================================== -->
+  <script>
+    // Jika tab baru dibuka membawa menu (?page=...) atau user sudah login, matikan splash screen SEBELUM HTML digambar!
+    if (window.location.search.indexOf('page=') !== -1 || localStorage.getItem('PAG_DOCS_ACTIVE_USER')) {
+      document.documentElement.classList.add('kill-splash');
+    }
+  </script>
+
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body {
@@ -34,7 +44,7 @@
     #app { width: 100%; height: 100%; position: relative; }
 
     /* ======================================================
-     * 🚀 SPLASH SCREEN ANTI-KEDIP (HARDWARE ACCELERATED)
+     * 🚀 SPLASH SCREEN ANTI-KEDIP & INSTANT-KILL
      * ====================================================== */
     #pagSplashScreen {
       position: absolute; inset: 0; z-index: 50;
@@ -45,6 +55,14 @@
     }
     #pagSplashScreen.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
     
+    /* ⚡ MATIKAN TOTAL SPLASH SCREEN DI TAB BARU */
+    html.kill-splash #pagSplashScreen {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
     .splash-logo {
       width: 76px; height: 76px; border-radius: 20px;
       background: #0f766e; color: #ffffff; font-size: 26px; font-weight: 800;
@@ -156,7 +174,7 @@
     </div>
   </div>
 
-  <!-- 2. HIGH PRIORITY IFRAME (SRC DIATUR OTOMATIS BERDASARKAN PARAMETER URL) -->
+  <!-- 2. HIGH PRIORITY IFRAME -->
   <iframe
     id="appFrame"
     title="PT. Putra Aulia"
@@ -218,12 +236,20 @@
   const warn = (...args) => console.warn("[PAG]", ...args);
   const error = (...args) => console.error("[PAG]", ...args);
 
-  // ⚡ 1. KONSTRUKSI URL IFRAME YANG MENERUSKAN ALAMAT PWA & PARAMETER TAB BARU (?page=...)
+  // ⚡ HILANGKAN MENU BAWAAN CHROME ("OPEN LINK IN CHROME / INCOGNITO")
+  document.addEventListener("contextmenu", (e) => {
+    // Matikan klik kanan native Chrome PWA agar tidak memunculkan "Open in Chrome"
+    if (isStandalonePWA() || window.location.search.indexOf("page=") !== -1) {
+      e.preventDefault();
+      return false;
+    }
+  }, { capture: true });
+
+  // ⚡ KONSTRUKSI URL IFRAME YANG MENERUSKAN PARAMETER TAB BARU (?page=...)
   function buildIframeUrl() {
     const pwaHostUrl = window.location.origin + window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Meneruskan host PWA agar menu di dalam iframe tahu kemana membuat link New Tab
     urlParams.set("pwa_host", pwaHostUrl);
 
     const separator = CONFIG.APP_SCRIPT_URL.indexOf("?") === -1 ? "?" : "&";
@@ -269,12 +295,7 @@
     if (!appFrame.src) {
       appFrame.src = buildIframeUrl();
     }
-    
-    // ⚡ BYPASS SPLASH SCREEN DI TAB BARU:
-    // Jika sudah pernah membuka PWA (ada session), matikan splash screen dalam 0.3 detik!
-    if (localStorage.getItem("PAG_DOCS_ACTIVE_USER") || sessionStorage.getItem("PAG_PWA_HOST")) {
-      setTimeout(dismissSplashFast, 300);
-    }
+    dismissSplashFast();
   }
 
   function lockApplicationInstantly() {
@@ -290,7 +311,7 @@
     if (splash && !splash.classList.contains("loaded") && btnEmergency) {
       btnEmergency.style.display = "inline-block";
     }
-  }, 5000);
+  }, 4000);
 
   window.forceReloadApp = function() {
     if (splash) splash.classList.remove("loaded");
@@ -629,7 +650,7 @@
   }
 
   /* ========================================================
-   * ⚡ ULTRA RESPONSIVE POSTMESSAGE & SINKRONISASI URL PWA
+   * ⚡ ULTRA RESPONSIVE POSTMESSAGE & SINKRONISASI PWA
    * ======================================================== */
   async function handleIframeMessage(event) {
     if (event.source !== appFrame.contentWindow) return;
@@ -638,7 +659,7 @@
 
     dismissSplashFast();
 
-    // ⚡ Sinkronkan address bar PWA saat pengguna berpindah menu di dalam iframe
+    // Sinkronkan address bar PWA saat pengguna berpindah menu
     if (data.type === "PAG_SET_URL" && data.page) {
       const pwaBase = window.location.origin + window.location.pathname;
       const newPwaUrl = pwaBase + "?page=" + encodeURIComponent(data.page);
@@ -646,6 +667,13 @@
       if (data.title) {
         document.title = data.title;
       }
+    }
+
+    // ⚡ DUKUNGAN BUKA TAB BARU DI LEVEL PWA (BEBAS DARI CHROME INCOGNITO)
+    if (data.type === "PAG_OPEN_NEW_PWA_TAB" && data.page) {
+      const pwaBase = window.location.origin + window.location.pathname;
+      const targetUrl = pwaBase + "?page=" + encodeURIComponent(data.page);
+      window.open(targetUrl, "_blank");
     }
 
     if (data.type === "SYNC_USER_SESSION") {
