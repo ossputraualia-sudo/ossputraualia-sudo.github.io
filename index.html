@@ -10,21 +10,14 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <!-- ========================================================
-       🚀 ULTRA PRELOAD: Download Iframe di Milidetik ke-0
-       ======================================================== -->
-  <link rel="preload" as="document" href="https://script.google.com/macros/s/AKfycbzSB9Nxg5tvWPI3Jrfrow9Mxs3ebSV31eoQ6TJW7o43oFx7m5MdK5WqVKbMDoig8hCVrA/exec">
-
-  <!-- ========================================================
        ⚡ OPTIMAL PRECONNECT: Koreksi CORS (Bebas Koneksi Ganda)
        ======================================================== -->
   <link rel="dns-prefetch" href="https://script.google.com">
   <link rel="dns-prefetch" href="https://script.googleusercontent.com">
   <link rel="dns-prefetch" href="https://qywqxcvnlehmiqrkpwdd.supabase.co">
 
-  <!-- Tanpa crossorigin untuk navigasi Iframe (Jalur TCP Langsung) -->
   <link rel="preconnect" href="https://script.google.com">
   <link rel="preconnect" href="https://script.googleusercontent.com">
-  <!-- Crossorigin hanya untuk API Supabase (Fetch CORS) -->
   <link rel="preconnect" href="https://qywqxcvnlehmiqrkpwdd.supabase.co" crossorigin>
 
   <link rel="manifest" href="./manifest.json">
@@ -167,7 +160,6 @@
   <iframe
     id="appFrame"
     title="PT. Putra Aulia"
-    src="https://script.google.com/macros/s/AKfycbzSB9Nxg5tvWPI3Jrfrow9Mxs3ebSV31eoQ6TJW7o43oFx7m5MdK5WqVKbMDoig8hCVrA/exec"
     loading="eager"
     fetchpriority="high"
     allow="geolocation; microphone; camera; display-capture; clipboard-read; clipboard-write;"
@@ -226,6 +218,21 @@
   const warn = (...args) => console.warn("[PAG]", ...args);
   const error = (...args) => console.error("[PAG]", ...args);
 
+  // ⚡ 1. KONSTRUKSI URL IFRAME YANG MENERUSKAN PARAMETER TAB BARU (?page=...)
+  function buildIframeUrl() {
+    const pwaHostUrl = window.location.origin + window.location.pathname;
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Kirim alamat PWA ini ke Apps Script agar link menu mengarah ke PWA GitHub
+    urlParams.set("pwa_host", pwaHostUrl);
+
+    const separator = CONFIG.APP_SCRIPT_URL.indexOf("?") === -1 ? "?" : "&";
+    return CONFIG.APP_SCRIPT_URL + separator + urlParams.toString();
+  }
+
+  // Set URL iframe segera
+  appFrame.src = buildIframeUrl();
+
   function showError(message) {
     errorBox.textContent = String(message || "");
     errorBox.style.display = "block";
@@ -260,7 +267,7 @@
       appFrame.style.display = "block";
     }
     if (!appFrame.src) {
-      appFrame.src = CONFIG.APP_SCRIPT_URL;
+      appFrame.src = buildIframeUrl();
     }
   }
 
@@ -269,12 +276,10 @@
     showBlockedState();
   }
 
-  /* ⚡ Hilangkan splash screen seketika tanpa jeda 150ms */
   appFrame.onload = () => {
     dismissSplashFast();
   };
 
-  // Watchdog pengaman dipercepat ke 5 detik (dari 7 detik)
   setTimeout(() => {
     if (splash && !splash.classList.contains("loaded") && btnEmergency) {
       btnEmergency.style.display = "inline-block";
@@ -283,7 +288,7 @@
 
   window.forceReloadApp = function() {
     if (splash) splash.classList.remove("loaded");
-    appFrame.src = CONFIG.APP_SCRIPT_URL + (CONFIG.APP_SCRIPT_URL.indexOf("?") === -1 ? "?" : "&") + "t=" + Date.now();
+    appFrame.src = buildIframeUrl() + "&t=" + Date.now();
   };
 
   function getDeviceId() {
@@ -618,15 +623,23 @@
   }
 
   /* ========================================================
-   * ⚡ ULTRA RESPONSIVE POSTMESSAGE: LEPAS SPLASH SCREEN INSTAN
+   * ⚡ ULTRA RESPONSIVE POSTMESSAGE & ADDRESS BAR SYNC
    * ======================================================== */
   async function handleIframeMessage(event) {
     if (event.source !== appFrame.contentWindow) return;
     const data = event.data || {};
     if (typeof data !== "object") return;
 
-    // 🌟 Jika iframe sudah memuat sesi atau mengirim pesan ready, singkirkan splash screen seketika!
     dismissSplashFast();
+
+    // ⚡ Sinkronkan URL Address Bar Browser PWA saat berpindah menu di dalam iframe
+    if (data.type === "PAG_SET_URL" && data.page) {
+      const newPwaUrl = window.location.pathname + "?page=" + encodeURIComponent(data.page);
+      window.history.replaceState({ page: data.page }, "", newPwaUrl);
+      if (data.title) {
+        document.title = data.title;
+      }
+    }
 
     if (data.type === "SYNC_USER_SESSION") {
       session.user_id = data.user_id ?? data.userId ?? data.user?.id ?? null;
