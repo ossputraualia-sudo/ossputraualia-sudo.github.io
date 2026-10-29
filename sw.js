@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V8";
+const SW_VERSION = "PAG-PUSH-V9";
 
 /* ============================================================
  * APP CONFIG
@@ -22,6 +22,14 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
+const SHELL_CACHE = "pag-shell-v9";
+const SHELL_ASSETS = [
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
+];
 const NOTIFICATION_MARKER_TTL = 24 * 60 * 60 * 1000; // 24 Jam
 
 /* ============================================================
@@ -292,8 +300,11 @@ function buildNotificationOptions(notification) {
  * LIFECYCLE: INSTALL & ACTIVATE
  * ============================================================ */
 
-self.addEventListener("install", () => {
+self.addEventListener("install", event => {
   log("Install:", SW_VERSION);
+  event.waitUntil(
+    caches.open(SHELL_CACHE).then(cache => cache.addAll(SHELL_ASSETS)).catch(() => {})
+  );
   self.skipWaiting();
 });
 
@@ -301,10 +312,44 @@ self.addEventListener("activate", event => {
   event.waitUntil(
     (async () => {
       await self.clients.claim();
+      try {
+        const keys = await caches.keys();
+        for (const k of keys) {
+          if (k.startsWith("pag-shell-") && k !== SHELL_CACHE) {
+            await caches.delete(k);
+          }
+        }
+      } catch (_) {}
       await cleanupNotificationMarkers();
       log("Activated:", SW_VERSION);
     })()
   );
+});
+
+/* ============================================================
+ * INSTANT PWA SHELL CACHE (STALE-WHILE-REVALIDATE < 5ms RELOAD)
+ * ============================================================ */
+self.addEventListener("fetch", event => {
+  const req = event.request;
+  if (req.method !== "GET") return;
+  try {
+    const url = new URL(req.url);
+    if (url.origin !== APP_ORIGIN) return;
+    if (url.pathname.startsWith("/__pag_push_marker__/")) return;
+
+    event.respondWith(
+      caches.open(SHELL_CACHE).then(async cache => {
+        const cached = await cache.match(req, { ignoreSearch: true });
+        const networkPromise = fetch(req).then(res => {
+          if (res && res.status === 200) {
+            cache.put(req, res.clone()).catch(() => {});
+          }
+          return res;
+        }).catch(() => cached);
+        return cached || networkPromise;
+      })
+    );
+  } catch (_) {}
 });
 
 /* ============================================================
