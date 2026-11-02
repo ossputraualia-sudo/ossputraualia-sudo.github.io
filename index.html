@@ -18,7 +18,7 @@
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
   <link rel="preconnect" href="https://script.google.com">
-  <link rel="preconnect" href="https://script.googleusercontent.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
   <link rel="preconnect" href="https://qywqxcvnlehmiqrkpwdd.supabase.co" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
@@ -192,7 +192,7 @@
   "use strict";
 
   const CONFIG = {
-    APP_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzSB9Nxg5tvWPI3Jrfrow9Mxs3ebSV31eoQ6TJW7o43oFx7m5MdK5WqVKbMDoig8hCVrA/exec",
+    APP_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwsbxo5bdw6DqxAoKyBTPOOHQyniegNFNvnHG-b20xArC24dX2Nwq6-srrwBvHW3Pei7w/exec",
     SB_URL: "https://qywqxcvnlehmiqrkpwdd.supabase.co",
     SB_KEY: "sb_publishable_Trk4jYTk3nI93sFtmWO6Tg_-ps4vYLq",
     VAPID_PUBLIC_KEY: "BJA7AZcYbZ-m23nmGsoICga9u-MhkIOfaL4ZuYTF0lO0PyUQKztgodNHp3EjQxKXTfMq0eO0nIDEyi5SHlKEZPg",
@@ -662,11 +662,16 @@
    * ⚡ ULTRA RESPONSIVE POSTMESSAGE & SINKRONISASI PWA
    * ======================================================== */
   async function handleIframeMessage(event) {
-    if (event.source !== appFrame.contentWindow) return;
     const data = event.data || {};
     if (typeof data !== "object") return;
 
-    dismissSplashFast();
+    // ⚡ INSTANT EARLY-PAINT SPLASH DISMISSAL (0ms LAG):
+    // Langsung lenyapkan splash screen begitu ada sinyal render awal tanpa terhalang cross-origin!
+    if (data.type === "PAG_EARLY_PAINT" || data.type === "PAG_SET_URL" || data.type === "SYNC_USER_SESSION") {
+      dismissSplashFast();
+    }
+
+    if (event.source !== appFrame.contentWindow) return;
 
     // Sinkronkan address bar PWA saat pengguna berpindah menu
     if (data.type === "PAG_SET_URL" && data.page) {
