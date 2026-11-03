@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V12 (RICH INFORMATIVE & DYNAMIC BADGE)
+ * VERSION: PAG-PUSH-V13 (RICH INFORMATIVE & DYNAMIC BADGE)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V12";
+const SW_VERSION = "PAG-PUSH-V13";
 
 /* ============================================================
  * APP CONFIG
