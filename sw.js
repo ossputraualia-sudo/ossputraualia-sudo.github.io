@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V30 (TAB 6 LEMBAR PEMBATAS JABATAN PERSONIL)
+ * VERSION: PAG-PUSH-V31 (TAB 7 LEMBAR PEMBATAS KWITANSI BIAYA & LAPORAN)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V30";
+const SW_VERSION = "PAG-PUSH-V31";
 
 /* ============================================================
  * APP CONFIG
