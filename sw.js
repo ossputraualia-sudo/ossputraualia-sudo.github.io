@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V26 (WORKFLOW TAB 1 RINCIAN TAB 2 REKAP TAB 3 MC & KOP SURAT)
+ * VERSION: PAG-PUSH-V27 (FIX SCOPE PERUSAHAAN & KOP SURAT MC)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V26";
+const SW_VERSION = "PAG-PUSH-V27";
 
 /* ============================================================
  * APP CONFIG
