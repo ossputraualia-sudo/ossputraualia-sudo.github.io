@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V34 (HEADER BULAN DINAMIS DAFTAR HADIR 30 HARI)
+ * VERSION: PAG-PUSH-V35 (LEMBAR MC PORTRAIT PRINT ORIENTATION)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V34";
+const SW_VERSION = "PAG-PUSH-V35";
 
 /* ============================================================
  * APP CONFIG
