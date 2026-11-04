@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V35 (LEMBAR MC PORTRAIT PRINT ORIENTATION)
+ * VERSION: PAG-PUSH-V36 (SPSE INAPROC EMAIL FORWARDING & TIMEOUT SHIELD)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V35";
+const SW_VERSION = "PAG-PUSH-V36";
 
 /* ============================================================
  * APP CONFIG
