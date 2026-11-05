@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V52 (FITUR PEMBULATAN NILAI AKHIR DIBULATKAN)
+ * VERSION: PAG-PUSH-V53 (PROPORSI KOP SELEBAR TABEL & SPASI TTD A4)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V52";
+const SW_VERSION = "PAG-PUSH-V53";
 
 /* ============================================================
  * APP CONFIG
