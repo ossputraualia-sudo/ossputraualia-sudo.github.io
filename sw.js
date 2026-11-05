@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V54 (PENOMORAN OTOMATIS SURAT PER INVOICE)
+ * VERSION: PAG-PUSH-V55 (TAHUN TUNGGAL AUTO CAP 31 DES & MYC)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V54";
+const SW_VERSION = "PAG-PUSH-V55";
 
 /* ============================================================
  * APP CONFIG
