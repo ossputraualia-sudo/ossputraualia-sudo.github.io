@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V36 (SPSE INAPROC EMAIL FORWARDING & TIMEOUT SHIELD)
+ * VERSION: PAG-PUSH-V37 (INVOICE STICKY TOPBAR & CLEAN METADATA)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V36";
+const SW_VERSION = "PAG-PUSH-V37";
 
 /* ============================================================
  * APP CONFIG
