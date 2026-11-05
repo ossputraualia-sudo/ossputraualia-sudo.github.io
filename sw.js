@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V55 (TAHUN TUNGGAL AUTO CAP 31 DES & MYC)
+ * VERSION: PAG-PUSH-V56 (LABEL MINIMALIS 1 KATA DATA UMUM)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V55";
+const SW_VERSION = "PAG-PUSH-V56";
 
 /* ============================================================
  * APP CONFIG
