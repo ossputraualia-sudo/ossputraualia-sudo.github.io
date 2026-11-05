@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V51 (NAMA PERUSAHAAN REKENING LEAD FIRM KHUSUS KSO)
+ * VERSION: PAG-PUSH-V52 (FITUR PEMBULATAN NILAI AKHIR DIBULATKAN)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V51";
+const SW_VERSION = "PAG-PUSH-V52";
 
 /* ============================================================
  * APP CONFIG
