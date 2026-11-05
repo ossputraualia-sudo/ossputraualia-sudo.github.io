@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V49 (TANGGAL DOKUMEN OTOMATIS DINAMIS AKHIR PERIODE PER INVOICE)
+ * VERSION: PAG-PUSH-V50 (FIX AUTO-HEAL ANOMALI TANGGAL INVOICE DARI KONTRAK)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V49";
+const SW_VERSION = "PAG-PUSH-V50";
 
 /* ============================================================
  * APP CONFIG
