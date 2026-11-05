@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V40 (SURAT PERMOHONAN, SMART AUDIT REKONSILIASI, DUPLIKAT PROYEK)
+ * VERSION: PAG-PUSH-V41 (PERGANTIAN PERSONIL TERINTEGRASI ADDENDUM KONTRAK)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V40";
+const SW_VERSION = "PAG-PUSH-V41";
 
 /* ============================================================
  * APP CONFIG
