@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V37 (INVOICE STICKY TOPBAR & CLEAN METADATA)
+ * VERSION: PAG-PUSH-V38 (INVOICE UNIFIED MASTER & TAB 3 TOOLBAR)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V37";
+const SW_VERSION = "PAG-PUSH-V38";
 
 /* ============================================================
  * APP CONFIG
