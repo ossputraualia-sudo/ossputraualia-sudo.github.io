@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V80 (OPTIMALISASI PREVIEW PQ, REPLACE DRAFT MODAL, JABATAN DINAMIS)
+ * VERSION: PAG-PUSH-V81 (FIX UPLOAD KOP PERUSAHAAN & DRIVE SERVICE AUTH SESSION)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V80";
+const SW_VERSION = "PAG-PUSH-V81";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v33";
+const SHELL_CACHE = "pag-shell-v34";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
