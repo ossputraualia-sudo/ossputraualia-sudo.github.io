@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V71 (PERBAIKAN DARK THEME VISUAL MODUL INVOICE)
+ * VERSION: PAG-PUSH-V72 (PERBAIKAN TUNTAS DARK THEME TAB 3 RINCIAN & TAB 4 BUNDEL)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V71";
+const SW_VERSION = "PAG-PUSH-V72";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v24";
+const SHELL_CACHE = "pag-shell-v25";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
