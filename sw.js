@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V63 (TOMBOL PERBESAR KACA PEMBESAR & HAPUS BANNER FREEZE)
+ * VERSION: PAG-PUSH-V64 (HAPUS FREEZE KOLOM 1-4 & FLOW TABEL PENUH)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V63";
+const SW_VERSION = "PAG-PUSH-V64";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v16";
+const SHELL_CACHE = "pag-shell-v17";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
