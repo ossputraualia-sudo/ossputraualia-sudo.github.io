@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V59 (FITUR UANG MUKA 20-30% DAN ANGSURAN BULANAN)
+ * VERSION: PAG-PUSH-V60 (PERBAIKAN TAMPILAN LEMBAR MC & SUBVIEWS)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V59";
+const SW_VERSION = "PAG-PUSH-V60";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v12";
+const SHELL_CACHE = "pag-shell-v13";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
