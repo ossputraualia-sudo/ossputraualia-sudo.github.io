@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V76 (PERBAIKAN DARK THEME TOOLBAR TAB 3)
+ * VERSION: PAG-PUSH-V77 (PERBAIKAN KONTEN TABEL TAB 3 & DARK THEME TOOLBAR)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V76";
+const SW_VERSION = "PAG-PUSH-V77";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v29";
+const SHELL_CACHE = "pag-shell-v30";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
