@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V69 (NAMA PEMILIK REKENING KSO DISESUAIKAN DENGAN FORM TAB 1)
+ * VERSION: PAG-PUSH-V70 (ARSIP INVOICE TAHUN & LOKASI + PERAPIHAN KOLOM OB/OH BULAN INI)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V69";
+const SW_VERSION = "PAG-PUSH-V70";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v22";
+const SHELL_CACHE = "pag-shell-v23";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
