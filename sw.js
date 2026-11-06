@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V67 (KOLOM ADDENDUM CCO SIDE-BY-SIDE SEBELUM TOMBOL AKSI TAB 2 RAB)
+ * VERSION: PAG-PUSH-V68 (PERBAIKAN AKTIVASI NAVIGASI TAB 3 & TAB 4 INVOICE)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V67";
+const SW_VERSION = "PAG-PUSH-V68";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v20";
+const SHELL_CACHE = "pag-shell-v21";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
