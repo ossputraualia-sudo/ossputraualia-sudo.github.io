@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V56 (LABEL MINIMALIS 1 KATA DATA UMUM)
+ * VERSION: PAG-PUSH-V57 (HOTFIX RENDER ADDENDUM LIST)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V56";
+const SW_VERSION = "PAG-PUSH-V57";
 
 /* ============================================================
  * APP CONFIG
