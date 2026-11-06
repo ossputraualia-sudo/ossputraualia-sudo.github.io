@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V74 (PENYERAGAMAN PRESISI LEBAR GRID 140PX TAB 1)
+ * VERSION: PAG-PUSH-V75 (PERBAIKAN OVERFLOW KANAN BULAN & SELESAI TAB 1)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V74";
+const SW_VERSION = "PAG-PUSH-V75";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v27";
+const SHELL_CACHE = "pag-shell-v28";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
