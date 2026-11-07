@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V95 (Fix Closing Style Tag & Clean Universal Topbar Display)
+ * VERSION: PAG-PUSH-V96 (Migrasi Penuh Seluruh Filter & Toolbar Menu ke Universal Topbar)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V95";
+const SW_VERSION = "PAG-PUSH-V96";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v48";
+const SHELL_CACHE = "pag-shell-v49";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
