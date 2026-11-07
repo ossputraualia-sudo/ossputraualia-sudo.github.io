@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V91 (Format Proporsional Surat Kuasa 2 Halaman, Klausul Penutup Resmi & Ruang Kosong Materai 95px)
+ * VERSION: PAG-PUSH-V92 (Sinkronisasi Dua Arah Dokumen PQ & Menu Perusahaan, dan Fitur Salin Draft sebagai Baru)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V91";
+const SW_VERSION = "PAG-PUSH-V92";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v44";
+const SHELL_CACHE = "pag-shell-v45";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
