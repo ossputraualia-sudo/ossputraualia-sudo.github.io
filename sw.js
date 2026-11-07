@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V105 (Migrasi Penuh Filter, Tab & Aksi Data Pengalaman (Portofolio SIKAP) ke Topbar)
+ * VERSION: PAG-PUSH-V106 (Migrasi Penuh Filter, Tab & Aksi Data Pengalaman (Portofolio SIKAP) ke Topbar)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V105";
+const SW_VERSION = "PAG-PUSH-V106";
 
 /* ============================================================
  * APP CONFIG
