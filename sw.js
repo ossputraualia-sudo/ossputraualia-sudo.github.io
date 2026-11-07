@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V98 (Standarisasi Ukuran Elemen Filter & Aksi Universal Topbar)
+ * VERSION: PAG-PUSH-V99 (Migrasi Penuh Tombol Aksi Legalitas (Bab A-G, Direktur, Kop, Dokumen) ke Topbar)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V98";
+const SW_VERSION = "PAG-PUSH-V99";
 
 /* ============================================================
  * APP CONFIG
