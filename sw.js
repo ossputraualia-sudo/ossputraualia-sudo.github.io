@@ -1,6 +1,6 @@
 /* ============================================================
  * PAG DOCS — SERVICE WORKER
- * VERSION: PAG-PUSH-V88 (Font 12pt Standard Legal & Surat KSO Halaman 1 Full Butir 1-7)
+ * VERSION: PAG-PUSH-V89 (Surat Kuasa: 6 Butir Khusus & Akta Penerima Kuasa Sesuai Template)
  *
  * FITUR UTAMA:
  * 1. Rich Native Notification (Informatif, Timestamp, Pola Getar)
@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V88";
+const SW_VERSION = "PAG-PUSH-V89";
 
 /* ============================================================
  * APP CONFIG
@@ -22,7 +22,7 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v41";
+const SHELL_CACHE = "pag-shell-v42";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
