@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V118";
+const SW_VERSION = "PAG-PUSH-V119";
 
 /* ============================================================
  * APP CONFIG
@@ -334,12 +334,14 @@ self.addEventListener("fetch", event => {
   if (req.method !== "GET") return;
   try {
     const url = new URL(req.url);
-    if (url.origin !== APP_ORIGIN) return;
+    const isCdn = (url.hostname === "cdn.jsdelivr.net" || url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com");
+    if (url.origin !== APP_ORIGIN && !isCdn) return;
     if (url.pathname.startsWith("/__pag_push_marker__/")) return;
 
     event.respondWith(
       caches.open(SHELL_CACHE).then(async cache => {
-        const cached = await cache.match(req, { ignoreSearch: true });
+        const cached = await cache.match(req, { ignoreSearch: isCdn ? false : true });
+        if (cached && isCdn) return cached;
         const networkPromise = fetch(req).then(res => {
           if (res && res.status === 200) {
             cache.put(req, res.clone()).catch(() => {});
