@@ -816,36 +816,59 @@
           </p>
         </div>
   
-        <p>Layar Beranda terbagi menjadi 4 zona utama yang terintegrasi secara dinamis:</p>
+        <p>Berdasarkan <strong>Gambar 1.1</strong> di atas, Layar Beranda terbagi menjadi <strong>7 Zona Sorotan Utama</strong> yang diberi nomor penanda merah. Setiap zona memiliki peran operasional spesifik yang saling terhubung:</p>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th style="width:20%;">Zona Layar</th>
-                <th style="width:35%;">Nama Elemen</th>
-                <th style="width:45%;">Fungsi Utama</th>
+                <th style="width:12%; text-align:center;">Pin Sorotan</th>
+                <th style="width:24%;">Nama Zona Layar</th>
+                <th style="width:36%;">Komponen &amp; Cara Interaksi</th>
+                <th style="width:28%;">Fungsi Operasional &amp; Dampak</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Bilah Atas (Topbar)</strong></td>
-                <td>Navigasi Universal & Tombol Segarkan (🔄)</td>
-                <td>Menampilkan status modul aktif, tombol buka/tutup menu sidebar (☰), dan tombol sinkronisasi ulang data manual.</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
+                <td><strong>Bilah Atas (Topbar) &amp; Sinkronisasi</strong></td>
+                <td>Berisi tombol hamburger (<code>☰</code>), judul modul aktif, sub-judul status, dan tombol <strong>Segarkan (🔄)</strong>.</td>
+                <td>Memantau status aplikasi, melipat menu untuk memperluas layar kerja, serta menyegarkan data lokal langsung dari Supabase tanpa refresh browser.</td>
               </tr>
               <tr>
-                <td><strong>Bilah Atas Konten</strong></td>
-                <td>7 Kartu Statistik Kilat (Micro Stat Cards)</td>
-                <td>Ringkasan angka kunci: jumlah perusahaan, dokumen izin, personil, tender aktif, paket berjalan, surat keluar, dan peringatan overlap.</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
+                <td><strong>7 Kartu Statistik Kilat (Micro Stat Cards)</strong></td>
+                <td>7 kartu metrik: <code>🏢 Perusahaan</code>, <code>📁 Dokumen</code>, <code>👷 Personil</code>, <code>📋 Tender</code>, <code>📦 Paket</code>, <code>✉️ Surat</code>, dan <code>⚠️ Overlap</code>. <em>Dapat diklik langsung!</em></td>
+                <td>Memberikan ikhtisar instan seluruh aset perusahaan. Jika ada bentrok personil, kartu Overlap langsung menyala <strong>merah</strong> dan saat diklik langsung membuka Gantt Chart.</td>
               </tr>
               <tr>
-                <td><strong>Area Tengah (Grid 2:1)</strong></td>
-                <td>Jadwal Tender Terdekat & Pusat Perhatian</td>
-                <td>Tabel tenggat waktu lelang dalam 30 hari ke depan serta kotak peringatan dokumen kedaluwarsa & arsip paket per tahun.</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
+                <td><strong>Jadwal Tender Terdekat (Countdown 30 Hari)</strong></td>
+                <td>Tabel prioritas tender aktif berurutan berdasarkan sisa waktu penutupan (Countdown). Dilengkapi badge warna (Merah, Oranye, Kuning). Klik baris untuk buka lelang.</td>
+                <td>Mencegah keterlambatan upload berkas penawaran SPSE atau menghadiri jadwal pembuktian kualifikasi lelang.</td>
               </tr>
               <tr>
-                <td><strong>Area Bawah (Grid 1:1)</strong></td>
-                <td>Rekap SKK Personil & Sebaran Lokasi Tender</td>
-                <td>Lipatan interaktif (accordion) sertifikat keahlian tenaga ahli dan filter cepat lelang per kabupaten/kota.</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
+                <td><strong>Pusat Perhatian &amp; Early Warning</strong></td>
+                <td>Panel peringatan dokumen legalitas/sertifikat yang akan kedaluwarsa dalam <code>≤ 1 Hari</code>, <code>≤ 7 Hari</code>, <code>≤ 14 Hari</code>, dan <code>≤ 30 Hari</code>. Klik badge untuk perpanjangan.</td>
+                <td>Menjaga kepatuhan hukum dan kualifikasi izin usaha (SBU/IUJK/NIB) agar tidak gugur saat evaluasi kualifikasi tender LKPP.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[5]</span></td>
+                <td><strong>Arsip Paket Berjalan</strong></td>
+                <td>Daftar ringkasan jumlah paket supervisi/perencanaan yang sedang dikerjakan per tahun anggaran (badge hijau). Klik badge untuk filter proyek.</td>
+                <td>Navigasi cepat menuju pengawasan fisik, rekap progres bulanan, dan invoice penagihan termin (MC) proyek yang aktif.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[6]</span></td>
+                <td><strong>Rekapitulasi SKK Personil &amp; Wilayah Tender</strong></td>
+                <td>Panel lipatan (accordion) sertifikat keahlian tenaga ahli (Madya, Muda, Utama) dan chip sebaran lokasi lelang (contoh: Kab. Tanah Datar). Klik chip untuk profil/filter.</td>
+                <td>Memudahkan estimator mencocokkan ketersediaan tenaga ahli bersertifikat sesuai KAK tender tanpa harus membuka database personil satu-per-satu.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[7]</span></td>
+                <td><strong>Bilah Navigasi Samping &amp; Dock Utilitas</strong></td>
+                <td>Sidebar daftar menu 17 modul terpadu beserta dock utilitas di bagian bawah: Catatan Sandi (<code>📝</code>), Kalender Hari Kerja (<code>📅</code>), Tanda Tangan (<code>✍️</code>), Stempel (<code>💮</code>), dan Tema (<code>◐</code>).</td>
+                <td>Pusat perpindahan antar modul kerja serta alat bantu darurat saat pengisian portal SPSE atau penghitungan masa kontrak kerja (SPMK).</td>
               </tr>
             </tbody>
           </table>
