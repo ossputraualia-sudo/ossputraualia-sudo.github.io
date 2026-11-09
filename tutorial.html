@@ -640,44 +640,219 @@
         </div>
       </section>
 
-      <!-- 1. DASHBOARD -->
+            <!-- 1. DASHBOARD -->
       <section class="module-card" id="dashboard">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📊</div>
             <div class="module-titles">
-              <h3>Modul 1: Dashboard Eksekutif</h3>
-              <div class="module-sub">Ringkasan Portofolio, Statistik Keuangan, Tender Aktif & Peringatan Dini</div>
+              <h3>Modul 1: Beranda & Dashboard Eksekutif</h3>
+              <div class="module-sub">Pusat Komando Operasional, Statistik Real-Time, Radar Lelang & Early Warning System</div>
             </div>
           </div>
-          <span class="module-tag">MODUL UTAMA</span>
+          <span class="module-tag">HALAMAN UTAMA</span>
         </div>
 
         <p>
-          Dashboard adalah pusat komando bagi Direksi, Pimpinan Cabang, dan Project Manager untuk melihat gambaran umum kesehatan proyek, batas waktu tender, ketersediaan personil, dan masa berlaku sertifikat legalitas.
+          <strong>Halaman Beranda (Dashboard)</strong> adalah pintu masuk utama sistem yang berfungsi sebagai pusat kendali eksekutif (<em>Executive Command Center</em>) bagi Direksi, Pimpinan Cabang, Koordinator Proyek, dan Staf Administrasi. Beranda dirancang dengan prinsip kerja <em>Zero-Delay</em> (tampil seketika 0 milidetik dari snapshot memori lokal) dan otomatis memperbarui data terbaru di latar belakang melalui mesin <strong>Supabase Direct Engine</strong>.
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">🎯</span> Fungsi & Fitur Utama:</div>
-        <ul class="step-list">
-          <li class="step-item">
-            <strong>Widget Statistik Finansial:</strong>
-            Menampilkan total nilai kontrak aktif, realisasi penarikan keuangan, dan sisa piutang berjalan secara real-time.
-          </li>
-          <li class="step-item">
-            <strong>Radar Status Tender:</strong>
-            Menampilkan tender yang sedang diikuti beserta hitung mundur (*countdown*) waktu unggah dokumen penawaran.
-          </li>
-          <li class="step-item">
-            <strong>Early Warning System (Peringatan Dini):</strong>
-            Memberikan notifikasi warna merah/kuning bila ada masa berlaku SKA/SKK personil atau SBU perusahaan yang akan habis dalam waktu kurang dari 60 hari.
-          </li>
-        </ul>
+        <!-- ANATOMI LAYAR BERANDA -->
+        <div class="sub-title"><span class="sub-title-icon">🧭</span> Anatomi & Pembagian Zona Layar Beranda:</div>
+        <p>Layar Beranda terbagi menjadi 4 zona utama yang terintegrasi secara dinamis:</p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:20%;">Zona Layar</th>
+                <th style="width:35%;">Nama Elemen</th>
+                <th style="width:45%;">Fungsi Utama</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Bilah Atas (Topbar)</strong></td>
+                <td>Navigasi Universal & Tombol Segarkan (🔄)</td>
+                <td>Menampilkan status modul aktif, tombol buka/tutup menu sidebar (☰), dan tombol sinkronisasi ulang data manual.</td>
+              </tr>
+              <tr>
+                <td><strong>Bilah Atas Konten</strong></td>
+                <td>7 Kartu Statistik Kilat (Micro Stat Cards)</td>
+                <td>Ringkasan angka kunci: jumlah perusahaan, dokumen izin, personil, tender aktif, paket berjalan, surat keluar, dan peringatan overlap.</td>
+              </tr>
+              <tr>
+                <td><strong>Area Tengah (Grid 2:1)</strong></td>
+                <td>Jadwal Tender Terdekat & Pusat Perhatian</td>
+                <td>Tabel tenggat waktu lelang dalam 30 hari ke depan serta kotak peringatan dokumen kedaluwarsa & arsip paket per tahun.</td>
+              </tr>
+              <tr>
+                <td><strong>Area Bawah (Grid 1:1)</strong></td>
+                <td>Rekap SKK Personil & Sebaran Lokasi Tender</td>
+                <td>Lipatan interaktif (accordion) sertifikat keahlian tenaga ahli dan filter cepat lelang per kabupaten/kota.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
+        <!-- PENGENALAN SETIAP TOMBOL & ELEMEN -->
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Pengenalan Lengkap Setiap Tombol & Elemen Interaktif:</div>
+        <p>Berikut adalah rincian aksi dari seluruh tombol yang ada pada Beranda:</p>
+
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Tombol / Elemen</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja & Efek Klik</th>
+                <th style="width:24%;">Aksi Terkait</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tombol Hamburger (☰)</strong></td>
+                <td>Pojok Kiri Atas Topbar</td>
+                <td>Membuka atau melipat bilah navigasi samping (sidebar) agar ruang kerja tabel menjadi lebih lega.</td>
+                <td>Navigasi Responsif</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol Segarkan (🔄)</strong></td>
+                <td>Pojok Kanan Atas Topbar</td>
+                <td>Memaksa sistem melakukan pembaruan data terbaru (revalidasi cache) dari server Supabase dan Google Apps Script tanpa me-reload browser.</td>
+                <td>Penyegaran Data Instan</td>
+              </tr>
+              <tr>
+                <td><strong>Pencarian Cepat (<kbd>Ctrl+K</kbd>)</strong></td>
+                <td>Bagian Atas Sidebar</td>
+                <td>Membuka jendela pencarian global kilat untuk mencari nomor tender, nama tenaga ahli, nomor kontrak, atau dokumen legalitas.</td>
+                <td>Pencarian Universal</td>
+              </tr>
+              <tr>
+                <td><strong>Kartu Statistik (7 Kartu)</strong><br><code>🏢 Perusahaan</code>, <code>📁 Dokumen</code>, <code>👷 Personil</code>, <code>📋 Tender</code>, <code>📦 Paket</code>, <code>✉️ Surat</code></td>
+                <td>Baris Teratas Beranda</td>
+                <td>Menampilkan angka kumulatif database. <strong>Setiap kartu dapat diklik</strong> untuk langsung berpindah ke modul bersangkutan dengan cepat.</td>
+                <td>Pintasan Antar Modul</td>
+              </tr>
+              <tr>
+                <td><strong>Kartu Peringatan <code>⚠️ Overlap</code></strong></td>
+                <td>Kartu Statistik ke-7</td>
+                <td>Jika bernilai <strong>0</strong>, berwarna hijau (jadwal aman). Jika bernilai <strong>&gt; 0</strong>, kartu otomatis berubah menjadi <strong>merah peringatan</strong>. Saat diklik, langsung membuka kalender Gantt Chart di modul Pantau Personil.</td>
+                <td>Peringatan Bentrok Audit BPK</td>
+              </tr>
+              <tr>
+                <td><strong>Baris Paket Tender</strong></td>
+                <td>Tabel "Jadwal Tender Terdekat"</td>
+                <td>Menampilkan hitung mundur batas upload/pembuktian. Mengklik baris paket langsung membuka berkas persiapan lelang tersebut di modul Data Tender.</td>
+                <td>Manajemen Tender</td>
+              </tr>
+              <tr>
+                <td><strong>Badge Dokumen Menjelang Kadaluarsa</strong></td>
+                <td>Panel "🚨 Pusat Perhatian"</td>
+                <td>Menampilkan badge warna berdasarkan sisa waktu (<code>≤ 1 Hari</code>, <code>≤ 7 Hari</code>, <code>≤ 14 Hari</code>, <code>≤ 30 Hari</code>). Saat diklik, langsung menuju tabel dokumen di modul Perusahaan untuk upload perpanjangan.</td>
+                <td>Audit Kepatuhan Izin</td>
+              </tr>
+              <tr>
+                <td><strong>Badge Arsip Paket Hijau</strong></td>
+                <td>Panel "📦 Arsip Paket Berjalan"</td>
+                <td>Menampilkan jumlah paket per tahun anggaran (contoh: <code>4 Paket</code> pada Tahun 2026). Mengklik badge langsung menyaring daftar proyek pada tahun tersebut.</td>
+                <td>Filter Kontrak Tahunan</td>
+              </tr>
+              <tr>
+                <td><strong>Panah Lipatan SKK (▶ / ▼)</strong></td>
+                <td>Panel "👷 Rekap SKK Personil"</td>
+                <td>Membuka lipatan (accordion) untuk menampilkan seluruh daftar nama personil pemegang sertifikat keahlian bersangkutan.</td>
+                <td>Eksplorasi Tenaga Ahli</td>
+              </tr>
+              <tr>
+                <td><strong>Chip Nama Personil Pemegang SKK</strong></td>
+                <td>Di Dalam Lipatan SKK</td>
+                <td>Setiap chip nama personil (contoh: <em>👤 Febriyanto, ST</em> dengan badge jenjang <code>MADYA</code>) dapat diklik untuk langsung membuka profil dan CV personil tersebut.</td>
+                <td>Inspeksi Portofolio Ahli</td>
+              </tr>
+              <tr>
+                <td><strong>Chip Lokasi Tender (📍 Wilayah)</strong></td>
+                <td>Panel "📋 Tender Aktif (Lokasi)"</td>
+                <td>Menampilkan lokasi sebaran tender (contoh: <code>📍 Kab. Tanah Datar (2)</code>). Mengklik chip langsung menyaring modul tender hanya untuk lokasi tersebut.</td>
+                <td>Filter Geografis Lelang</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol Mengambang (FAB 💬)</strong></td>
+                <td>Pojok Kanan Bawah Layar</td>
+                <td>Membuka Speed-Dial menu cepat untuk mengakses <strong>Pusat Tugas Staf (📋)</strong> dan <strong>PAG Messenger / Chat Antar Pengguna (💬)</strong>.</td>
+                <td>Komunikasi Internal</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SISTEM INDIKATOR WARNA PADA JADWAL TENDER -->
+        <div class="sub-title"><span class="sub-title-icon">🚦</span> Arti Warna Badge Jadwal Tender Terdekat (Countdown):</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:20%;">Warna Badge</th>
+                <th style="width:25%;">Keterangan Waktu</th>
+                <th style="width:55%;">Tindakan Wajib Staf</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="module-tag" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">🔴 MERAH DARURAT</span></td>
+                <td><strong>HARI INI s/d 3 Hari Lagi</strong></td>
+                <td>Prioritas Tertinggi! Dokumen penawaran atau berkas pembuktian kualifikasi harus sudah siap cetak / selesai diunggah ke portal SPSE.</td>
+              </tr>
+              <tr>
+                <td><span class="module-tag" style="background:#ffedd5; color:#c2410c; border-color:#fdba74;">🟠 ORANYE WASPADA</span></td>
+                <td><strong>4 s/d 7 Hari Lagi</strong></td>
+                <td>Penyelesaian RAB Inkindo, kelengkapan CV Tenaga Ahli, dan dokumen metode kerja harus sudah memasuki tahap review akhir.</td>
+              </tr>
+              <tr>
+                <td><span class="module-tag" style="background:#fef9c3; color:#a16207; border-color:#fde047;">🟡 KUNING PERSIAPAN</span></td>
+                <td><strong>8 s/d 30 Hari Lagi</strong></td>
+                <td>Tahap aanwijzing, pengumpulan dokumen kualifikasi mitra KSO, dan studi awal Kerangka Acuan Kerja (KAK).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PANDUAN PENGOPERASIAN SOP HARIAN -->
+        <div class="sub-title"><span class="sub-title-icon">📋</span> Prosedur Operasional Standar (SOP) Harian di Beranda:</div>
+        <ol class="step-list">
+          <li class="step-item">
+            <strong>Pemeriksaan Pagi (Pukul 08.00 WIB) - Audit Peringatan & Kesiapan:</strong>
+            Buka Beranda, periksa <strong>Kartu Overlap (⚠️)</strong> dan <strong>Pusat Perhatian (🚨)</strong>. Pastikan tidak ada sertifikat personil atau dokumen perusahaan berstatus <em>Lewat Tempo</em> atau <em>≤ 7 Hari</em>. Jika ditemukan, segera lakukan perpanjangan izin.
+          </li>
+          <li class="step-item">
+            <strong>Pemeriksaan Siang (Pukul 13.00 WIB) - Monitoring Batas Akhir Tender:</strong>
+            Tinjau panel <strong>Jadwal Tender Terdekat</strong>. Cek tender ber-badge merah atau oranye. Pastikan dokumen penawaran harga dan teknis sudah terunggah sebelum batas waktu penutupan SPSE.
+          </li>
+          <li class="step-item">
+            <strong>Pemeriksaan Sore (Pukul 17.00 WIB) - Verifikasi Penugasan & Penyegaran Data:</strong>
+            Klik tombol <strong>Segarkan (🔄)</strong> di pojok kanan atas untuk memastikan pembaruan data dari rekan staf lain telah tersinkronisasi. Pastikan tugas di menu FAB (📋) telah diselesaikan.
+          </li>
+        </ol>
+
+        <!-- STUDI KASUS NYATA -->
         <div class="case-box">
-          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
-          <div class="case-title">Pemeriksaan Kesiapan Lelang Pagi Hari oleh Tim Estimator</div>
+          <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
+          <div class="case-title">Pemeriksaan Rutin Pagi Hari oleh Tim Estimator & Admin Tender</div>
           <div class="case-content">
-            Setiap pagi pukul 08.00 WIB, staf administrasi membuka Dashboard. Terlihat indikator merah bahwa <em>SKA Ahli K3 Konstruksi (Ir. Handoko)</em> tersisa 25 hari lagi sebelum kedaluwarsa. Tim segera memproses perpanjangan di LPJK sebelum personil tersebut di-upload pada paket lelang pengawasan jembatan minggu depan.
+            <strong>Kondisi Lapangan:</strong><br>
+            Pukul 08.15 WIB, staf membuka Beranda aplikasi PT. Putra Aulia Group.<br>
+            1. Pada baris kartu statistik, terlihat <strong>⚠️ Overlap bernilai 1</strong> (berwarna merah lembut).<br>
+            2. Staf mengklik kartu tersebut dan langsung diarahkan ke modul <em>Pantau Personil</em>. Terlihat bahwa <strong>Ir. Handoko (Site Engineer)</strong> dijadwalkan bersamaan pada Proyek Jembatan TKD dan Proyek Jalan Lingkar di bulan Oktober.<br>
+            3. Di panel <em>Pusat Perhatian</em>, terdapat badge <code>≤ 7 Hari (1 Dokumen)</code>. Setelah diklik, sistem membuka modul <em>Perusahaan</em> yang menunjukkan bahwa <strong>SBU Jasa Pengawasan Transportasi</strong> akan kedaluwarsa dalam 5 hari.<br>
+            4. Di panel <em>Jadwal Tender Terdekat</em>, paket <strong>"Pengawasan Jalan Lintas Sumbar"</strong> ber-badge merah (<code>HARI INI - Batas Upload Penawaran Pukul 15.00 WIB</code>).<br><br>
+            <strong>Tindakan yang Berhasil Diambil:</strong><br>
+            Tim segera membagi tugas: satu admin memproses perpanjangan SBU, estimator mengganti personil pendamping agar tidak terjadi temuan audit BPK, dan admin tender menyelesaikan proses upload dokumen sebelum jam 15.00 WIB. Seluruh risiko kegagalan lelang berhasil dicegah hanya dengan membaca informasi di Beranda selama 2 menit!
+          </div>
+        </div>
+
+        <div class="alert-callout alert-tip">
+          <div>
+            ⚡ <strong>Tips Produktivitas Beranda:</strong><br>
+            Gunakan kombinasi tombol keyboard <kbd>Ctrl + K</kbd> di Beranda untuk mencari data tanpa harus membuka menu satu-per-satu. Anda juga dapat menggunakan alat bantu cepat di pojok kiri bawah (Dock Tools) untuk membuka catatan sandi SPSE atau menghitung durasi SPMK tanpa perlu keluar dari Beranda.
           </div>
         </div>
       </section>
