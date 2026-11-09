@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Buku Panduan & SOP Operasional Sistem - PT. Putra Aulia Group</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="./icon-192.png">
+
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-light: #ccfbf1;
+      --primary-border: #99f6e4;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+      --accent-dark: #b45309;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --info: #0284c7;
+      --info-light: #e0f2fe;
+      
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-sub: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-sub: #475569;
+      
+      --sidebar-w: 290px;
+      --header-h: 64px;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+      --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.1);
+    }
+
+    body.dark {
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-sub: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #cbd5e1;
+      --primary-light: #134e4a;
+      --primary-border: #115e59;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+      --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 15px; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* TOP NAVBAR HEADER */
+    .doc-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .brand-logo {
+      width: 38px; height: 38px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(15, 118, 110, 0.3);
+    }
+    .brand-text h1 { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.2; }
+    .brand-text p { font-size: 11.5px; color: var(--text-muted); font-weight: 600; }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .header-btn:hover {
+      background: var(--surface-sub);
+      border-color: var(--primary);
+    }
+    .header-btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .header-btn-primary:hover {
+      background: var(--primary-dark);
+      color: #ffffff;
+    }
+
+    /* SEARCH WRAPPER */
+    .search-wrap {
+      position: relative;
+      width: 280px;
+    }
+    .search-input {
+      width: 100%;
+      height: 36px;
+      padding: 0 12px 0 34px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--surface-sub);
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+    }
+    .search-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* MAIN LAYOUT */
+    .doc-layout {
+      display: flex;
+      padding-top: var(--header-h);
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR NAV */
+    .doc-sidebar {
+      width: var(--sidebar-w);
+      height: calc(100vh - var(--header-h));
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 20px 14px 40px;
+      z-index: 900;
+    }
+    .doc-sidebar::-webkit-scrollbar { width: 5px; }
+    .doc-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+    .nav-group-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin: 18px 10px 8px;
+    }
+    .nav-list { list-style: none; }
+    .nav-item { margin-bottom: 2px; }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7.5px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .nav-link:hover {
+      background: var(--surface-sub);
+      color: var(--primary);
+    }
+    .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+    body.dark .nav-link.active {
+      background: var(--primary-dark);
+      color: #ffffff;
+    }
+    .nav-link-icon { font-size: 15px; min-width: 18px; text-align: center; }
+
+    /* CONTENT WRAPPER */
+    .doc-content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 36px 48px 100px;
+      max-width: 1080px;
+    }
+
+    /* HERO BANNER */
+    .hero-banner {
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+      color: #ffffff;
+      padding: 36px;
+      border-radius: var(--radius);
+      margin-bottom: 36px;
+      box-shadow: 0 10px 25px rgba(15, 118, 110, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner::after {
+      content: 'P.A.G';
+      position: absolute;
+      right: 20px;
+      bottom: -15px;
+      font-size: 110px;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+    }
+    .hero-banner h2 { font-size: 26px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .hero-banner p { font-size: 14.5px; opacity: 0.92; max-width: 720px; line-height: 1.6; }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .hero-pill {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* MODULE SECTION STYLING */
+    .module-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 36px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: calc(var(--header-h) + 20px);
+      position: relative;
+    }
+    .module-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+    .module-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .module-icon {
+      width: 44px; height: 44px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    body.dark .module-icon {
+      background: var(--surface-sub);
+      color: #2dd4bf;
+    }
+    .module-titles h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+    .module-titles .module-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .module-tag {
+      padding: 4px 10px;
+      background: var(--surface-sub);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* SECTION SUBHEADINGS */
+    .sub-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sub-title-icon { font-size: 16px; }
+
+    /* STEPS LIST */
+    .step-list {
+      list-style: none;
+      counter-reset: doc-step;
+      margin: 14px 0 20px;
+    }
+    .step-item {
+      position: relative;
+      padding-left: 36px;
+      margin-bottom: 14px;
+      font-size: 13.5px;
+      color: var(--text-sub);
+    }
+    .step-item::before {
+      counter-increment: doc-step;
+      content: counter(doc-step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 24px;
+      height: 24px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-item strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 2px;
+      font-size: 14px;
+    }
+
+    /* REAL CASE STUDY BOX */
+    .case-box {
+      background: #f0fdfa;
+      border: 1.5px solid var(--primary-border);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin: 20px 0;
+      position: relative;
+    }
+    body.dark .case-box {
+      background: #0f2926;
+      border-color: #115e59;
+    }
+    .case-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .case-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    body.dark .case-title { color: #5eead4; }
+    .case-content {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* CALLOUT ALERT BOXES */
+    .alert-callout {
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      line-height: 1.55;
+    }
+    .alert-tip { background: var(--success-light); border-left: 4px solid var(--success); color: #065f46; }
+    .alert-warn { background: var(--accent-light); border-left: 4px solid var(--accent); color: #92400e; }
+    .alert-info { background: var(--info-light); border-left: 4px solid var(--info); color: #075985; }
+    body.dark .alert-tip { background: #064e3b; color: #a7f3d0; }
+    body.dark .alert-warn { background: #451a03; color: #fde68a; }
+    body.dark .alert-info { background: #0c4a6e; color: #bae6fd; }
+
+    /* CODE & KEYBOARD */
+    kbd {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--surface-sub);
+      border: 1px solid var(--border);
+      border-bottom-width: 2px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text);
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: var(--surface-sub);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--primary);
+    }
+
+    /* TABLE FORMATTING */
+    .table-responsive {
+      overflow-x: auto;
+      margin: 16px 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+    .doc-table th {
+      background: var(--surface-sub);
+      padding: 10px 14px;
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .doc-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-sub);
+    }
+    .doc-table tr:last-child td { border-bottom: none; }
+
+    /* FOOTER */
+    .doc-footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* MOBILE RESPONSIVE */
+    .menu-toggle {
+      display: none;
+      font-size: 22px;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+    }
+    @media (max-width: 900px) {
+      .menu-toggle { display: block; }
+      .doc-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+      }
+      .doc-sidebar.open {
+        transform: translateX(0);
+        box-shadow: 20px 0 40px rgba(0,0,0,0.2);
+      }
+      .doc-content {
+        margin-left: 0;
+        padding: 20px 16px 60px;
+      }
+      .search-wrap { display: none; }
+      .hero-banner { padding: 24px; }
+      .hero-banner h2 { font-size: 20px; }
+      .module-card { padding: 20px; }
+    }
+
+    /* PRINT MEDIA STYLES FOR PDF SOP EXPORT */
+    @media print {
+      body { background: #fff !important; color: #000 !important; font-size: 11pt; }
+      .doc-header, .doc-sidebar, .header-actions, .menu-toggle, .search-wrap, #btnThemeToggle, .hero-badges { display: none !important; }
+      .doc-content { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+      .module-card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin-bottom: 30px;
+        padding: 20px !important;
+      }
+      .hero-banner {
+        background: #0f766e !important;
+        color: #fff !important;
+        page-break-after: avoid;
+      }
+      .case-box { border: 1px solid #0f766e !important; background: #fafafa !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER NAVBAR -->
+  <header class="doc-header">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <button class="menu-toggle" id="btnToggleNav" onclick="toggleNav()" aria-label="Toggle Navigation">☰</button>
+      <a href="./tutorial.html" class="brand-group">
+        <div class="brand-logo">PAG</div>
+        <div class="brand-text">
+          <h1>PT. PUTRA AULIA GROUP</h1>
+          <p>Buku Panduan & SOP Operasional Sistem</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- PENCARIAN CEPAT -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="docSearchInput" class="search-input" placeholder="Cari modul, menu, cara input..." onkeyup="filterDocs()">
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="header-btn" id="btnThemeToggle" onclick="toggleTheme()" title="Ubah Tema Gelap/Terang">
+        <span id="themeIcon">◐</span> Tema
+      </button>
+      <button type="button" class="header-btn" onclick="window.print()" title="Cetak Dokumen atau Simpan PDF">
+        🖨️ Cetak / PDF
+      </button>
+      <a href="./index.html" class="header-btn header-btn-primary" title="Buka Aplikasi Web">
+        🚀 Masuk Aplikasi
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <div class="doc-layout">
+
+    <!-- SIDEBAR NAVIGASI DAFTAR ISI -->
+    <aside class="doc-sidebar" id="docSidebar">
+      <div class="nav-group-title">Navigasi Utama</div>
+      <ul class="nav-list">
+        <li class="nav-item"><a href="#pengantar" class="nav-link active"><span class="nav-link-icon">📌</span> Pengantar & Standar</a></li>
+      </ul>
+
+      <div class="nav-group-title">Modul Operasional</div>
+      <ul class="nav-list">
+        <li class="nav-item"><a href="#dashboard" class="nav-link"><span class="nav-link-icon">📊</span> 1. Dashboard</a></li>
+        <li class="nav-item"><a href="#perusahaan" class="nav-link"><span class="nav-link-icon">🏢</span> 2. Perusahaan & KSO</a></li>
+        <li class="nav-item"><a href="#portofolio" class="nav-link"><span class="nav-link-icon">📈</span> 3. Data Pengalaman (SIKAP)</a></li>
+        <li class="nav-item"><a href="#radartender" class="nav-link"><span class="nav-link-icon">📡</span> 4. Radar SPSE & WA Bot</a></li>
+        <li class="nav-item"><a href="#tender" class="nav-link"><span class="nav-link-icon">📋</span> 5. Tender & Evaluasi</a></li>
+        <li class="nav-item"><a href="#dokumenpq" class="nav-link"><span class="nav-link-icon">📑</span> 6. PQ Anggota KSO</a></li>
+        <li class="nav-item"><a href="#personil" class="nav-link"><span class="nav-link-icon">👷</span> 7. Personil & CV Otomatis</a></li>
+        <li class="nav-item"><a href="#kaktanggapan" class="nav-link"><span class="nav-link-icon">🤖</span> 8. AI KAK & Tanggapan</a></li>
+        <li class="nav-item"><a href="#rab" class="nav-link"><span class="nav-link-icon">💰</span> 9. Pembuat RAB 9 Tab</a></li>
+        <li class="nav-item"><a href="#paket" class="nav-link"><span class="nav-link-icon">📦</span> 10. Paket Berjalan</a></li>
+        <li class="nav-item"><a href="#invoice" class="nav-link"><span class="nav-link-icon">🧾</span> 11. Invoice & Lembar MC</a></li>
+        <li class="nav-item"><a href="#pantaupersonil" class="nav-link"><span class="nav-link-icon">👥</span> 12. Pantau Jadwal Personil</a></li>
+        <li class="nav-item"><a href="#surat" class="nav-link"><span class="nav-link-icon">✉️</span> 13. Master Surat</a></li>
+        <li class="nav-item"><a href="#bankref" class="nav-link"><span class="nav-link-icon">🏛️</span> 14. Bank Referensi</a></li>
+        <li class="nav-item"><a href="#pengaturan" class="nav-link"><span class="nav-link-icon">⚙️</span> 15. Pengaturan & Hak Akses</a></li>
+      </ul>
+
+      <div class="nav-group-title">Utilitas Tambahan</div>
+      <ul class="nav-list">
+        <li class="nav-item"><a href="#docktools" class="nav-link"><span class="nav-link-icon">🛠️</span> 16. Sidebar Dock Tools</a></li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="doc-content">
+
+      <!-- HERO BANNER -->
+      <section class="hero-banner" id="pengantar">
+        <h2>Buku Manual Operasional Sistem (SOP)</h2>
+        <p>
+          Dokumentasi resmi dan panduan langkah-demi-langkah pengoperasian aplikasi terpadu manajemen administrasi, pengadaan (SPSE), remunerasi tenaga ahli (INKINDO), dan penagihan termin (MC PU) PT. PUTRA AULIA GROUP.
+        </p>
+        <div class="hero-badges">
+          <span class="hero-pill">🏷️ Versi Sistem: v2.4 (Enterprise)</span>
+          <span class="hero-pill">🏛️ Standar: Permen PUPR & INKINDO</span>
+          <span class="hero-pill">⚡ Engine: Supabase Direct & GAS Microservice</span>
+          <span class="hero-pill">📱 PWA: Siap Digunakan di Laptop, Tablet & HP</span>
+        </div>
+      </section>
+
+      <!-- 1. DASHBOARD -->
+      <section class="module-card" id="dashboard">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">📊</div>
+            <div class="module-titles">
+              <h3>Modul 1: Dashboard Eksekutif</h3>
+              <div class="module-sub">Ringkasan Portofolio, Statistik Keuangan, Tender Aktif & Peringatan Dini</div>
+            </div>
+          </div>
+          <span class="module-tag">MODUL UTAMA</span>
+        </div>
+
+        <p>
+          Dashboard adalah pusat komando bagi Direksi, Pimpinan Cabang, dan Project Manager untuk melihat gambaran umum kesehatan proyek, batas waktu tender, ketersediaan personil, dan masa berlaku sertifikat legalitas.
+        </p>
+
+        <div class="sub-title"><span class="sub-title-icon">🎯</span> Fungsi & Fitur Utama:</div>
+        <ul class="step-list">
+          <li class="step-item">
+            <strong>Widget Statistik Finansial:</strong>
+            Menampilkan total nilai kontrak aktif, realisasi penarikan keuangan, dan sisa piutang berjalan secara real-time.
+          </li>
+          <li class="step-item">
+            <strong>Radar Status Tender:</strong>
+            Menampilkan tender yang sedang diikuti beserta hitung mundur (*countdown*) waktu unggah dokumen penawaran.
+          </li>
+          <li class="step-item">
+            <strong>Early Warning System (Peringatan Dini):</strong>
+            Memberikan notifikasi warna merah/kuning bila ada masa berlaku SKA/SKK personil atau SBU perusahaan yang akan habis dalam waktu kurang dari 60 hari.
+          </li>
+        </ul>
+
+        <div class="case-box">
+          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
+          <div class="case-title">Pemeriksaan Kesiapan Lelang Pagi Hari oleh Tim Estimator</div>
+          <div class="case-content">
+            Setiap pagi pukul 08.00 WIB, staf administrasi membuka Dashboard. Terlihat indikator merah bahwa <em>SKA Ahli K3 Konstruksi (Ir. Handoko)</em> tersisa 25 hari lagi sebelum kedaluwarsa. Tim segera memproses perpanjangan di LPJK sebelum personil tersebut di-upload pada paket lelang pengawasan jembatan minggu depan.
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. DATA PERUSAHAAN & KSO -->
+      <section class="module-card" id="perusahaan">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">🏢</div>
+            <div class="module-titles">
+              <h3>Modul 2: Data Perusahaan & KSO (Konsorsium)</h3>
+              <div class="module-sub">Manajemen Badan Usaha, Legalitas, Rekening Bank, Kop Surat & Kemitraan KSO</div>
+            </div>
+          </div>
+          <span class="module-tag">DATA MASTER</span>
+        </div>
+
+        <p>
+          Modul ini mengelola seluruh identitas badan usaha yang dinaungi (misal: PT. PUTRA AULIA KONSULTAN, PT. RAISSA GEMILANG, CV mitra), lengkap dengan akta, NIB, NPWP, nomor rekening dinas, serta tanda tangan dan stempel digital resmi.
+        </p>
+
+        <div class="sub-title"><span class="sub-title-icon">📝</span> Langkah-Langkah Pengoperasian:</div>
+        <ol class="step-list">
+          <li class="step-item">
+            <strong>Mendaftarkan Perusahaan Baru:</strong>
+            Klik tombol <code>+ Tambah Perusahaan</code> di pojok kanan atas. Isi Nama Badan Usaha, Bentuk Usaha (PT/CV), Nomor NPWP 16 Digit, dan Alamat Domisili Resmi.
+          </li>
+          <li class="step-item">
+            <strong>Mengatur Rekening Bank Penerima:</strong>
+            Pilih nama bank (contoh: <em>Bank Nagari Cabang Utama Padang</em>), masukkan nomor rekening dan nama pemilik rekening persis sesuai buku tabungan.
+          </li>
+          <li class="step-item">
+            <strong>Mengatur KSO (Kemitraan/Konsorsium):</strong>
+            Bila mengikuti tender secara konsorsium, klik tab <em>Kemitraan KSO</em>. Tentukan <strong>Lead Firm</strong> (Pemimpin KSO) dan <strong>Partner Firm</strong> (Anggota), lalu masukkan pembagian porsi saham (misal: 70% Lead : 30% Partner).
+          </li>
+          <li class="step-item">
+            <strong>Upload Kop Surat & Pengesahan Digital:</strong>
+            Unggah logo kop surat resolusi tinggi, pindaian stempel berlatar transparan (.png), dan tanda tangan direktur untuk dicetak otomatis pada dokumen invoice/surat.
+          </li>
+        </ol>
+
+        <div class="case-box">
+          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
+          <div class="case-title">Penyusunan Perjanjian Kemitraan KSO Proyek PUPR</div>
+          <div class="case-content">
+            Pada tender <em>Pengawasan Pembangunan Gedung Rumah Sakit</em> senilai Rp 800 Juta, disepakati KSO antara <strong>PT. PUTRA AULIA KONSULTAN (Lead Firm 65%)</strong> dan <strong>PT. RAISSA GEMILANG (Anggota 35%)</strong>. Dengan memasukkan data ini di Modul Perusahaan, saat membuat invoice atau surat permohonan penagihan, kop surat, nomor rekening bersama, dan pembagian hak tagih otomatis tersinkronisasi tanpa salah hitung.
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. PORTOFOLIO SIKAP -->
+      <section class="module-card" id="portofolio">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">📈</div>
+            <div class="module-titles">
+              <h3>Modul 3: Data Pengalaman (Portofolio SIKAP)</h3>
+              <div class="module-sub">Rekam Jejak Kontrak Selesai, Nilai KD, FHO/BAST & Sinkronisasi SIKAP LKPP</div>
+            </div>
+          </div>
+          <span class="module-tag">KUALIFIKASI TENDER</span>
+        </div>
+
+        <p>
+          Berfungsi menyimpan seluruh riwayat pengalaman kontrak perusahaan yang telah selesai 100% (dilengkapi Berita Acara Serah Terima / BAST / FHO). Data ini menjadi dasar perhitungan <strong>Kemampuan Dasar (KD)</strong> pada tender kualifikasi menengah dan besar.
+        </p>
+
+        <div class="alert-callout alert-tip">
+          <div>💡 <strong>Tips Penting KD:</strong> Nilai KD dihitung sebesar <code>3 x Nilai Kontrak Tertinggi</code> dalam 10 tahun terakhir untuk sub-bidang pengawasan/perencanaan yang sejenis. Pastikan selalu melampirkan file PDF BAST akhir pada setiap entri pengalaman.</div>
+        </div>
+      </section>
+
+      <!-- 4. RADAR TENDER & WA BOT -->
+      <section class="module-card" id="radartender">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">📡</div>
+            <div class="module-titles">
+              <h3>Modul 4: Radar SPSE & Forwarder WhatsApp</h3>
+              <div class="module-sub">Scraping Paket LPSE Otomatis & Notifikasi Resmi Email SPSE ke WhatsApp Group</div>
+            </div>
+          </div>
+          <span class="module-tag">INTEGRASI BOT</span>
+        </div>
+
+        <p>
+          Modul ini bekerja tanpa henti (24/7) memantau tender jasa konsultansi di portal SPSE wilayah Sumatera Barat, Riau, Jambi, kementerian pusat, serta meneruskan email pemberitahuan SPSE (undangan pembuktian, perubahan jadwal, pengumuman pemenang) langsung ke grup WhatsApp kantor (<code>PT. PA - SUMBAR</code>).
+        </p>
+
+        <div class="sub-title"><span class="sub-title-icon">🛡️</span> Sistem Proteksi Anti-Spam:</div>
+        <p>
+          Sistem dilengkapi pelindung cerdas yang secara ketat membedakan email resmi pemerintah dengan iklan komersial. Email iklan pihak ketiga seperti <code>info@tenderid.com</code> atau promosi lelang berbayar <strong>otomatis dibuang</strong>, sehingga grup WhatsApp hanya menerima pengumuman resmi berkepentingan tinggi dengan badge <code>[PRIORITAS UTAMA] SPSE INAPROC</code> dari domain <code>.go.id</code> atau <code>inaproc.id</code>.
+        </p>
+
+        <div class="case-box">
+          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
+          <div class="case-title">Pemberitahuan Kilat Undangan Pembuktian Kualifikasi</div>
+          <div class="case-content">
+            Pokja UKPBJ mengirim email undangan pembuktian kualifikasi tender Pengawasan Jalan pada pukul 21.15 WIB. Dalam waktu 90 detik, bot WhatsApp meneruskan ringkasan paket, batas waktu hadir, serta dokumen yang harus dibawa langsung ke grup WA direksi, memungkinkan tim segera menyiapkan berkas fisik malam itu juga tanpa terlewat.
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. DATA TENDER -->
+      <section class="module-card" id="tender">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">📋</div>
+            <div class="module-titles">
+              <h3>Modul 5: Data Tender & Evaluasi Penawaran</h3>
+              <div class="module-sub">Manajemen Tahapan Lelang, HPS, Penawaran Harga & Simulasi Evaluasi Teknis</div>
+            </div>
+          </div>
+          <span class="module-tag">PRA-KONTRAK</span>
+        </div>
+
+        <p>
+          Mengawal seluruh tahapan tender dari pengumuman, penjelasan dokumen (aanwijzing), penyusunan harga penawaran terhadap HPS, hingga pembuktian kualifikasi dan masa sanggah.
+        </p>
+
+        <div class="sub-title"><span class="sub-title-icon">📊</span> Fitur Evaluasi Harga Penawaran:</div>
+        <p>
+          Sistem menyediakan kalkulator otomatis persentase penawaran. Anda cukup memasukkan Nilai HPS (misal: Rp 200.000.000) dan target persentase (misal: 92.5%), sistem akan otomatis menghitung nilai penawaran bersih beserta rincian PPN 11% yang tepat hingga ke satuan rupiah terbulatkan.
+        </p>
+      </section>
+
+      <!-- 6. DOKUMEN PQ -->
+      <section class="module-card" id="dokumenpq">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">📑</div>
+            <div class="module-titles">
+              <h3>Modul 6: Dokumen PQ Anggota KSO</h3>
+              <div class="module-sub">Pemberkasan Kualifikasi Kemitraan, Surat Pernyataan & Lampiran SPSE</div>
+            </div>
+          </div>
+          <span class="module-tag">DOKUMEN KSO</span>
+        </div>
+
+        <p>
+          Mempermudah pengumpulan dokumen kualifikasi (Prakualifikasi / PQ) bagi mitra KSO. Sistem menyediakan checklist lengkap: Formulir Kualifikasi, Pakta Integritas, Surat Kuasa KSO, serta surat pernyataan bebas sanksi daftar hitam (*blacklist*).
+        </p>
+      </section>
+
+      <!-- 7. PERSONIL & CV GENERATOR -->
+      <section class="module-card" id="personil">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">👷</div>
+            <div class="module-titles">
+              <h3>Modul 7: Data Personil & Generator CV Standar Tender</h3>
+              <div class="module-sub">Bank Data Tenaga Ahli, SKA/SKK, Ijazah, Riwayat Kerja & Ekspor CV INKINDO</div>
+            </div>
+          </div>
+          <span class="module-tag">SDM TEKNIK</span>
+        </div>
+
+        <p>
+          Menyimpan seluruh profil Tenaga Ahli (Site Engineer, Highway Engineer, Ahli Struktur, Ahli K3) dan Tenaga Pendukung (Inspector, Surveyor, CAD Drafter, Admin). 
+        </p>
+
+        <div class="sub-title"><span class="sub-title-icon">⚡</span> Keunggulan Generator CV Otomatis:</div>
+        <p>
+          Tidak perlu lagi mengedit file Microsoft Word berulang-ulang untuk setiap tender! Cukup pilih nama personil dan posisi yang ditawarkan, klik <code>📄 Generate CV Tender</code>. Sistem akan menyusun Curriculum Vitae lengkap berstandar <strong>Format INKINDO / LPSE</strong> yang memuat:
+        </p>
+        <ul class="step-list">
+          <li class="step-item">Data Pribadi, Nomor KTP, NPWP, dan Status Kepegawaian (Tetap/Tidak Tetap).</li>
+          <li class="step-item">Pendidikan Terakhir & Tahun Kelulusan.</li>
+          <li class="step-item">Daftar Sertifikat Keahlian Kerja (SKK/SKA) yang masih aktif beserta masa berlakunya.</li>
+          <li class="step-item">Tabel Pengalaman Kerja Proyek Sejenis (Uraian Tugas, Pengguna Jasa, Nilai Kontrak, Waktu Penugasan).</li>
+          <li class="step-item">Tanda Tangan Asli Personil & Pernyataan Kesediaan Ditugaskan.</li>
+        </ul>
+
+        <div class="case-box">
+          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
+          <div class="case-title">Penyusunan Berkas Tenaga Ahli Tender Jalan Raya</div>
+          <div class="case-content">
+            Untuk paket pengawasan jalan, dibutuhkan <em>Site Engineer</em> dengan pengalaman minimal 3 tahun. Di Modul Personil, Anda menyaring tenaga ahli berijazah S1 Teknik Sipil dan memiliki SKK Ahli Madya Teknik Jalan. Pilih <em>Febriyanto, ST</em>, centang 5 proyek jalan terbaiknya dalam 4 tahun terakhir, lalu klik unduh. Dokumen CV 6 halaman format resmi langsung tercipta rapi siap upload ke SPSE.
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. AI KAK & TANGGAPAN DOKUMEN -->
+      <section class="module-card" id="kaktanggapan">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">🤖</div>
+            <div class="module-titles">
+              <h3>Modul 8: AI KAK & Tanggapan Dokumen Pengadaan</h3>
+              <div class="module-sub">Ekstraksi Dokumen KAK, Analisis Lingkup Tugas & Generator Proposal Teknis Otomatis</div>
+            </div>
+          </div>
+          <span class="module-tag">AI INTELLIGENCE</span>
+        </div>
+
+        <p>
+          Modul kecerdasan buatan (AI) yang dirancang khusus untuk membedah Kerangka Acuan Kerja (KAK) dari Pejabat Pembuat Komitmen (PPK). 
+        </p>
+
+        <div class="sub-title"><span class="sub-title-icon">🚀</span> Output yang Dihasilkan AI:</div>
+        <ul class="step-list">
+          <li class="step-item"><strong>Bab Pendekatan & Metodologi Pelaksanaan:</strong> Alur teknis pengawasan/perencanaan sesuai standar SNI dan Bina Marga.</li>
+          <li class="step-item"><strong>Bab Tanggapan Terhadap KAK:</strong> Saran dan masukan profesional terhadap ruang lingkup dinas.</li>
+          <li class="step-item"><strong>Uraian Tugas Personil & Struktur Organisasi:</strong> Matriks penugasan Site Engineer, Inspector, dan Laboratorium.</li>
+          <li class="step-item"><strong>Jadwal Pelaksanaan Pekerjaan (Kurva S Rencana Kerja).</strong></li>
+        </ul>
+      </section>
+
+      <!-- 9. PEMBUAT RAB 9 TAB -->
+      <section class="module-card" id="rab">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">💰</div>
+            <div class="module-titles">
+              <h3>Modul 9: Pembuat RAB Konsultansi 9 Tab Standar INKINDO</h3>
+              <div class="module-sub">Penyusunan Rencana Anggaran Biaya Billing Rate, Operasional, Non-Personil & Rekapitulasi Cetak</div>
+            </div>
+          </div>
+          <span class="module-tag">ESTIMASI BIAYA</span>
+        </div>
+
+        <p>
+          Modul penyusunan anggaran biaya jasa konsultansi terlengkap dengan arsitektur 9 Tab sesuai Pedoman Standar Biaya Remunerasi INKINDO dan Kementerian PUPR:
+        </p>
+
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th>Tab</th>
+                <th>Nama Tab</th>
+                <th>Uraian Pengisian</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tab 1</strong></td>
+                <td>Rekapitulasi Total</td>
+                <td>Ringkasan Biaya Personil (Billing Rate) + Biaya Non-Personil + PPN 11% + Pembulatan Resmi.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 2</strong></td>
+                <td>Remunerasi Tenaga Ahli</td>
+                <td>Perhitungan Billing Rate Tenaga Ahli berdasarkan Provinsi, Tahun Pengalaman, dan Orang-Bulan (OB).</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 3</strong></td>
+                <td>Remunerasi Tenaga Pendukung</td>
+                <td>Gaji Inspector, Surveyor Lapangan, Operator CAD, Tenaga Administrasi Proyek.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 4</strong></td>
+                <td>Fasilitas & Sewa Kantor</td>
+                <td>Sewa Basecamp Lapangan, Komputer, Laptop, Printer, dan ATK Habis Pakai.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 5</strong></td>
+                <td>Sewa Kendaraan</td>
+                <td>Sewa Mobil Operasional (4x4 / MPV), Sepeda Motor Lapangan, Bahan Bakar & Pemeliharaan.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 6</strong></td>
+                <td>Biaya Pelaporan</td>
+                <td>Laporan Pendahuluan, Laporan Antara, Laporan Bulanan, Laporan Akhir & Album Dokumentasi.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 7</strong></td>
+                <td>Pertemuan & Sosialisasi</td>
+                <td>Biaya Rapat Koordinasi, Presentasi Laporan, FGD, dan Konsultasi Publik.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 8 & 9</strong></td>
+                <td>Analisa & Rekap Ekspor</td>
+                <td>Tampilan cetak formal standar tender dan tombol <code>Ekspor ke Excel (.xlsx)</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="case-box">
+          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
+          <div class="case-title">Penyusunan RAB Pengawasan Jembatan 4 Bulan (Rp 184 Juta)</div>
+          <div class="case-content">
+            Pada paket pengawasan jembatan di Kabupaten Tanah Datar dengan masa kerja 4 bulan:<br>
+            • <strong>Tab 2:</strong> 1 Site Engineer (4 OB @ Rp 20.295.800) = Rp 81.183.200.<br>
+            • <strong>Tab 3:</strong> 1 Inspector (4 OB @ Rp 10.000.000) + 1 CAD Drafter = Rp 68.700.000.<br>
+            • <strong>Tab 4-6:</strong> Fasilitas Kantor Rp 6.200.000, Sewa Kendaraan Rp 4.800.000, Pelaporan Rp 3.750.000.<br>
+            • <strong>Tab 1:</strong> Total Biaya Langsung Rp 164.633.200 + PPN 11% (Rp 18.109.652) = <strong>Rp 182.742.852 (Dibulatkan Rp 182.742.000)</strong>.<br>
+            Seluruh rumus matematika terhubung otomatis tanpa risiko rumus Excel terhapus!
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. DATA PAKET BERJALAN -->
+      <section class="module-card" id="paket">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">📦</div>
+            <div class="module-titles">
+              <h3>Modul 10: Data Paket Berjalan & Manajemen Kontrak</h3>
+              <div class="module-sub">Administrasi Proyek Menang, SPMK, Addendum Waktu/Biaya & Rekam Jejak Lapangan</div>
+            </div>
+          </div>
+          <span class="module-tag">PELAKSANAAN KONTRAK</span>
+        </div>
+
+        <p>
+          Tempat menyimpan data paket yang telah resmi berkontrak: Nomor Kontrak Dinas, Nomor SPMK, Tanggal Mulai dan Selesai, Pejabat Penandatangan (PPK / PPTK / Keduanya), dan riwayat <strong>Addendum Kontrak</strong>.
+        </p>
+
+        <div class="alert-callout alert-warn">
+          <div>⚠️ <strong>Penting Terkait Addendum:</strong> Jika terjadi perpanjangan waktu atau perubahan nilai kontrak di lapangan, selalu masukkan Addendum di modul ini terlebih dahulu agar saat mencetak Invoice, kolom <em>"Kontrak Setelah Addendum"</em> di Tab Rekapitulasi 12 Kolom otomatis terupdate.</div>
+        </div>
+      </section>
+
+      <!-- 11. PEMBUAT INVOICE & LEMBAR MC -->
+      <section class="module-card" id="invoice">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">🧾</div>
+            <div class="module-titles">
+              <h3>Modul 11: Pembuat Invoice & Lembar Penagihan MC (Monthly Certificate)</h3>
+              <div class="module-sub">Mesin Termin PU, Rekapitulasi 12 Kolom, Pengembalian Uang Muka Fleksibel & Format MC 3 Bagian</div>
+            </div>
+          </div>
+          <span class="module-tag">MODUL UNGGULAN</span>
+        </div>
+
+        <p>
+          Modul ini adalah jantung administrasi keuangan proyek konsultan, dirancang khusus untuk memenuhi standar penagihan dinas teknis (Dinas PUPR, Balai Wilayah Sungai, Balai Jalan Nasional).
+        </p>
+
+        <div class="sub-title"><span class="sub-title-icon">📑</span> Struktur Tiga Tab Invoice:</div>
+        <ul class="step-list">
+          <li class="step-item">
+            <strong>Tab 1: Data Umum Proyek & Kontrak:</strong>
+            Memuat identitas proyek, jangka waktu bulan, rekening bank penampung, pejabat penandatangan dinas (PPK, PPTK, atau Keduanya), pembulatan nominal, dan <strong>Pengaturan Skema Pengembalian Uang Muka</strong>.
+          </li>
+          <li class="step-item">
+            <strong>Tab 2: Rekapitulasi 12 Kolom Standar PUPR:</strong>
+            Menampilkan tabel kumulatif biaya: Kontrak Awal, Addendum, Realisasi s/d Bulan Lalu, Realisasi Bulan Ini, Total s/d Bulan Ini, dan Sisa Kontrak untuk setiap mata pembayaran.
+          </li>
+          <li class="step-item">
+            <strong>Tab 3: Lembar Penagihan MC Resmi 3 Bagian:</strong>
+            Lembar sertifikat penagihan yang dibagi menjadi 3 bagian bersih berjarak rapi:
+            <ol style="margin: 8px 0 0 20px;">
+              <li><strong>1. PENGEMBALIAN UANG MUKA:</strong> Plafon Uang Muka, Potongan s/d Bulan Lalu, Bulan Ini, s/d Bulan Ini, dan <em>Sisa Uang Muka (Wajib Rp 0 di Bulan Terakhir)</em>.</li>
+              <li><strong>2. REALISASI PRESTASI PEKERJAAN:</strong> Prestasi s/d Bulan Lalu, Bulan Ini, dan s/d Bulan Ini.</li>
+              <li><strong>3. PENARIKAN BULAN INI:</strong> Pembayaran Netto yang diterima konsultan beserta teks Terbilang Rupiah resmi.</li>
+            </ol>
+          </li>
+        </ul>
+
+        <div class="sub-title"><span class="sub-title-icon">⚙️</span> Fleksibilitas Pengembalian Uang Muka (Diatur di Tab 1):</div>
+        <p>
+          Sistem mendukung 4 skema pengembalian uang muka untuk mengakomodasi berbagai kondisi keuangan proyek di lapangan:
+        </p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th>Skema</th>
+                <th>Cara Kerja</th>
+                <th>Kapan Digunakan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Otomatis (20%)</strong></td>
+                <td>Memotong persis 20% dari nilai bruto tagihan setiap bulan.</td>
+                <td>Kondisi proyek normal sesuai proporsi progres.</td>
+              </tr>
+              <tr>
+                <td><strong>Tunda / Lewati (0%)</strong></td>
+                <td>Tidak ada potongan uang muka pada bulan tersebut (potongan Rp 0).</td>
+                <td>Bila progres lapangan minim atau disetujui PPK untuk tidak dipotong di bulan berjalan.</td>
+              </tr>
+              <tr>
+                <td><strong>Rapel 2 Bulan (40%)</strong></td>
+                <td>Memotong dobel (40%) untuk melunasi potongan bulan lalu yang tertunda.</td>
+                <td>Bulan berikutnya setelah penundaan potongan uang muka.</td>
+              </tr>
+              <tr>
+                <td><strong>Nominal Kustom (Rp)</strong></td>
+                <td>Pengguna bebas mengetik nominal potongan rupiah tertentu.</td>
+                <td>Sesuai Berita Acara Kesepakatan khusus antara konsultan dan PPK dinas.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert-callout alert-tip">
+          <div>
+            🎯 <strong>Aturan Otomatis Sisa Uang Muka Rp 0 di Bulan Terakhir:</strong><br>
+            Sistem dilengkapi <em>Reconciliation Balancing Plug</em>. Pada invoice terakhir (bulan akhir/progres 100%), seluruh sisa uang muka yang masih tersisa (bahkan sisa pembulatan beberapa rupiah seperti Rp 600) akan <strong>otomatis dipotong habis sehingga Sisa Uang Muka di Lembar MC dijamin 100% menjadi Rp 0,00!</strong>
+          </div>
+        </div>
+
+        <div class="case-box">
+          <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
+          <div class="case-title">Praktek Kasus: Proyek Jembatan TKD Kab. Tanah Datar (Masa Kerja 4 Bulan)</div>
+          <div class="case-content">
+            • <strong>Nilai Kontrak:</strong> Rp 184.685.000 (Termasuk PPN 11%) | Dibulatkan: Rp 184.685.000<br>
+            • <strong>Uang Muka 20%:</strong> Rp 36.937.000 diterima di awal.<br><br>
+            <strong>Alur Penagihan Termin Tiap Bulan:</strong><br>
+            1. <strong>Invoice 1 (Bulan ke-1):</strong> Progres 28,44% (Rp 51.971.000). Skema: Potong Otomatis 20% = <em>Rp 10.394.200</em>. Netto dibayar = <strong>Rp 41.576.800</strong>. Sisa Uang Muka = Rp 26.542.800.<br>
+            2. <strong>Invoice 2 (Bulan ke-2):</strong> Konsultan mengajukan penundaan potongan. Di Tab 1 dipilih <em>"Tunda/Lewati (0%)"</em>. Potongan bulan ini = <em>Rp 0</em>. Netto dibayar = 100% nilai progres fisik.<br>
+            3. <strong>Invoice 3 (Bulan ke-3):</strong> Dilakukan rapel. Di Tab 1 dipilih <em>"Rapel 2 Bulan (40%)"</em>. Potongan bulan ini mengembalikan potongan bulan ke-2 dan ke-3 sekaligus.<br>
+            4. <strong>Invoice 4 (Bulan ke-4 / Terakhir):</strong> Progres mencapai 100%. Sistem otomatis membersihkan seluruh saldo sisa uang muka. Di Lembar MC Tab 3, baris <strong>"- Sisa" otomatis tercetak Rp 0,00</strong> dan status lunas!
+          </div>
+        </div>
+
+        <div class="sub-title"><span class="sub-title-icon">🖨️</span> Paket Cetak Lengkap:</div>
+        <p>Dengan tombol <code>Cetak</code> di pojok kanan atas, sistem langsung menghasilkan berkas penagihan resmi lengkap:</p>
+        <ul class="step-list">
+          <li class="step-item">Surat Permohonan Pembayaran Termin Berkop Resmi.</li>
+          <li class="step-item">Berita Acara Pembayaran (BAP) & Berita Acara Kemajuan Pekerjaan (BAKP).</li>
+          <li class="step-item">Lembar Rekapitulasi 12 Kolom Resmi.</li>
+          <li class="step-item">Lembar Monthly Certificate (MC) 3 Bagian.</li>
+          <li class="step-item">Kwitansi Penagihan Rangkap Bermaterai.</li>
+          <li class="step-item">Rincian Slip Gaji Tenaga Ahli & Daftar Hadir / Absensi Proyek.</li>
+        </ul>
+      </section>
+
+      <!-- 12. PANTAU PERSONIL OVERLAP -->
+      <section class="module-card" id="pantaupersonil">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">👥</div>
+            <div class="module-titles">
+              <h3>Modul 12: Pantau Personil & Deteksi Overlap Proyek</h3>
+              <div class="module-sub">Peta Kalender Penugasan Tenaga Ahli & Peringatan Tabrakan Waktu Lintas Proyek</div>
+            </div>
+          </div>
+          <span class="module-tag">AUDIT & KEPATUHAN</span>
+        </div>
+
+        <p>
+          Modul ini memvisualisasikan seluruh penugasan Tenaga Ahli dalam garis waktu (*timeline Gantt chart*).
+        </p>
+
+        <div class="alert-callout alert-warn">
+          <div>
+            ⚠️ <strong>Pencegahan Pelanggaran Penugasan Ganda (Overlap):</strong><br>
+            Menurut aturan pengadaan pemerintah, Tenaga Ahli yang berstatus <em>Full Time</em> tidak boleh ditugaskan pada dua proyek berbeda dalam waktu bersamaan. Jika seorang tenaga ahli didaftarkan pada dua proyek yang bertabrakan tanggalnya, modul ini akan memunculkan <strong>Garis Merah Peringatan Overlap</strong> untuk mencegah temuan audit Badan Pemeriksa Keuangan (BPK) atau Inspektorat.
+          </div>
+        </div>
+      </section>
+
+      <!-- 13. MASTER SURAT -->
+      <section class="module-card" id="surat">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">✉️</div>
+            <div class="module-titles">
+              <h3>Modul 13: Master Surat & Generator Surat Resmi</h3>
+              <div class="module-sub">Penomoran Otomatis Surat Keluar, Surat Tugas, Bebas Tugas & Referensi Kerja</div>
+            </div>
+          </div>
+          <span class="module-tag">PERSURATAN</span>
+        </div>
+
+        <p>
+          Menyediakan format baku surat-surat administrasi konsultan:
+        </p>
+        <ul class="step-list">
+          <li class="step-item"><strong>Surat Referensi Kerja Personil:</strong> Bukti pengalaman kerja tenaga ahli setelah proyek selesai.</li>
+          <li class="step-item"><strong>Surat Keterangan Bebas Tugas:</strong> Pernyataan bahwa personil telah menyelesaikan tugas dan bebas untuk ditugaskan pada lelang baru.</li>
+          <li class="step-item"><strong>Surat Tugas Lapangan & Surat Kuasa.</strong></li>
+        </ul>
+      </section>
+
+      <!-- 14. BANK REFERENSI -->
+      <section class="module-card" id="bankref">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">🏛️</div>
+            <div class="module-titles">
+              <h3>Modul 14: Bank Referensi</h3>
+              <div class="module-sub">Manajemen Permohonan Surat Keterangan Dukungan Bank untuk Dokumen Tender</div>
+            </div>
+          </div>
+          <span class="module-tag">KEUANGAN BANK</span>
+        </div>
+
+        <p>
+          Mengelola arsip permohonan Surat Dukungan Bank dan Surat Keterangan Referensi Bank (Bank Nagari, BNI, Mandiri) sebagai syarat kelengkapan kualifikasi keuangan pada tender-tender bernilai besar.
+        </p>
+      </section>
+
+      <!-- 15. PENGATURAN -->
+      <section class="module-card" id="pengaturan">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">⚙️</div>
+            <div class="module-titles">
+              <h3>Modul 15: Pengaturan Sistem & Manajemen Hak Akses (RBAC)</h3>
+              <div class="module-sub">Saklar Modul Aktif, Manajemen Akun Staf, Peran Pengguna & Proteksi Data</div>
+            </div>
+          </div>
+          <span class="module-tag">ADMINISTRATOR</span>
+        </div>
+
+        <p>
+          Dikhususkan untuk Direktur atau Administrator Utama untuk mengatur hak akses pengguna (*Role-Based Access Control*):
+        </p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th>Tingkat Peran (Role)</th>
+                <th>Hak Akses & Otoritas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Superuser / Direktur</strong></td>
+                <td>Akses penuh ke seluruh modul, pengaturan keuangan, persetujuan hapus data permanen, dan saklar modul.</td>
+              </tr>
+              <tr>
+                <td><strong>User Teknik / Estimator</strong></td>
+                <td>Dapat mengelola RAB, AI KAK, Personil, dan data paket berjalan. Tidak dapat mengubah nomor rekening perusahaan.</td>
+              </tr>
+              <tr>
+                <td><strong>User Tender / Admin</strong></td>
+                <td>Dapat menginput tender, mengunduh CV, memantau radar SPSE. Watermark nama aktif secara otomatis untuk mencegah kebocoran dokumen.</td>
+              </tr>
+              <tr>
+                <td><strong>User Biasa / Tamu</strong></td>
+                <td>Akses hanya-lihat (*read-only*) tanpa izin hapus atau ekspor rahasia.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 16. DOCK UTILITY TOOLS -->
+      <section class="module-card" id="docktools">
+        <div class="module-header">
+          <div class="module-badge-wrap">
+            <div class="module-icon">🛠️</div>
+            <div class="module-titles">
+              <h3>16. Sidebar Dock Tools (Peralatan Cepat)</h3>
+              <div class="module-sub">Peralatan Bantu Ringkas di Pojok Kiri Bawah Aplikasi</div>
+            </div>
+          </div>
+          <span class="module-tag">ALAT BANTU</span>
+        </div>
+
+        <p>
+          Pada bagian bawah bilah samping (sidebar), terdapat 5 ikon cepat yang dapat dibuka kapan saja tanpa meninggalkan pekerjaan:
+        </p>
+        <ul class="step-list">
+          <li class="step-item">
+            <strong>📝 Catatan & Password (Vault Akun):</strong>
+            Buku catatan terenkripsi untuk menyimpan akun SPSE dari berbagai kabupaten/kota, sandi email dinas, dan nomor kontak Pokja.
+          </li>
+          <li class="step-item">
+            <strong>📅 Kalkulator Hari Kalender & Hari Kerja:</strong>
+            Alat hitung cepat selisih tanggal. Cukup masukkan tanggal SPMK dan durasi kontrak (misal: 120 Hari Kalender), sistem langsung menampilkan tanggal jatuh tempo PHO lengkap dengan peringatan hari libur nasional.
+          </li>
+          <li class="step-item">
+            <strong>✍️ Bank Tanda Tangan Digital:</strong>
+            Penyimpanan spesimen tanda tangan Direktur dan Tenaga Ahli berformat PNG transparan.
+          </li>
+          <li class="step-item">
+            <strong>💮 Bank Cap Stempel Perusahaan:</strong>
+            Penyimpanan cap stempel basah digital yang otomatis diberi efek kemiringan alami saat ditempelkan ke lembar permohonan.
+          </li>
+          <li class="step-item">
+            <strong>◐ Pengubah Tema Gelap / Terang:</strong>
+            Beralih tampilan antara tema terang dan tema gelap (*Dark Mode*) untuk kenyamanan mata saat bekerja malam hari.
+          </li>
+        </ul>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="doc-footer">
+        <p>© 2026 PT. PUTRA AULIA GROUP • Seluruh Hak Cipta Dilindungi Undang-Undang.</p>
+        <p style="margin-top:4px;">Sistem Informasi Manajemen Konsultan Pengawas & Perencana Konstruksi Standar PUPR / INKINDO.</p>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- SCRIPT UTAMA -->
+  <script>
+    // 1. FILTER SEARCH PENCARIAN CEPAT
+    function filterDocs() {
+      var query = (document.getElementById('docSearchInput').value || '').toLowerCase().trim();
+      var sections = document.querySelectorAll('.module-card');
+      
+      sections.forEach(function(sec) {
+        var text = sec.innerText.toLowerCase();
+        if (!query || text.indexOf(query) !== -1) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+
+    // 2. TOGGLE DARK / LIGHT THEME
+    function toggleTheme() {
+      var isDark = document.body.classList.toggle('dark');
+      try {
+        localStorage.setItem('PAG_THEME_MODE', isDark ? 'dark' : 'light');
+      } catch(e) {}
+      var icon = document.getElementById('themeIcon');
+      if (icon) icon.textContent = isDark ? '☀️' : '◐';
+    }
+
+    // Load initial theme from localStorage
+    try {
+      if (localStorage.getItem('PAG_THEME_MODE') === 'dark') {
+        document.body.classList.add('dark');
+        var icon = document.getElementById('themeIcon');
+        if (icon) icon.textContent = '☀️';
+      }
+    } catch(e) {}
+
+    // 3. TOGGLE MOBILE SIDEBAR
+    function toggleNav() {
+      var sb = document.getElementById('docSidebar');
+      if (sb) sb.classList.toggle('open');
+    }
+
+    // Close mobile nav on click link
+    document.querySelectorAll('.nav-link').forEach(function(link) {
+      link.addEventListener('click', function() {
+        var sb = document.getElementById('docSidebar');
+        if (sb && window.innerWidth <= 900) {
+          sb.classList.remove('open');
+        }
+        document.querySelectorAll('.nav-link').forEach(function(l) { l.classList.remove('active'); });
+        link.classList.add('active');
+      });
+    });
+
+    // 4. HIGHLIGHT ACTIVE NAV ON SCROLL
+    window.addEventListener('scroll', function() {
+      var sections = document.querySelectorAll('.module-card, .hero-banner');
+      var scrollPos = window.scrollY + 100;
+
+      sections.forEach(function(sec) {
+        var top = sec.offsetTop;
+        var height = sec.offsetHeight;
+        var id = sec.getAttribute('id');
+        if (scrollPos >= top && scrollPos < top + height) {
+          document.querySelectorAll('.nav-link').forEach(function(link) {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

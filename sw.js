@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V149";
+const SW_VERSION = "PAG-PUSH-V150";
 
 /* ============================================================
  * APP CONFIG
@@ -22,10 +22,12 @@ const APP_URL = APP_ORIGIN + "/";
 const MAX_BADGE = 999;
 
 const NOTIFICATION_CACHE = "pag-push-notifications-v1";
-const SHELL_CACHE = "pag-shell-v60";
+const SHELL_CACHE = "pag-shell-v61";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
+  "./tutorial.html",
+  "./docs.html",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png"
