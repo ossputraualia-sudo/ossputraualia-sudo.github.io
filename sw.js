@@ -11,7 +11,7 @@
  * 6. Proteksi Keamanan URL (Anti Open-Redirect)
  * ============================================================ */
 
-const SW_VERSION = "PAG-PUSH-V143";
+const SW_VERSION = "PAG-PUSH-V144";
 
 /* ============================================================
  * APP CONFIG
