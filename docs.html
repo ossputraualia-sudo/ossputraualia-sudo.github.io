@@ -1077,51 +1077,134 @@
       </section>
 
       <!-- 2. DATA PERUSAHAAN & KSO -->
+      <!-- 2. DATA PERUSAHAAN & KSO -->
       <section class="module-card module-pane" id="perusahaan">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">🏢</div>
             <div class="module-titles">
-              <h3>Modul 2: Data Perusahaan & KSO (Konsorsium)</h3>
-              <div class="module-sub">Manajemen Badan Usaha, Legalitas, Rekening Bank, Kop Surat & Kemitraan KSO</div>
+              <h3>Modul 2: Data Perusahaan &amp; KSO (Konsorsium)</h3>
+              <div class="module-sub">Manajemen Badan Usaha Master, Legalitas SBU/NIB, Rekening Bank Dinas, Kop Surat, Stempel &amp; Kemitraan KSO</div>
             </div>
           </div>
           <span class="module-tag">DATA MASTER</span>
         </div>
 
         <p>
-          Modul ini mengelola seluruh identitas badan usaha yang dinaungi (misal: PT. PUTRA AULIA KONSULTAN, PT. RAISSA GEMILANG, CV mitra), lengkap dengan akta, NIB, NPWP, nomor rekening dinas, serta tanda tangan dan stempel digital resmi.
+          <strong>Modul Data Perusahaan &amp; KSO</strong> adalah fondasi data utama (<em>Master Entity Repository</em>) yang menyimpan seluruh identitas hukum badan usaha di bawah naungan PT. Putra Aulia Group (seperti PT. PUTRA AULIA KONSULTAN, PT. RAISSA GEMILANG, maupun perusahaan mitra KSO). Seluruh data legalitas di modul ini terhubung otomatis ke modul Tender, Dokumen PQ, Invoice MC, dan Master Surat.
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">📝</span> Langkah-Langkah Pengoperasian:</div>
+        <div class="sub-title"><span class="sub-title-icon">🏛️</span> Struktur Pengelolaan Data Badan Usaha:</div>
+        <ul class="step-list">
+          <li class="step-item">
+            <strong>Identitas Pokok Badan Usaha:</strong>
+            Nama resmi badan usaha, bentuk hukum (PT / CV / Firma), nomor NPWP 16 digit format terbaru, alamat domisili kantor resmi, nomor telepon, dan email dinas.
+          </li>
+          <li class="step-item">
+            <strong>Perizinan &amp; Legalitas (NIB &amp; SBU):</strong>
+            Nomor Induk Berusaha (NIB) berbasis OSS RBA, Sertifikat Badan Usaha (SBU) Jasa Pengawasan dan Perencanaan Konstruksi dari LPJK/Kementerian PUPR, masa berlaku, dan tanggal kedaluwarsa.
+          </li>
+          <li class="step-item">
+            <strong>Rekening Bank Penampung:</strong>
+            Daftar rekening bank resmi dinas (Bank Nagari, BNI, Bank Mandiri, BRI) yang memuat nama bank, kantor cabang, nomor rekening, dan nama pemilik rekening persis sesuai buku tabungan.
+          </li>
+          <li class="step-item">
+            <strong>Pengesahan &amp; Kop Surat Digital:</strong>
+            Pindaian stempel resmi basah perusahaan berlatar transparan (.png), tanda tangan digital Direktur Utama, dan logo kop surat resolusi tinggi.
+          </li>
+          <li class="step-item">
+            <strong>Pengaturan Kemitraan KSO Default:</strong>
+            Konfigurasi konsorsium bawaan antara perusahaan induk sebagai <em>Lead Firm</em> dan mitra sebagai <em>Partner Firm</em> beserta pembagian hak porsi modal kerja.
+          </li>
+        </ul>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Seluruh Tombol di Modul Perusahaan:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>+ Tambah Perusahaan</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Membuka modal formulir input badan usaha baru (Nama, Bentuk Usaha, NPWP 16 Digit, Domisili).</td>
+                <td>Penambahan Master Data</td>
+              </tr>
+              <tr>
+                <td><strong><code>✏️ Edit Profil</code></strong></td>
+                <td>Tabel Perusahaan</td>
+                <td>Membuka lembar pengubahan informasi alamat, direksi, nomor kontak, atau rekening bank penampung.</td>
+                <td>Pembaruan Data Instan</td>
+              </tr>
+              <tr>
+                <td><strong><code>📁 Kelola Dokumen Izin</code></strong></td>
+                <td>Aksi Tabel</td>
+                <td>Menampilkan daftar lampiran SBU, NIB, Akta Notaris, dan KSWP beserta alarm hitung mundur kedaluwarsa.</td>
+                <td>Audit Legalitas Usaha</td>
+              </tr>
+              <tr>
+                <td><strong><code>🏦 Atur Rekening Bank</code></strong></td>
+                <td>Tab Rekening</td>
+                <td>Menambah atau memilih rekening bank utama yang akan dicetak pada lembar penagihan Monthly Certificate (MC).</td>
+                <td>Integrasi Modul Invoice</td>
+              </tr>
+              <tr>
+                <td><strong><code>🖼️ Unggah Kop &amp; Stempel</code></strong></td>
+                <td>Tab Pengesahan</td>
+                <td>Mengunggah berkas gambar stempel dan tanda tangan berlatar transparan untuk dicetak otomatis pada surat dinas.</td>
+                <td>Otomatisasi Berkas Cetak</td>
+              </tr>
+              <tr>
+                <td><strong><code>🤝 Tab Kemitraan KSO</code></strong></td>
+                <td>Bilah Atas Modul</td>
+                <td>Mengatur perjanjian konsorsium, menentukan Lead Firm, nama rekening bersama KSO, dan persentase saham.</td>
+                <td>Sinkronisasi Modul PQ</td>
+              </tr>
+              <tr>
+                <td><strong><code>🗑️ Hapus Perusahaan</code></strong></td>
+                <td>Aksi Tabel</td>
+                <td>Menghapus data entitas (hanya dapat diakses oleh Superuser / Direktur dengan konfirmasi keamanan).</td>
+                <td>Proteksi Penghapusan Data</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title"><span class="sub-title-icon">📋</span> SOP Langkah-demi-Langkah Pendaftaran Perusahaan Baru:</div>
         <ol class="step-list">
           <li class="step-item">
-            <strong>Mendaftarkan Perusahaan Baru:</strong>
-            Klik tombol <code>+ Tambah Perusahaan</code> di pojok kanan atas. Isi Nama Badan Usaha, Bentuk Usaha (PT/CV), Nomor NPWP 16 Digit, dan Alamat Domisili Resmi.
+            <strong>Langkah 1:</strong> Klik tombol <code>+ Tambah Perusahaan</code>, isi Nama Lengkap Badan Usaha (misal: <em>PT. PUTRA AULIA KONSULTAN</em>), pilih Bentuk Usaha (PT), dan ketik NPWP 16 digit.
           </li>
           <li class="step-item">
-            <strong>Mengatur Rekening Bank Penerima:</strong>
-            Pilih nama bank (contoh: <em>Bank Nagari Cabang Utama Padang</em>), masukkan nomor rekening dan nama pemilik rekening persis sesuai buku tabungan.
+            <strong>Langkah 2:</strong> Masukkan alamat domisili resmi sesuai Akta Notaris, kota, nomor telepon kantor, dan alamat email resmi kantor.
           </li>
           <li class="step-item">
-            <strong>Mengatur KSO (Kemitraan/Konsorsium):</strong>
-            Bila mengikuti tender secara konsorsium, klik tab <em>Kemitraan KSO</em>. Tentukan <strong>Lead Firm</strong> (Pemimpin KSO) dan <strong>Partner Firm</strong> (Anggota), lalu masukkan pembagian porsi saham (misal: 70% Lead : 30% Partner).
+            <strong>Langkah 3:</strong> Pada bagian Rekening Bank, pilih bank (contoh: <em>Bank Nagari Cabang Utama Padang</em>), masukkan nomor rekening dan nama pemilik rekening persis sesuai buku tabungan.
           </li>
           <li class="step-item">
-            <strong>Upload Kop Surat & Pengesahan Digital:</strong>
-            Unggah logo kop surat resolusi tinggi, pindaian stempel berlatar transparan (.png), dan tanda tangan direktur untuk dicetak otomatis pada dokumen invoice/surat.
+            <strong>Langkah 4:</strong> Masukkan izin usaha SBU dan NIB beserta tanggal berakhirnya izin agar sistem Early Warning di Beranda dapat memantau masa berlakunya secara otomatis.
+          </li>
+          <li class="step-item">
+            <strong>Langkah 5:</strong> Unggah file logo kop surat (.png), tanda tangan direktur, dan stempel basah berlatar transparan, lalu klik <strong>Simpan Perusahaan</strong>.
           </li>
         </ol>
 
         <div class="case-box">
-          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
-          <div class="case-title">Penyusunan Perjanjian Kemitraan KSO Proyek PUPR</div>
+          <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
+          <div class="case-title">Penyusunan Perjanjian Kemitraan KSO Tender PUPR</div>
           <div class="case-content">
-            Pada tender <em>Pengawasan Pembangunan Gedung Rumah Sakit</em> senilai Rp 800 Juta, disepakati KSO antara <strong>PT. PUTRA AULIA KONSULTAN (Lead Firm 65%)</strong> dan <strong>PT. RAISSA GEMILANG (Anggota 35%)</strong>. Dengan memasukkan data ini di Modul Perusahaan, saat membuat invoice atau surat permohonan penagihan, kop surat, nomor rekening bersama, dan pembagian hak tagih otomatis tersinkronisasi tanpa salah hitung.
+            Pada tender <em>Pengawasan Pembangunan Gedung Rumah Sakit</em> senilai Rp 800 Juta, disepakati konsorsium antara <strong>PT. PUTRA AULIA KONSULTAN (Lead Firm 65%)</strong> dan <strong>PT. RAISSA GEMILANG (Anggota 35%)</strong>. Dengan memasukkan data ini di Modul Perusahaan, saat membuat invoice atau surat permohonan penagihan, kop surat, nomor rekening bersama, dan pembagian hak tagih otomatis tersinkronisasi tanpa salah hitung.
           </div>
         </div>
       </section>
 
+      <!-- 3. PORTOFOLIO SIKAP -->
       <!-- 3. PORTOFOLIO SIKAP -->
       <section class="module-card module-pane" id="portofolio">
         <div class="module-header">
@@ -1129,73 +1212,269 @@
             <div class="module-icon">📈</div>
             <div class="module-titles">
               <h3>Modul 3: Data Pengalaman (Portofolio SIKAP)</h3>
-              <div class="module-sub">Rekam Jejak Kontrak Selesai, Nilai KD, FHO/BAST & Sinkronisasi SIKAP LKPP</div>
+              <div class="module-sub">Rekam Jejak Kontrak Selesai 100%, Bukti BAST/FHO, Perhitungan Nilai KD &amp; Sinkronisasi SIKAP LKPP</div>
             </div>
           </div>
           <span class="module-tag">KUALIFIKASI TENDER</span>
         </div>
 
         <p>
-          Berfungsi menyimpan seluruh riwayat pengalaman kontrak perusahaan yang telah selesai 100% (dilengkapi Berita Acara Serah Terima / BAST / FHO). Data ini menjadi dasar perhitungan <strong>Kemampuan Dasar (KD)</strong> pada tender kualifikasi menengah dan besar.
+          <strong>Modul Data Pengalaman (Portofolio SIKAP)</strong> berfungsi sebagai brankas rekam jejak pekerjaan yang telah selesai 100% dan telah diserahterimakan kepada Pejabat Pembuat Komitmen (dilengkapi Berita Acara Serah Terima / BAST / FHO). Data pengalaman ini menjadi rujukan utama penghitungan <strong>Kemampuan Dasar (KD)</strong> pada tender lelang bernilai besar dan menengah di portal SPSE LKPP.
         </p>
 
-        <div class="alert-callout alert-tip">
-          <div>💡 <strong>Tips Penting KD:</strong> Nilai KD dihitung sebesar <code>3 x Nilai Kontrak Tertinggi</code> dalam 10 tahun terakhir untuk sub-bidang pengawasan/perencanaan yang sejenis. Pastikan selalu melampirkan file PDF BAST akhir pada setiap entri pengalaman.</div>
+        <div class="sub-title"><span class="sub-title-icon">📐</span> Rumus Resmi Perhitungan Kemampuan Dasar (KD):</div>
+        <div class="alert-callout alert-info">
+          <div>
+            Menurut <strong>Perpres No. 12/2021</strong> dan <strong>Permen PUPR No. 14/2020</strong>, untuk tender jasa konsultansi konstruksi kualifikasi usaha menengah dan besar, nilai Kemampuan Dasar (KD) dihitung dengan rumus baku:<br>
+            <div style="font-size:16px; font-weight:800; margin:10px 0; color:var(--primary-dark); text-align:center;">
+              $$KD = 3 	imes 	ext{Nilai Kontrak Tertinggi dalam 10 Tahun Terakhir}$$
+            </div>
+            <em>Catatan Penting:</em> Pengalaman yang dapat dihitung sebagai KD wajib berasal dari sub-bidang klasifikasi yang sejenis dengan paket pekerjaan yang dilelangkan dan telah memiliki BAST akhir.
+          </div>
         </div>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Seluruh Tombol di Modul Portofolio SIKAP:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>+ Tambah Pengalaman</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Membuka modal input data kontrak selesai: Nama Paket, Pemberi Tugas, Nomor Kontrak, Nilai Kontrak, dan Tanggal Selesai.</td>
+                <td>Penambahan Arsip KD</td>
+              </tr>
+              <tr>
+                <td><strong><code>🔍 Filter Sub-Bidang</code></strong></td>
+                <td>Atas Tabel Data</td>
+                <td>Menyaring pengalaman berdasarkan klasifikasi (misal: Pengawasan Jalan &amp; Jembatan, Pengawasan Gedung, SDA/Irigasi).</td>
+                <td>Pencocokan Cepat KAK</td>
+              </tr>
+              <tr>
+                <td><strong><code>🧮 Hitung KD Otomatis</code></strong></td>
+                <td>Bilah Metrik</td>
+                <td>Menemukan kontrak nilai tertinggi pada sub-bidang terpilih dan mengalikan nominalnya dengan 3x secara otomatis.</td>
+                <td>Kalkulasi Ambang Batas KD</td>
+              </tr>
+              <tr>
+                <td><strong><code>📎 Upload File BAST/FHO</code></strong></td>
+                <td>Tabel Riwayat</td>
+                <td>Mengunggah scan PDF Berita Acara Serah Terima Pekerjaan sebagai bukti sah kualifikasi evaluasi lelang.</td>
+                <td>Bukti Otentik SPSE</td>
+              </tr>
+              <tr>
+                <td><strong><code>📊 Ekspor Portofolio (.xlsx)</code></strong></td>
+                <td>Atas Kanan Tabel</td>
+                <td>Mengekspor daftar seluruh pengalaman kerja dalam format tabel Excel berstandar formulir kualifikasi lelang.</td>
+                <td>Dokumen Lampiran Tender</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title"><span class="sub-title-icon">📋</span> SOP Input dan Validasi Pengalaman Kerja:</div>
+        <ol class="step-list">
+          <li class="step-item">
+            <strong>Langkah 1:</strong> Buka modul Portofolio SIKAP, klik tombol <code>+ Tambah Pengalaman</code>.
+          </li>
+          <li class="step-item">
+            <strong>Langkah 2:</strong> Pilih nama badan usaha pelaksana (misal: <em>PT. PUTRA AULIA KONSULTAN</em>).
+          </li>
+          <li class="step-item">
+            <strong>Langkah 3:</strong> Masukkan Nama Paket Pekerjaan, Nama Instansi / Satker Pengguna Jasa, Nomor Kontrak, Tanggal Kontrak, dan Nilai Kontrak Bersih (tanpa PPN).
+          </li>
+          <li class="step-item">
+            <strong>Langkah 4:</strong> Pilih Sub-Klasifikasi SBU yang sesuai (contoh: <em>RE202 - Jasa Pengawasan Rekayasa Pekerjaan Teknik Sipil Transportasi</em>).
+          </li>
+          <li class="step-item">
+            <strong>Langkah 5:</strong> Masukkan Nomor dan Tanggal BAST Akhir (FHO), unggah salinan PDF BAST, lalu klik <strong>Simpan Pengalaman</strong>. Nilai KD sub-bidang otomatis terbarui seketika!
+          </li>
+        </ol>
       </section>
 
+      <!-- 4. RADAR TENDER & WA BOT -->
       <!-- 4. RADAR TENDER & WA BOT -->
       <section class="module-card module-pane" id="radartender">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📡</div>
             <div class="module-titles">
-              <h3>Modul 4: Radar SPSE & Forwarder WhatsApp</h3>
-              <div class="module-sub">Scraping Paket LPSE Otomatis & Notifikasi Resmi Email SPSE ke WhatsApp Group</div>
+              <h3>Modul 4: Radar SPSE &amp; Forwarder WhatsApp Bot</h3>
+              <div class="module-sub">Pemantauan Paket LPSE Otomatis 24/7, Notifikasi Resmi Email SPSE ke WhatsApp Group &amp; Filter Anti-Spam</div>
             </div>
           </div>
           <span class="module-tag">INTEGRASI BOT</span>
         </div>
 
         <p>
-          Modul ini bekerja tanpa henti (24/7) memantau tender jasa konsultansi di portal SPSE wilayah Sumatera Barat, Riau, Jambi, kementerian pusat, serta meneruskan email pemberitahuan SPSE (undangan pembuktian, perubahan jadwal, pengumuman pemenang) langsung ke grup WhatsApp kantor (<code>PT. PA - SUMBAR</code>).
+          <strong>Modul Radar SPSE &amp; Forwarder WhatsApp</strong> bekerja secara otonom tanpa henti (24 jam sehari, 7 hari seminggu) memantau pengumuman lelang pengadaan jasa konsultansi di puluhan portal LPSE (Sumatera Barat, Riau, Jambi, kementerian pusat) serta meneruskan email pemberitahuan SPSE (undangan pembuktian kualifikasi, berita acara penjelasan/aanwijzing, perubahan jadwal lelang, dan pengumuman pemenang) langsung ke grup WhatsApp internal kantor (<code>PT. PA - SUMBAR</code>).
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">🛡️</span> Sistem Proteksi Anti-Spam:</div>
+        <div class="sub-title"><span class="sub-title-icon">🛡️</span> Sistem Proteksi Cerdas Anti-Spam (Penjelasan Gambar Notifikasi WA):</div>
         <p>
-          Sistem dilengkapi pelindung cerdas yang secara ketat membedakan email resmi pemerintah dengan iklan komersial. Email iklan pihak ketiga seperti <code>info@tenderid.com</code> atau promosi lelang berbayar <strong>otomatis dibuang</strong>, sehingga grup WhatsApp hanya menerima pengumuman resmi berkepentingan tinggi dengan badge <code>[PRIORITAS UTAMA] SPSE INAPROC</code> dari domain <code>.go.id</code> atau <code>inaproc.id</code>.
+          Di lapangan, banyak penyedia pihak ketiga seperti <code>info@tenderid.com</code> atau portal lelang komersial berbayar mengirimkan promosi ke email kantor. Sistem bot PT. Putra Aulia Group dilengkapi <strong>Gerbang Filter Keamanan Ketat</strong>:
         </p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Sumber Pengirim Email</th>
+                <th style="width:30%;">Perlakuan Sistem Bot</th>
+                <th style="width:45%;">Tanda di WhatsApp Group</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Resmi SPSE Pemerintah</strong><br>Domain <code>.go.id</code>, <code>inaproc.id</code>, <code>lpse.*.go.id</code></td>
+                <td><span class="module-tag" style="background:#dcfce7; color:#15803d; border-color:#86efac;">DILOLOSKAN PRIORITAS</span></td>
+                <td>Diteruskan dalam hitungan detik dengan label tebal <code>⚡ [PRIORITAS] SPSE INAPROC</code>, memuat nama paket, link lelang, dan batas waktu tindakan.</td>
+              </tr>
+              <tr>
+                <td><strong>Email Pihak Ketiga / Iklan</strong><br>Contoh: <code>*@tenderid.com</code>, vendor software, penawaran pelatihan berbayar</td>
+                <td><span class="module-tag" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">DIBLOKIR / DIBUANG OTOMATIS</span></td>
+                <td>Tidak akan diteruskan ke grup utama direksi, mencegah grup menjadi bising dengan pesan promosi non-resmi yang tidak memiliki kekuatan hukum lelang.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Tombol di Modul Radar SPSE:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>🔄 Scan Ulang LPSE</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Menjalankan pemindaian darurat (force scraping) ke portal LPSE untuk mencari lelang baru yang baru tayang 1 jam terakhir.</td>
+                <td>Pembaruan Radar Lelang</td>
+              </tr>
+              <tr>
+                <td><strong><code>📍 Filter Wilayah</code></strong></td>
+                <td>Bilah Atas Radar</td>
+                <td>Menyaring daftar lelang berdasarkan provinsi (Sumbar, Riau, Jambi) atau kementerian pusat (KemenPUPR, BWS, BPJN).</td>
+                <td>Fokus Wilayah Kerja</td>
+              </tr>
+              <tr>
+                <td><strong><code>💬 Uji Kirim Pesan WA</code></strong></td>
+                <td>Panel Bot</td>
+                <td>Mengirim pesan uji coba ke grup WhatsApp <code>PT. PA - SUMBAR</code> untuk memastikan token gateway bot WA tetap aktif.</td>
+                <td>Verifikasi Koneksi Bot</td>
+              </tr>
+              <tr>
+                <td><strong><code>📋 Salin Format Ringkasan</code></strong></td>
+                <td>Setiap Kartu Tender</td>
+                <td>Menyalin data HPS, lokasi, dan batas upload ke papan klip dalam format teks rapi siap dibagikan ke tim estimator.</td>
+                <td>Koordinasi Cepat</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div class="case-box">
-          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
-          <div class="case-title">Pemberitahuan Kilat Undangan Pembuktian Kualifikasi</div>
+          <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
+          <div class="case-title">Pemberitahuan Kilat Undangan Pembuktian Kualifikasi Jam 21.00 WIB</div>
           <div class="case-content">
-            Pokja UKPBJ mengirim email undangan pembuktian kualifikasi tender Pengawasan Jalan pada pukul 21.15 WIB. Dalam waktu 90 detik, bot WhatsApp meneruskan ringkasan paket, batas waktu hadir, serta dokumen yang harus dibawa langsung ke grup WA direksi, memungkinkan tim segera menyiapkan berkas fisik malam itu juga tanpa terlewat.
+            Pokja UKPBJ mengirim email resmi perubahan jadwal pembuktian kualifikasi tender Pengawasan Jalan pada pukul 21.15 WIB. Dalam waktu 90 detik, bot WhatsApp meneruskan ringkasan paket, batas waktu hadir, serta berkas fisik yang harus dibawa langsung ke grup WA direksi. Tim langsung menyiapkan dokumen malam itu juga sehingga kehadiran pembuktian di kantor Pokja keesokan paginya berjalan lancar tanpa risiko gugur!
           </div>
         </div>
       </section>
 
+      <!-- 5. DATA TENDER -->
       <!-- 5. DATA TENDER -->
       <section class="module-card module-pane" id="tender">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📋</div>
             <div class="module-titles">
-              <h3>Modul 5: Data Tender & Evaluasi Penawaran</h3>
-              <div class="module-sub">Manajemen Tahapan Lelang, HPS, Penawaran Harga & Simulasi Evaluasi Teknis</div>
+              <h3>Modul 5: Data Tender &amp; Evaluasi Penawaran</h3>
+              <div class="module-sub">Manajemen Siklus Pra-Kontrak, Kalkulator Persentase HPS, Simulasi Nilai Teknis &amp; Monitoring Sanggah</div>
             </div>
           </div>
           <span class="module-tag">PRA-KONTRAK</span>
         </div>
 
         <p>
-          Mengawal seluruh tahapan tender dari pengumuman, penjelasan dokumen (aanwijzing), penyusunan harga penawaran terhadap HPS, hingga pembuktian kualifikasi dan masa sanggah.
+          <strong>Modul Data Tender &amp; Evaluasi Penawaran</strong> adalah pusat persiapan dan pemenangan lelang. Modul ini mengawal seluruh tahapan lelang sejak pengumuman di portal SPSE, rapat pemberian penjelasan (aanwijzing), perakitan dokumen penawaran teknis dan biaya, simulasi skor evaluasi, hingga masa sanggah dan terbitnya Surat Penunjukan Penyedia Barang/Jasa (SPPBJ).
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">📊</span> Fitur Evaluasi Harga Penawaran:</div>
+        <div class="sub-title"><span class="sub-title-icon">🧮</span> Kalkulator Otomatis Persentase Penawaran HPS:</div>
         <p>
-          Sistem menyediakan kalkulator otomatis persentase penawaran. Anda cukup memasukkan Nilai HPS (misal: Rp 200.000.000) dan target persentase (misal: 92.5%), sistem akan otomatis menghitung nilai penawaran bersih beserta rincian PPN 11% yang tepat hingga ke satuan rupiah terbulatkan.
+          Sistem menyediakan mesin kalkulator harga cerdas. Anda cukup memasukkan <strong>Nilai HPS</strong> dari Pokja (misal: <code>Rp 250.000.000</code>) dan target persentase penawaran (misal: <code>93,5%</code>):
         </p>
+        <ul class="step-list">
+          <li class="step-item">Sistem menghitung nilai penawaran kotor (bruto).</li>
+          <li class="step-item">Memisahkan Biaya Langsung Pokok dan komponen <strong>PPN 11%</strong> secara presisi matematis.</li>
+          <li class="step-item">Menerapkan <strong>Pembulatan Ribuan Resmi</strong> yang diakui dokumen tender pengadaan pemerintah sehingga tidak ada selisih 1 rupiah pun antara form penawaran harga SPSE dan rincian RAB Inkindo.</li>
+        </ul>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Seluruh Tombol di Modul Data Tender:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>+ Tambah Tender Baru</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Membuka modal pendaftaran lelang baru (Kode SPSE, Nama Paket, Instansi, Nilai HPS, Tanggal Batas Upload).</td>
+                <td>Pendaftaran Lelang Baru</td>
+              </tr>
+              <tr>
+                <td><strong><code>💰 Buka Pembuat RAB</code></strong></td>
+                <td>Aksi Baris Tender</td>
+                <td>Menghubungkan langsung paket lelang ini ke Modul 9 (Pembuat RAB 9 Tab) untuk menyusun rincian billing rate.</td>
+                <td>Integrasi RAB Inkindo</td>
+              </tr>
+              <tr>
+                <td><strong><code>🤖 Buka AI KAK</code></strong></td>
+                <td>Aksi Baris Tender</td>
+                <td>Mengunggah KAK lelang ini ke Modul 8 untuk membedah syarat personil dan membuat proposal teknis otomatis.</td>
+                <td>Proposal Teknis Instan</td>
+              </tr>
+              <tr>
+                <td><strong><code>📑 Buka Dokumen PQ</code></strong></td>
+                <td>Aksi Baris Tender</td>
+                <td>Membuka Modul 6 (Dokumen PQ KSO) dengan data paket yang langsung tersinkronisasi otomatis.</td>
+                <td>Persiapan Kualifikasi KSO</td>
+              </tr>
+              <tr>
+                <td><strong><code>🏆 Status Menang (SPPBJ)</code></strong></td>
+                <td>Menu Status Lelang</td>
+                <td>Mengubah status tender menjadi <em>MENANG</em> dan secara otomatis meneruskan data paket ini ke Modul 10 (Paket Berjalan).</td>
+                <td>Transisi ke Pelaksanaan</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title"><span class="sub-title-icon">📋</span> SOP Persiapan Dokumen Tender 7 Hari Sebelum Penutupan SPSE:</div>
+        <ol class="step-list">
+          <li class="step-item"><strong>Hari H-7 (Pendaftaran):</strong> Daftarkan paket di Modul Tender, masukkan nilai HPS, instansi, dan batas waktu upload penawaran.</li>
+          <li class="step-item"><strong>Hari H-5 (Analisis KAK &amp; Personil):</strong> Buka AI KAK untuk mengekstrak syarat tenaga ahli. Buka Modul Personil untuk mengunci nama-nama personil dan unduh CV format LPJK.</li>
+          <li class="step-item"><strong>Hari H-3 (Penyusunan RAB):</strong> Buka Pembuat RAB, sesuaikan Billing Rate Inkindo dan biaya non-personil hingga nilai total penawaran berada di kisaran target 90-95% dari HPS.</li>
+          <li class="step-item"><strong>Hari H-1 (Pemberkasan Akhir):</strong> Cetak surat penawaran harga, pakta integritas, surat pernyataan, dan lakukan upload ke server SPSE sebelum pukul 15.00 WIB.</li>
+        </ol>
       </section>
 
       <!-- 6. DOKUMEN PQ -->
@@ -1204,82 +1483,378 @@
           <div class="module-badge-wrap">
             <div class="module-icon">📑</div>
             <div class="module-titles">
-              <h3>Modul 6: Dokumen PQ Anggota KSO</h3>
-              <div class="module-sub">Pemberkasan Kualifikasi Kemitraan, Surat Pernyataan & Lampiran SPSE</div>
+              <h3>Modul 6: Dokumen PQ Anggota KSO (Prakualifikasi Kemitraan)</h3>
+              <div class="module-sub">Pemberkasan Kualifikasi Kemitraan KSO, Perjanjian Konsorsium, Pakta Integritas & Isian Kualifikasi SPSE</div>
             </div>
           </div>
           <span class="module-tag">DOKUMEN KSO</span>
         </div>
 
         <p>
-          Mempermudah pengumpulan dokumen kualifikasi (Prakualifikasi / PQ) bagi mitra KSO. Sistem menyediakan checklist lengkap: Formulir Kualifikasi, Pakta Integritas, Surat Kuasa KSO, serta surat pernyataan bebas sanksi daftar hitam (*blacklist*).
+          <strong>Modul Dokumen PQ Anggota KSO</strong> adalah modul spesialis yang dirancang khusus untuk memfasilitasi penyusunan dokumen <strong>Prakualifikasi (PQ)</strong> dan kemitraan <em>Kerja Sama Operasi (KSO / Konsorsium)</em>. Sesuai dengan <strong>Permen PUPR No. 14/PRT/M/2020</strong> dan Standar Dokumen Pemilihan SPSE LKPP v4.5, keikutsertaan lelang secara KSO menuntut keselarasan mutlak antara pembagian porsi saham, hak tanggung renteng, rekening bank bersama, serta kelengkapan formulir kualifikasi dari masing-masing badan usaha anggota kemitraan.
         </p>
+
+        <!-- ARSITEKTUR LAYAR MODUL PQ -->
+        <div class="sub-title"><span class="sub-title-icon">🖥️</span> Arsitektur Layar: Workspace Hybrid Split-Screen</div>
+        <p>
+          Modul ini menerapkan antarmuka kerja ganda (*Split-Screen Workspace*):
+        </p>
+        <ul class="step-list">
+          <li class="step-item">
+            <strong>Panel Kiri (Formulir Input Interaktif):</strong>
+            Tempat pengguna memilih paket lelang, menentukan Lead Firm dan Mitra, mengisikan persentase saham, memilih rekening bank, dan mengonfirmasi data legalitas. Dilengkapi dengan <em>3 Stepper Tab</em> (Step 1: KSO, Step 2: Kualifikasi, Step 3: Pengalaman).
+          </li>
+          <li class="step-item">
+            <strong>Panel Kanan (Live Preview Kertas Fisik A4):</strong>
+            Pratinjau fisik dokumen cetak berformat kertas A4 standar dinas lengkap dengan kop surat resmi, penomoran otomatis, klausul hukum tanggung renteng, tabel porsi kepemilikan, dan area tanda tangan bermaterai Rp 10.000 yang langsung terbarui saat Anda mengetik di sisi kiri.
+          </li>
+        </ul>
+
+        <!-- TIGA TAHAPAN STEPPER DOKUMEN PQ -->
+        <div class="sub-title"><span class="sub-title-icon">📚</span> Struktur 3 Tahap Penyusunan Dokumen PQ:</div>
+        
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:18%;">Tahap / Step</th>
+                <th style="width:28%;">Nama Dokumen yang Dihasilkan</th>
+                <th style="width:54%;">Rincian Data &amp; Klausul Hukum yang Disusun</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Step 1</strong><br><span class="module-tag" style="background:#e0f2fe; color:#0369a1;">PERJANJIAN KSO</span></td>
+                <td><strong>Surat Perjanjian Kemitraan / KSO &amp; Pakta Integritas</strong></td>
+                <td>
+                  • <strong>Pemilihan Tender:</strong> Memilih lelang aktif di SPSE (otomatis menyinkronkan nama paket, instansi, lokasi, dan HPS).<br>
+                  • <strong>Lead Firm vs Partner Firm:</strong> Menentukan badan usaha pemimpin KSO (misal: PT. Putra Aulia Konsultan) dan perusahaan mitra.<br>
+                  • <strong>Porsi Pembagian Saham (%):</strong> Membagi hak dan modal kerja (misal: 65% : 35% atau 70% : 30%).<br>
+                  • <strong>Rekening Bank Bersama:</strong> Menentukan bank penampung dana termin KSO.<br>
+                  • <strong>Penomoran Otomatis Cerdas:</strong> Format resmi <code>01/KSO/[Inisial Lead]-PAG/[Inisial Paket]/[Bulan Romawi]/[Tahun]</code>.<br>
+                  • <strong>Klausul Tanggung Renteng:</strong> Pernyataan hukum bahwa seluruh anggota KSO bertanggung jawab penuh secara bersama-sama kepada PPK.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Step 2</strong><br><span class="module-tag" style="background:#fef3c7; color:#b45309;">FORMULIR KUALIFIKASI</span></td>
+                <td><strong>Formulir Isian Kualifikasi Badan Usaha Anggota KSO</strong></td>
+                <td>
+                  • <strong>Identitas Pokok:</strong> Nama Badan Usaha, NPWP 16 Digit, Bentuk Usaha (PT/CV), Domisili Kantor.<br>
+                  • <strong>Izin Usaha / NIB:</strong> Nomor Induk Berusaha berbasis OSS RBA dan masa berlaku.<br>
+                  • <strong>Sertifikat Badan Usaha (SBU):</strong> Sub-bidang Jasa Pengawasan / Perencanaan Konstruksi, nomor LPJK, dan kualifikasi usaha.<br>
+                  • <strong>Landasan Hukum &amp; Akta:</strong> Akta Pendirian, Akta Perubahan Terakhir, SK Pengesahan Kemenkumham RI.<br>
+                  • <strong>Pengurus &amp; Saham:</strong> Susunan Direksi, Komisaris, serta persentase kepemilikan modal.<br>
+                  • <strong>Pajak &amp; KSWP:</strong> Konfirmasi Status Wajib Pajak valid dan bukti pelaporan SPT Tahunan PPh Badan.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Step 3</strong><br><span class="module-tag" style="background:#dcfce7; color:#15803d;">PENGALAMAN &amp; FASILITAS</span></td>
+                <td><strong>Daftar Pengalaman Kontrak 10 Tahun &amp; Fasilitas Alat</strong></td>
+                <td>
+                  • <strong>Tabel Pengalaman 10 Tahun:</strong> Riwayat pekerjaan sejenis yang telah selesai 100% (dilengkapi nomor kontrak dan tanggal BAST/FHO).<br>
+                  • <strong>Perhitungan Nilai KD Otomatis:</strong> Rumus $KD = 3 \times \text{Nilai Kontrak Tertinggi}$. Membuktikan pemenuhan syarat kualifikasi teknis lelang menengah/besar.<br>
+                  • <strong>Fasilitas Kantor &amp; Peralatan:</strong> Daftar inventaris kantor pendukung (perangkat keras, perangkat lunak analisis struktur/CAD, peralatan uji lapangan, kendaraan survei).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- DAFTAR TOMBOL INTERAKTIF PADA MODUL PQ -->
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Setiap Tombol di Modul Dokumen PQ:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:40%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:22%;">Hasil Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Dropdown Pilih Tender (<code>📋</code>)</strong></td>
+                <td>Bagian Teratas Formulir</td>
+                <td>Memilih daftar lelang yang sedang diikuti dari database Modul Tender. Saat dipilih, nama paket, lokasi dinas, dan nomor otomatis langsung terisi otomatis.</td>
+                <td>Otomatisasi Isian Paket</td>
+              </tr>
+              <tr>
+                <td><strong>Tab Stepper <code>Step 1 (KSO)</code></strong></td>
+                <td>Atas Bilah Formulir</td>
+                <td>Membuka formulir pengaturan kemitraan KSO, lead firm, persentase saham, dan live preview Surat Perjanjian KSO A4.</td>
+                <td>Beralih ke Tahap 1</td>
+              </tr>
+              <tr>
+                <td><strong>Tab Stepper <code>Step 2 (Kualifikasi)</code></strong></td>
+                <td>Atas Bilah Formulir</td>
+                <td>Membuka formulir legalitas badan usaha anggota KSO (NIB, SBU, Akta Notaris, KSWP) dan live preview Formulir Isian Kualifikasi.</td>
+                <td>Beralih ke Tahap 2</td>
+              </tr>
+              <tr>
+                <td><strong>Tab Stepper <code>Step 3 (Pengalaman)</code></strong></td>
+                <td>Atas Bilah Formulir</td>
+                <td>Membuka tabel verifikasi kontrak pengalaman 10 tahun, perhitungan nilai KD, serta daftar fasilitas peralatan kantor.</td>
+                <td>Beralih ke Tahap 3</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>🖨️ Cetak Tab Ini</code></strong></td>
+                <td>Pojok Kanan Atas Live Preview</td>
+                <td>Mencetak dokumen yang sedang aktif di layar pratinjau (hanya mencetak Step yang sedang dibuka tanpa merusak tata letak).</td>
+                <td>Cetak / Simpan PDF</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>💾 Simpan Draft</code></strong></td>
+                <td>Bawah Panel Formulir</td>
+                <td>Menyimpan draf isian KSO dan kualifikasi ke memori lokal dan cloud Supabase agar data tidak hilang saat browser ditutup.</td>
+                <td>Penyimpanan Permanen</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>🔄 Sinkronkan Master</code></strong></td>
+                <td>Bawah Panel Formulir</td>
+                <td>Menarik ulang data profil legalitas terbaru dari Modul Perusahaan jika ada pembaruan akta atau nomor rekening.</td>
+                <td>Pembaruan Data Instan</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol Navigasi <code>Lanjut ➡️</code> / <code>⬅️ Kembali</code></strong></td>
+                <td>Bawah Panel Formulir</td>
+                <td>Melangkah secara berurutan antar Step 1, 2, dan 3 dengan validasi kolom wajib isi.</td>
+                <td>Navigasi Stepper Bertahap</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PROSEDUR TATA CARA OPERASIONAL STANDAR (SOP) -->
+        <div class="sub-title"><span class="sub-title-icon">📋</span> Prosedur Operasional Standar (SOP): Penyusunan Dokumen PQ KSO dari Nol</div>
+        <ol class="step-list">
+          <li class="step-item">
+            <strong>Langkah 1 - Pilih Paket Tender yang Diikuti:</strong>
+            Buka menu <strong>📑 PQ Anggota KSO</strong> dari sidebar. Pada bagian atas panel, klik dropdown <em>Pilih Tender</em> dan pilih nama lelang yang terdaftar (contoh: <em>Pengawasan Jalan Lintas Provinsi</em>). Sistem akan otomatis mengisi nama pekerjaan dan instansi dinas terkait.
+          </li>
+          <li class="step-item">
+            <strong>Langkah 2 - Konfigurasi Perjanjian Kemitraan KSO (Step 1):</strong>
+            Tentukan <strong>Lead Firm</strong> (Pemimpin Konsorsium yang mewakili KSO) dan <strong>Partner Firm</strong> (Anggota Kemitraan). Masukkan pembagian porsi saham (contoh: <code>60%</code> Lead Firm dan <code>40%</code> Partner Firm). Pilih rekening bank yang digunakan untuk penampungan pembayaran termin. Periksa nomor surat KSO yang digenerate otomatis oleh sistem.
+          </li>
+          <li class="step-item">
+            <strong>Langkah 3 - Verifikasi Formulir Isian Kualifikasi (Step 2):</strong>
+            Klik tombol <code>Lanjut ke Step 2 (Kualifikasi)</code>. Periksa keabsahan NIB, tanggal berakhirnya SBU pengawasan, nomor akta perubahan terakhir, dan status KSWP pajak. Jika ada perubahan izin, perbarui di kolom formulir dan klik <em>Simpan Draft</em>.
+          </li>
+          <li class="step-item">
+            <strong>Langkah 4 - Pemilihan Pengalaman Kerja &amp; Validasi Nilai KD (Step 3):</strong>
+            Klik tombol <code>Lanjut ke Step 3 (Pengalaman)</code>. Pilih 3-5 paket pengalaman kerja sejenis yang memiliki nilai kontrak tertinggi dalam 10 tahun terakhir. Sistem akan secara otomatis menghitung nilai <strong>Kemampuan Dasar (KD)</strong>. Pastikan nilai KD melebihi nilai HPS lelang yang dipersyaratkan oleh Pokja Pemilihan.
+          </li>
+          <li class="step-item">
+            <strong>Langkah 5 - Pratinjau Live A4 &amp; Cetak Berkas Resmi:</strong>
+            Lihat panel sisi kanan untuk memastikan tata letak dokumen pratinjau A4 sudah rapi dan presisi. Klik tombol <strong>🖨️ Cetak Tab Ini</strong> pada masing-masing Step untuk mengunduh file PDF resmi, bubuhkan tanda tangan basah / digital bersertifikat dan materai Rp 10.000, lalu unggah ke formulir Prakualifikasi portal SPSE.
+          </li>
+        </ol>
+
+        <!-- CONTOH SKENARIO NYATA -->
+        <div class="case-box">
+          <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
+          <div class="case-title">Penyusunan KSO Tender Pengawasan Jalan Senilai Rp 1,2 Milyar</div>
+          <div class="case-content">
+            <strong>Kondisi Tender:</strong><br>
+            Pokja UKPBJ mensyaratkan peserta lelang memiliki Kemampuan Dasar (KD) minimal Rp 1,2 Milyar dan izin sub-bidang Pengawasan Rekayasa Jalan. PT. Putra Aulia Konsultan bersepakat membentuk kemitraan KSO dengan PT. Citra Rancang Mandiri.<br><br>
+            <strong>Pelaksanaan di Modul Dokumen PQ:</strong><br>
+            1. Pada <strong>Step 1</strong>, staf memilih paket lelang di dropdown. Memilih <em>PT. Putra Aulia Konsultan</em> sebagai Lead Firm (60%) dan <em>PT. Citra Rancang Mandiri</em> sebagai Partner Firm (40%). Sistem otomatis membuat nomor perjanjian: <code>01/KSO/PAK-PAG/PJN/XI/2026</code>.<br>
+            2. Pada <strong>Step 2</strong>, data NIB dan SBU kedua perusahaan terverifikasi aktif tanpa ada yang kedaluwarsa.<br>
+            3. Pada <strong>Step 3</strong>, staf memilih pengalaman kontrak PT. Putra Aulia pada paket supervisi tahun 2024 senilai Rp 550.000.000. Sistem menghitung $KD = 3 \times \text{Rp } 550.000.000 = \text{\textbf{Rp 1.650.000.000}}$. Karena Rp 1,65 Milyar &gt; Rp 1,2 Milyar, syarat kualifikasi dinyatakan <strong>Lolos / Memenuhi Ambang Batas Teknis</strong>.<br>
+            4. Seluruh berkas dicetak dan diserahkan ke direktur utama kedua belah pihak untuk penandatanganan bersama hanya dalam waktu 15 menit!
+          </div>
+        </div>
+
+        <div class="alert-callout alert-tip">
+          <div>
+            ⚡ <strong>Tips Kunci Kualifikasi KSO:</strong><br>
+            Sesuai aturan lelang pemerintah, anggota KSO yang bertindak sebagai <strong>Lead Firm wajib memiliki porsi kepemilikan modal terbesar</strong> (minimal di atas 50% atau porsi mayoritas). Pastikan persentase porsi di Step 1 mencerminkan kepemimpinan teknis ini agar tidak terkena diskualifikasi administrasi oleh Pokja.
+          </div>
+        </div>
       </section>
 
+      <!-- 7. PERSONIL & CV GENERATOR -->
       <!-- 7. PERSONIL & CV GENERATOR -->
       <section class="module-card module-pane" id="personil">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">👷</div>
             <div class="module-titles">
-              <h3>Modul 7: Data Personil & Generator CV Standar Tender</h3>
-              <div class="module-sub">Bank Data Tenaga Ahli, SKA/SKK, Ijazah, Riwayat Kerja & Ekspor CV INKINDO</div>
+              <h3>Modul 7: Data Personil &amp; Generator CV Standar Tender</h3>
+              <div class="module-sub">Database Tenaga Ahli &amp; Pendukung, Integrasi SKK/SKA LPJK, Portofolio Proyek &amp; Ekspor CV Standar Permen PUPR</div>
             </div>
           </div>
           <span class="module-tag">SDM TEKNIK</span>
         </div>
 
         <p>
-          Menyimpan seluruh profil Tenaga Ahli (Site Engineer, Highway Engineer, Ahli Struktur, Ahli K3) dan Tenaga Pendukung (Inspector, Surveyor, CAD Drafter, Admin). 
+          <strong>Modul Data Personil &amp; Generator CV</strong> adalah pusat pengelolaan aset sumber daya manusia (SDM) perusahaan. Mengelola profil lengkap Tenaga Ahli (Site Engineer, Highway Engineer, Ahli Jembatan, Ahli K3 Konstruksi, Ahli Struktur, Geoteknik) dan Tenaga Pendukung (Inspector, Surveyor Lapangan, Operator CAD/Drafter, Petugas Lab, Tenaga Administrasi Proyek) lengkap dengan ijazah, sertifikat keahlian, dan riwayat penugasan.
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">⚡</span> Keunggulan Generator CV Otomatis:</div>
+        <div class="sub-title"><span class="sub-title-icon">⚡</span> Fitur Unggulan Generator CV Standar Tender (Format LPSE / INKINDO):</div>
         <p>
-          Tidak perlu lagi mengedit file Microsoft Word berulang-ulang untuk setiap tender! Cukup pilih nama personil dan posisi yang ditawarkan, klik <code>📄 Generate CV Tender</code>. Sistem akan menyusun Curriculum Vitae lengkap berstandar <strong>Format INKINDO / LPSE</strong> yang memuat:
+          Menghilangkan proses penyusunan CV manual di Microsoft Word yang memakan waktu berjam-jam. Cukup pilih nama personil dan posisi yang ditawarkan, sistem akan menyusun dokumen Curriculum Vitae 5-8 halaman berformat resmi yang memuat:
         </p>
         <ul class="step-list">
-          <li class="step-item">Data Pribadi, Nomor KTP, NPWP, dan Status Kepegawaian (Tetap/Tidak Tetap).</li>
-          <li class="step-item">Pendidikan Terakhir & Tahun Kelulusan.</li>
-          <li class="step-item">Daftar Sertifikat Keahlian Kerja (SKK/SKA) yang masih aktif beserta masa berlakunya.</li>
-          <li class="step-item">Tabel Pengalaman Kerja Proyek Sejenis (Uraian Tugas, Pengguna Jasa, Nilai Kontrak, Waktu Penugasan).</li>
-          <li class="step-item">Tanda Tangan Asli Personil & Pernyataan Kesediaan Ditugaskan.</li>
+          <li class="step-item"><strong>Data Identitas Pribadi:</strong> Nama Lengkap dengan Gelar, Tempat/Tanggal Lahir, Nomor KTP, NPWP, dan Status Kepegawaian (Tetap/Tidak Tetap).</li>
+          <li class="step-item"><strong>Pendidikan Formal:</strong> Perguruan Tinggi, Jurusan, Nomor Ijazah, dan Tahun Kelulusan.</li>
+          <li class="step-item"><strong>Sertifikat Kompetensi Kerja (SKK/SKA):</strong> Nomor registrasi LPJK, bidang keahlian, jenjang (Muda / Madya / Utama), masa berlaku, dan tanggal kedaluwarsa.</li>
+          <li class="step-item"><strong>Tabel Pengalaman Kerja Proyek Sejenis:</strong> Nama Pekerjaan, Lokasi, Pengguna Jasa/Satker, Nama Perusahaan Pelaksana, Posisi Penugasan, Uraian Tugas Teknis, Nilai Kontrak, serta Waktu Pelaksanaan (Orang-Bulan).</li>
+          <li class="step-item"><strong>Surat Pernyataan Kesediaan Ditugaskan:</strong> Format standar Kementerian PUPR bermaterai Rp 10.000 dengan tanda tangan asli personil.</li>
         </ul>
 
-        <div class="case-box">
-          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
-          <div class="case-title">Penyusunan Berkas Tenaga Ahli Tender Jalan Raya</div>
-          <div class="case-content">
-            Untuk paket pengawasan jalan, dibutuhkan <em>Site Engineer</em> dengan pengalaman minimal 3 tahun. Di Modul Personil, Anda menyaring tenaga ahli berijazah S1 Teknik Sipil dan memiliki SKK Ahli Madya Teknik Jalan. Pilih <em>Febriyanto, ST</em>, centang 5 proyek jalan terbaiknya dalam 4 tahun terakhir, lalu klik unduh. Dokumen CV 6 halaman format resmi langsung tercipta rapi siap upload ke SPSE.
-          </div>
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Seluruh Tombol di Modul Personil:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>+ Tambah Personil</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Membuka modal input profil personil baru (Nama, NIK, NPWP, Pendidikan, Kontak, Ijazah).</td>
+                <td>Penambahan SDM Baru</td>
+              </tr>
+              <tr>
+                <td><strong><code>📜 Kelola SKK / SKA</code></strong></td>
+                <td>Profil Personil</td>
+                <td>Menambah sertifikat keahlian LPJK, nomor lisensi, jenjang kualifikasi, dan batas akhir masa berlaku.</td>
+                <td>Pembaruan Lisensi LPJK</td>
+              </tr>
+              <tr>
+                <td><strong><code>📄 Generate CV Tender</code></strong></td>
+                <td>Aksi Baris Personil</td>
+                <td>Membuka modal pembuat CV otomatis: pilih posisi usulan, centang proyek sejenis, lalu hasilkan dokumen cetak.</td>
+                <td>Pembuatan CV Instan</td>
+              </tr>
+              <tr>
+                <td><strong><code>🔍 Filter Posisi &amp; Jenjang</code></strong></td>
+                <td>Bilah Atas Tabel</td>
+                <td>Menyaring daftar ahli berdasarkan posisi usulan (misal: Ahli Madya Teknik Jalan atau Ahli K3).</td>
+                <td>Pencarian Tenaga Ahli</td>
+              </tr>
+              <tr>
+                <td><strong><code>🖨️ Cetak / Unduh PDF CV</code></strong></td>
+                <td>Jendela Preview CV</td>
+                <td>Mengunduh berkas Curriculum Vitae resmi siap unggah ke portal lelang SPSE.</td>
+                <td>Dokumen Kualifikasi Siap Upload</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+
+        <div class="sub-title"><span class="sub-title-icon">📋</span> SOP Pembuatan CV Tenaga Ahli untuk Tender:</div>
+        <ol class="step-list">
+          <li class="step-item"><strong>Langkah 1:</strong> Buka modul Personil, gunakan kotak pencarian untuk mencari nama personil (contoh: <em>Febriyanto, ST</em>).</li>
+          <li class="step-item"><strong>Langkah 2:</strong> Periksa badge SKK di samping nama. Pastikan masa berlaku sertifikat masih aktif (berwarna hijau).</li>
+          <li class="step-item"><strong>Langkah 3:</strong> Klik tombol <code>📄 Generate CV Tender</code>. Ketikkan Posisi yang Diusulkan (contoh: <em>Site Engineer / Koordinator Pengawasan</em>).</li>
+          <li class="step-item"><strong>Langkah 4:</strong> Centang 3 sampai 6 paket proyek pengalaman kerja terbaik yang sejenis dengan Kerangka Acuan Kerja (KAK) tender.</li>
+          <li class="step-item"><strong>Langkah 5:</strong> Klik tombol <strong>Pratinjau CV</strong>, periksa kelengkapan uraian tugas, lalu klik <strong>🖨️ Cetak / Unduh PDF</strong>. Dokumen CV 6 halaman format resmi siap dalam 60 detik!</li>
+        </ol>
       </section>
 
       <!-- 8. AI KAK & TANGGAPAN DOKUMEN -->
+      <!-- 8. AI KAK & TANGGAPAN -->
       <section class="module-card module-pane" id="kaktanggapan">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">🤖</div>
             <div class="module-titles">
-              <h3>Modul 8: AI KAK & Tanggapan Dokumen Pengadaan</h3>
-              <div class="module-sub">Ekstraksi Dokumen KAK, Analisis Lingkup Tugas & Generator Proposal Teknis Otomatis</div>
+              <h3>Modul 8: AI KAK &amp; Tanggapan Dokumen Pengadaan</h3>
+              <div class="module-sub">Ekstraksi Dokumen KAK oleh AI, Analisis Lingkup Tugas, Generator Bab Metodologi &amp; Tanggapan Proposal Teknis</div>
             </div>
           </div>
           <span class="module-tag">AI INTELLIGENCE</span>
         </div>
 
         <p>
-          Modul kecerdasan buatan (AI) yang dirancang khusus untuk membedah Kerangka Acuan Kerja (KAK) dari Pejabat Pembuat Komitmen (PPK). 
+          <strong>Modul AI KAK &amp; Tanggapan</strong> memanfaatkan teknologi kecerdasan buatan (<em>Artificial Intelligence Engine</em>) yang dilatih khusus dengan standar teknis Kementerian PUPR (Spesifikasi Umum Bina Marga, Standar Cipta Karya, dan Pedoman SDA). Modul ini membedah dokumen Kerangka Acuan Kerja (KAK) dari PPK dan menyusun draf proposal teknis secara otomatis dalam hitungan menit.
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">🚀</span> Output yang Dihasilkan AI:</div>
-        <ul class="step-list">
-          <li class="step-item"><strong>Bab Pendekatan & Metodologi Pelaksanaan:</strong> Alur teknis pengawasan/perencanaan sesuai standar SNI dan Bina Marga.</li>
-          <li class="step-item"><strong>Bab Tanggapan Terhadap KAK:</strong> Saran dan masukan profesional terhadap ruang lingkup dinas.</li>
-          <li class="step-item"><strong>Uraian Tugas Personil & Struktur Organisasi:</strong> Matriks penugasan Site Engineer, Inspector, dan Laboratorium.</li>
-          <li class="step-item"><strong>Jadwal Pelaksanaan Pekerjaan (Kurva S Rencana Kerja).</strong></li>
-        </ul>
+        <div class="sub-title"><span class="sub-title-icon">🚀</span> 4 Bagian Proposal Teknis yang Dihasilkan Otomatis oleh AI:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Bagian Proposal</th>
+                <th style="width:75%;">Uraian Konten yang Disusun AI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Pemahaman &amp; Tanggapan KAK</strong></td>
+                <td>Ulasan kritis terhadap latar belakang proyek, sasaran pekerjaan, ketersediaan data awal, serta saran teknis penyempurnaan ruang lingkup dinas tanpa menambah biaya kontrak.</td>
+              </tr>
+              <tr>
+                <td><strong>2. Pendekatan &amp; Metodologi Kerja</strong></td>
+                <td>Alur kerja pengawasan fisik lapangan tahap demi tahap (tahap persiapan, review desain, pengawasan mutu material, pengendalian waktu/biaya, hingga tahap serah terima BAST/FHO).</td>
+              </tr>
+              <tr>
+                <td><strong>3. Rencana Kerja &amp; Kurva S Rencana</strong></td>
+                <td>Jadwal tahapan pelaksanaan pekerjaan per minggu dan bulan sesuai alokasi waktu yang ditentukan dalam KAK.</td>
+              </tr>
+              <tr>
+                <td><strong>4. Komposisi Tim &amp; Uraian Tugas</strong></td>
+                <td>Matriks pembagian tanggung jawab antara Site Engineer, Inspector, Ahli K3, dan Surveyor lengkap dengan alokasi Orang-Bulan (OB).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Tombol di Modul AI KAK:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>📤 Upload File PDF KAK</code></strong></td>
+                <td>Bilah Atas Modul</td>
+                <td>Mengunggah berkas KAK resmi dari Pokja untuk diproses dan diekstraksi oleh mesin teks cerdas.</td>
+                <td>Input Berkas KAK</td>
+              </tr>
+              <tr>
+                <td><strong><code>⚡ Analisis KAK dengan AI</code></strong></td>
+                <td>Panel Kontrol</td>
+                <td>Menjalankan pembedahan KAK untuk mengekstrak syarat personil, lingkup fisik, lokasi, dan target keluaran.</td>
+                <td>Ekstraksi Parameter Proyek</td>
+              </tr>
+              <tr>
+                <td><strong><code>📝 Generate Tanggapan KAK</code></strong></td>
+                <td>Tab Tanggapan</td>
+                <td>Menghasilkan teks bab tanggapan resmi yang memuat apresiasi, catatan teknis, dan saran konstruktif.</td>
+                <td>Bab Tanggapan Siap Pakai</td>
+              </tr>
+              <tr>
+                <td><strong><code>🛠️ Generate Metodologi Kerja</code></strong></td>
+                <td>Tab Metodologi</td>
+                <td>Menyusun bab pendekatan teknis pengawasan/perencanaan sesuai spesifikasi teknis Bina Marga/PUPR terbaru.</td>
+                <td>Bab Metodologi Siap Pakai</td>
+              </tr>
+              <tr>
+                <td><strong><code>📋 Salin Teks ke Clipboard</code></strong></td>
+                <td>Setiap Bab</td>
+                <td>Menyalin teks hasil susunan AI dengan format paragraf rapi langsung ke papan klip untuk ditempel ke dokumen Word.</td>
+                <td>Penyusunan Cepat Proposal</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
+      <!-- 9. PEMBUAT RAB 9 TAB -->
       <!-- 9. PEMBUAT RAB 9 TAB -->
       <section class="module-card module-pane" id="rab">
         <div class="module-header">
@@ -1287,103 +1862,196 @@
             <div class="module-icon">💰</div>
             <div class="module-titles">
               <h3>Modul 9: Pembuat RAB Konsultansi 9 Tab Standar INKINDO</h3>
-              <div class="module-sub">Penyusunan Rencana Anggaran Biaya Billing Rate, Operasional, Non-Personil & Rekapitulasi Cetak</div>
+              <div class="module-sub">Arsitektur Perhitungan Biaya Terlengkap: Remunerasi Billing Rate, Fasilitas Kantor, Sewa Kendaraan, Pelaporan, PPN 11% &amp; Ekspor Excel</div>
             </div>
           </div>
           <span class="module-tag">ESTIMASI BIAYA</span>
         </div>
 
         <p>
-          Modul penyusunan anggaran biaya jasa konsultansi terlengkap dengan arsitektur 9 Tab sesuai Pedoman Standar Biaya Remunerasi INKINDO dan Kementerian PUPR:
+          <strong>Modul Pembuat RAB Konsultansi 9 Tab</strong> dirancang sesuai <em>Pedoman Standar Biaya Remunerasi Minimal INKINDO</em> dan <em>SE Menteri PUPR</em>. Modul ini menghitung seluruh komponen biaya jasa konsultansi secara matematis tanpa risiko rumus Excel terhapus atau selisih pembulatan rupiah.
         </p>
 
+        <div class="sub-title"><span class="sub-title-icon">📊</span> Rincian Fungsi &amp; Pengisian Seluruh 9 Tab RAB:</div>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th>Tab</th>
-                <th>Nama Tab</th>
-                <th>Uraian Pengisian</th>
+                <th style="width:12%;">Tab</th>
+                <th style="width:24%;">Nama Tab</th>
+                <th style="width:40%;">Komponen Biaya yang Dihitung</th>
+                <th style="width:24%;">Standar Acuan</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong>Tab 1</strong></td>
-                <td>Rekapitulasi Total</td>
-                <td>Ringkasan Biaya Personil (Billing Rate) + Biaya Non-Personil + PPN 11% + Pembulatan Resmi.</td>
+                <td><strong>Rekapitulasi Total</strong></td>
+                <td>Ringkasan Biaya Langsung Personil (BLP) + Biaya Langsung Non-Personil (BLNP) + PPN 11% + Nilai Penawaran Akhir Dibulatkan.</td>
+                <td>Formulir Penawaran SPSE</td>
               </tr>
               <tr>
                 <td><strong>Tab 2</strong></td>
-                <td>Remunerasi Tenaga Ahli</td>
-                <td>Perhitungan Billing Rate Tenaga Ahli berdasarkan Provinsi, Tahun Pengalaman, dan Orang-Bulan (OB).</td>
+                <td><strong>Remunerasi Tenaga Ahli</strong></td>
+                <td>Perhitungan Billing Rate Tenaga Ahli (Site Engineer, Ahli K3, Ahli Struktur) berdasarkan Provinsi, Tahun Pengalaman, dan Orang-Bulan (OB).</td>
+                <td>Billing Rate INKINDO</td>
               </tr>
               <tr>
                 <td><strong>Tab 3</strong></td>
-                <td>Remunerasi Tenaga Pendukung</td>
-                <td>Gaji Inspector, Surveyor Lapangan, Operator CAD, Tenaga Administrasi Proyek.</td>
+                <td><strong>Tenaga Pendukung</strong></td>
+                <td>Honorarium Inspector, Surveyor Lapangan, Operator CAD/Drafter, Petugas Laboratorium, dan Administrasi Proyek.</td>
+                <td>Standar Upah Minimum / SE PUPR</td>
               </tr>
               <tr>
                 <td><strong>Tab 4</strong></td>
-                <td>Fasilitas & Sewa Kantor</td>
-                <td>Sewa Basecamp Lapangan, Komputer, Laptop, Printer, dan ATK Habis Pakai.</td>
+                <td><strong>Fasilitas &amp; Sewa Kantor</strong></td>
+                <td>Sewa Basecamp Lapangan, Biaya Listrik/Air, Komputer/Laptop, Printer A3/A4, dan ATK Habis Pakai.</td>
+                <td>Biaya Operasional Nyata (At Cost)</td>
               </tr>
               <tr>
                 <td><strong>Tab 5</strong></td>
-                <td>Sewa Kendaraan</td>
-                <td>Sewa Mobil Operasional (4x4 / MPV), Sepeda Motor Lapangan, Bahan Bakar & Pemeliharaan.</td>
+                <td><strong>Sewa Kendaraan</strong></td>
+                <td>Sewa Mobil Operasional Lapangan (4x4 / MPV), Sepeda Motor Survei, Biaya Bahan Bakar Minyak (BBM), dan Servis Rutin.</td>
+                <td>Biaya Operasional Nyata (At Cost)</td>
               </tr>
               <tr>
                 <td><strong>Tab 6</strong></td>
-                <td>Biaya Pelaporan</td>
-                <td>Laporan Pendahuluan, Laporan Antara, Laporan Bulanan, Laporan Akhir & Album Dokumentasi.</td>
+                <td><strong>Biaya Pelaporan</strong></td>
+                <td>Pencetakan dan Penjilidan: Laporan Pendahuluan, Laporan Antara, Laporan Bulanan, Laporan Akhir, dan Album Foto Dokumentasi.</td>
+                <td>Lump Sum / Harga Satuan</td>
               </tr>
               <tr>
                 <td><strong>Tab 7</strong></td>
-                <td>Pertemuan & Sosialisasi</td>
-                <td>Biaya Rapat Koordinasi, Presentasi Laporan, FGD, dan Konsultasi Publik.</td>
+                <td><strong>Pertemuan &amp; Sosialisasi</strong></td>
+                <td>Biaya Rapat Koordinasi, Presentasi Laporan di Dinas, Focus Group Discussion (FGD), dan Konsultasi Publik.</td>
+                <td>Konsumsi &amp; Ruang Rapat</td>
               </tr>
               <tr>
-                <td><strong>Tab 8 & 9</strong></td>
-                <td>Analisa & Rekap Ekspor</td>
-                <td>Tampilan cetak formal standar tender dan tombol <code>Ekspor ke Excel (.xlsx)</code>.</td>
+                <td><strong>Tab 8</strong></td>
+                <td><strong>Analisis Satuan Harga</strong></td>
+                <td>Uraian rincian harga satuan dasar dan koefisien pengali untuk setiap item biaya non-personil.</td>
+                <td>Dasar Justifikasi Harga</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 9</strong></td>
+                <td><strong>Format Ekspor Cetak</strong></td>
+                <td>Tampilan formal dokumen penawaran harga standar tender dan tombol ekspor langsung ke format Microsoft Excel (.xlsx).</td>
+                <td>Dokumen Siap Cetak</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="case-box">
-          <span class="case-badge">💡 Contoh Skenario Penggunaan</span>
-          <div class="case-title">Penyusunan RAB Pengawasan Jembatan 4 Bulan (Rp 184 Juta)</div>
-          <div class="case-content">
-            Pada paket pengawasan jembatan di Kabupaten Tanah Datar dengan masa kerja 4 bulan:<br>
-            • <strong>Tab 2:</strong> 1 Site Engineer (4 OB @ Rp 20.295.800) = Rp 81.183.200.<br>
-            • <strong>Tab 3:</strong> 1 Inspector (4 OB @ Rp 10.000.000) + 1 CAD Drafter = Rp 68.700.000.<br>
-            • <strong>Tab 4-6:</strong> Fasilitas Kantor Rp 6.200.000, Sewa Kendaraan Rp 4.800.000, Pelaporan Rp 3.750.000.<br>
-            • <strong>Tab 1:</strong> Total Biaya Langsung Rp 164.633.200 + PPN 11% (Rp 18.109.652) = <strong>Rp 182.742.852 (Dibulatkan Rp 182.742.000)</strong>.<br>
-            Seluruh rumus matematika terhubung otomatis tanpa risiko rumus Excel terhapus!
-          </div>
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Tombol di Modul Pembuat RAB:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>+ Tambah Baris Personil</code></strong></td>
+                <td>Tab 2 &amp; Tab 3</td>
+                <td>Menambah baris personil baru, memilih posisi, tahun pengalaman, dan durasi Orang-Bulan (OB).</td>
+                <td>Kalkulasi Billing Rate</td>
+              </tr>
+              <tr>
+                <td><strong><code>📊 Ekspor ke Excel (.xlsx)</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Mengekspor seluruh 9 tab secara utuh ke dalam 1 file buku kerja Excel dengan format tabel rapi.</td>
+                <td>File Excel Siap Upload</td>
+              </tr>
+              <tr>
+                <td><strong><code>🖨️ Cetak Rekap RAB</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Mencetak lembar rekapitulasi penawaran harga resmi Tab 1 lengkap dengan tanda tangan dan kop surat.</td>
+                <td>Dokumen Penawaran Fisik</td>
+              </tr>
+              <tr>
+                <td><strong><code>💾 Simpan Draf RAB</code></strong></td>
+                <td>Bawah Panel Tab</td>
+                <td>Menyimpan seluruh angka perhitungan ke memori lokal dan cloud Supabase.</td>
+                <td>Penyimpanan Aman</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
+      <!-- 10. DATA PAKET BERJALAN -->
       <!-- 10. DATA PAKET BERJALAN -->
       <section class="module-card module-pane" id="paket">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📦</div>
             <div class="module-titles">
-              <h3>Modul 10: Data Paket Berjalan & Manajemen Kontrak</h3>
-              <div class="module-sub">Administrasi Proyek Menang, SPMK, Addendum Waktu/Biaya & Rekam Jejak Lapangan</div>
+              <h3>Modul 10: Data Paket Berjalan &amp; Manajemen Kontrak</h3>
+              <div class="module-sub">Administrasi Proyek Menang, SPMK, Pengendalian Addendum Waktu/Biaya &amp; Kurva S Progres Lapangan</div>
             </div>
           </div>
           <span class="module-tag">PELAKSANAAN KONTRAK</span>
         </div>
 
         <p>
-          Tempat menyimpan data paket yang telah resmi berkontrak: Nomor Kontrak Dinas, Nomor SPMK, Tanggal Mulai dan Selesai, Pejabat Penandatangan (PPK / PPTK / Keduanya), dan riwayat <strong>Addendum Kontrak</strong>.
+          <strong>Modul Data Paket Berjalan</strong> adalah pusat administrasi bagi seluruh proyek yang telah dimenangkan dan resmi berkontrak dinas. Menyimpan nomor kontrak dinas, nomor Surat Perintah Mulai Kerja (SPMK), masa pelaksanaan (hari kalender), pejabat dinas penandatangan (PPK / PPTK), dan riwayat <strong>Addendum Kontrak</strong> (perpanjangan waktu atau perubahan nilai biaya).
         </p>
 
         <div class="alert-callout alert-warn">
-          <div>⚠️ <strong>Penting Terkait Addendum:</strong> Jika terjadi perpanjangan waktu atau perubahan nilai kontrak di lapangan, selalu masukkan Addendum di modul ini terlebih dahulu agar saat mencetak Invoice, kolom <em>"Kontrak Setelah Addendum"</em> di Tab Rekapitulasi 12 Kolom otomatis terupdate.</div>
+          <div>
+            ⚠️ <strong>Aturan Wajib Addendum Kontrak:</strong><br>
+            Jika terjadi perubahan nilai kontrak atau perpanjangan waktu kerja di lapangan, staf <strong>wajib menginput Addendum Kontrak di modul ini terlebih dahulu</strong>. Saat data addendum tersimpan, sistem secara otomatis meneruskan angka kontrak baru tersebut ke Modul Invoice sehingga pada lembar <em>Rekapitulasi 12 Kolom</em>, kolom <em>"Kontrak Setelah Addendum"</em> otomatis terbarui tanpa salah hitung!
+          </div>
+        </div>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Tombol di Modul Paket Berjalan:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>+ Tambah Kontrak Baru</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Mendaftarkan proyek baru: Nomor Kontrak, Tanggal Kontrak, Nomor SPMK, Tanggal Mulai/Selesai, Nilai Bruto, dan PPK Dinas.</td>
+                <td>Pendaftaran Kontrak Baru</td>
+              </tr>
+              <tr>
+                <td><strong><code>📝 Tambah Addendum</code></strong></td>
+                <td>Aksi Baris Paket</td>
+                <td>Mencatat Addendum Waktu (perpanjangan hari kalender) atau Addendum Biaya (CCO tambah/kurang nilai).</td>
+                <td>Pembaruan Nilai Kontrak</td>
+              </tr>
+              <tr>
+                <td><strong><code>🧾 Buat Invoice / MC</code></strong></td>
+                <td>Aksi Baris Paket</td>
+                <td>Melompat langsung ke Modul 11 (Pembuat Invoice) dengan data proyek yang sudah terkunci otomatis.</td>
+                <td>Pembuatan Berkas Termin</td>
+              </tr>
+              <tr>
+                <td><strong><code>📈 Update Kurva S Progres</code></strong></td>
+                <td>Aksi Baris Paket</td>
+                <td>Memasukkan realisasi persentase progres fisik mingguan untuk memantau deviasi keterlambatan proyek.</td>
+                <td>Monitoring Kinerja Lapangan</td>
+              </tr>
+              <tr>
+                <td><strong><code>📦 Tutup / Arsipkan Kontrak</code></strong></td>
+                <td>Aksi Baris Paket</td>
+                <td>Mengarsipkan proyek yang telah selesai 100% dan meneruskan data pengalaman ke Modul 3 (Portofolio SIKAP).</td>
+                <td>Arsip Selesai &amp; Tambah KD</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -1497,27 +2165,68 @@
       </section>
 
       <!-- 12. PANTAU PERSONIL OVERLAP -->
+      <!-- 12. PANTAU PERSONIL OVERLAP -->
       <section class="module-card module-pane" id="pantaupersonil">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">👥</div>
             <div class="module-titles">
-              <h3>Modul 12: Pantau Personil & Deteksi Overlap Proyek</h3>
-              <div class="module-sub">Peta Kalender Penugasan Tenaga Ahli & Peringatan Tabrakan Waktu Lintas Proyek</div>
+              <h3>Modul 12: Pantau Personil &amp; Deteksi Overlap Lintas Proyek</h3>
+              <div class="module-sub">Peta Kalender Penugasan Tenaga Ahli (Gantt Chart), Deteksi Peringatan Tabrakan Tanggal Proyek &amp; Audit Kepatuhan BPK</div>
             </div>
           </div>
-          <span class="module-tag">AUDIT & KEPATUHAN</span>
+          <span class="module-tag">AUDIT &amp; KEPATUHAN</span>
         </div>
 
         <p>
-          Modul ini memvisualisasikan seluruh penugasan Tenaga Ahli dalam garis waktu (*timeline Gantt chart*).
+          <strong>Modul Pantau Personil &amp; Deteksi Overlap</strong> adalah instrumen pengawasan kepatuhan hukum penugasan tenaga ahli. Modul ini memetakan seluruh jadwal kerja Tenaga Ahli pada proyek-proyek yang sedang berjalan ke dalam garis waktu visual (*Gantt Chart Interactive*).
         </p>
 
         <div class="alert-callout alert-warn">
           <div>
-            ⚠️ <strong>Pencegahan Pelanggaran Penugasan Ganda (Overlap):</strong><br>
-            Menurut aturan pengadaan pemerintah, Tenaga Ahli yang berstatus <em>Full Time</em> tidak boleh ditugaskan pada dua proyek berbeda dalam waktu bersamaan. Jika seorang tenaga ahli didaftarkan pada dua proyek yang bertabrakan tanggalnya, modul ini akan memunculkan <strong>Garis Merah Peringatan Overlap</strong> untuk mencegah temuan audit Badan Pemeriksa Keuangan (BPK) atau Inspektorat.
+            ⚠️ <strong>Pencegahan Pelanggaran Penugasan Ganda (Overlap Audit BPK):</strong><br>
+            Sesuai regulasi pengadaan pemerintah dan kode etik profesi, Tenaga Ahli yang berstatus <em>Full Time</em> (seperti Site Engineer, Koordinator Tim, Ahli K3) <strong>dilarang keras ditugaskan pada dua paket pekerjaan berbeda dalam waktu yang bersamaan</strong>. Jika sistem mendeteksi seorang personil terdaftar pada dua kontrak yang rentang tanggalnya bertabrakan, sistem secara otomatis memunculkan <strong>Garis Merah Peringatan Overlap</strong> dan menaikkan angka peringatan di Kartu Overlap Beranda.
           </div>
+        </div>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Tombol di Modul Pantau Personil:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>📅 Filter Rentang Bulan/Tahun</code></strong></td>
+                <td>Atas Gantt Chart</td>
+                <td>Menggeser tampilan kalender kerja untuk melihat jadwal penugasan di bulan lalu, bulan ini, atau bulan depan.</td>
+                <td>Navigasi Waktu Gantt Chart</td>
+              </tr>
+              <tr>
+                <td><strong><code>🔍 Filter Nama Personil</code></strong></td>
+                <td>Bilah Filter</td>
+                <td>Mencari nama tenaga ahli spesifik untuk melihat daftar seluruh proyek yang pernah dan sedang ditangani.</td>
+                <td>Inspeksi Riwayat Ahli</td>
+              </tr>
+              <tr>
+                <td><strong><code>⚠️ Tombol Hanya Overlap</code></strong></td>
+                <td>Bilah Atas</td>
+                <td>Menyaring dan hanya menampilkan daftar personil yang mengalami bentrok penugasan ganda saja.</td>
+                <td>Deteksi Cepat Konflik</td>
+              </tr>
+              <tr>
+                <td><strong><code>🔄 Alihkan Penugasan</code></strong></td>
+                <td>Aksi Baris Personil</td>
+                <td>Mengganti personil yang bertabrakan dengan tenaga ahli cadangan lain yang berlisensi sama di database.</td>
+                <td>Penyelesaian Konflik Audit</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -1527,21 +2236,58 @@
           <div class="module-badge-wrap">
             <div class="module-icon">✉️</div>
             <div class="module-titles">
-              <h3>Modul 13: Master Surat & Generator Surat Resmi</h3>
-              <div class="module-sub">Penomoran Otomatis Surat Keluar, Surat Tugas, Bebas Tugas & Referensi Kerja</div>
+              <h3>Modul 13: Master Surat &amp; Generator Surat Resmi</h3>
+              <div class="module-sub">Penomoran Otomatis Surat Keluar, Surat Tugas Lapangan, Surat Bebas Tugas &amp; Surat Keterangan Referensi Pengalaman</div>
             </div>
           </div>
           <span class="module-tag">PERSURATAN</span>
         </div>
 
         <p>
-          Menyediakan format baku surat-surat administrasi konsultan:
+          <strong>Modul Master Surat</strong> mengelola seluruh surat-menyurat resmi perusahaan konsultan. Dilengkapi penomoran otomatis terpusat, template dinas baku, dan otomatisasi kop surat resmi.
         </p>
+
+        <div class="sub-title"><span class="sub-title-icon">📑</span> Format Surat Baku yang Disediakan Sistem:</div>
         <ul class="step-list">
-          <li class="step-item"><strong>Surat Referensi Kerja Personil:</strong> Bukti pengalaman kerja tenaga ahli setelah proyek selesai.</li>
-          <li class="step-item"><strong>Surat Keterangan Bebas Tugas:</strong> Pernyataan bahwa personil telah menyelesaikan tugas dan bebas untuk ditugaskan pada lelang baru.</li>
-          <li class="step-item"><strong>Surat Tugas Lapangan & Surat Kuasa.</strong></li>
+          <li class="step-item"><strong>Surat Tugas Tenaga Ahli Lapangan:</strong> Surat pengantar penugasan resmi dari direksi kepada Site Engineer / Inspector untuk melapor ke direksi dinas / PPK.</li>
+          <li class="step-item"><strong>Surat Keterangan Bebas Tugas:</strong> Pernyataan resmi bahwa personil telah menyelesaikan seluruh tanggung jawabnya pada proyek lama dan bebas untuk diusulkan pada lelang baru di SPSE.</li>
+          <li class="step-item"><strong>Surat Keterangan Pengalaman Kerja (Referensi Kerja):</strong> Bukti otentik kinerja personil setelah proyek selesai untuk persyaratan kenaikan jenjang SKK di LPJK.</li>
+          <li class="step-item"><strong>Surat Kuasa Direksi &amp; Surat Pernyataan Minat KSO.</strong></li>
         </ul>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Tombol di Modul Master Surat:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>+ Buat Surat Baru</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Membuka formulir pembuatan surat baru: pilih jenis surat, nama penerima, perihal, dan badan usaha penerbit.</td>
+                <td>Pembuatan Surat Baru</td>
+              </tr>
+              <tr>
+                <td><strong><code>#️⃣ Generate Nomor Otomatis</code></strong></td>
+                <td>Formulir Surat</td>
+                <td>Menyusun nomor surat keluar resmi sesuai buku agenda dinas (contoh: <code>042/PAG-ST/XI/2026</code>).</td>
+                <td>Penomoran Anti-Dobel</td>
+              </tr>
+              <tr>
+                <td><strong><code>🖨️ Cetak Surat Resmi</code></strong></td>
+                <td>Pratinjau Surat</td>
+                <td>Mencetak dokumen surat lengkap dengan kop resmi, stempel basah transparan, dan tanda tangan direktur.</td>
+                <td>Surat Resmi Siap Kirim</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <!-- 14. BANK REFERENSI -->
@@ -1550,16 +2296,50 @@
           <div class="module-badge-wrap">
             <div class="module-icon">🏛️</div>
             <div class="module-titles">
-              <h3>Modul 14: Bank Referensi</h3>
-              <div class="module-sub">Manajemen Permohonan Surat Keterangan Dukungan Bank untuk Dokumen Tender</div>
+              <h3>Modul 14: Bank Referensi &amp; Dukungan Keuangan</h3>
+              <div class="module-sub">Manajemen Permohonan Surat Keterangan Referensi Bank &amp; Surat Dukungan Keuangan Tender</div>
             </div>
           </div>
           <span class="module-tag">KEUANGAN BANK</span>
         </div>
 
         <p>
-          Mengelola arsip permohonan Surat Dukungan Bank dan Surat Keterangan Referensi Bank (Bank Nagari, BNI, Mandiri) sebagai syarat kelengkapan kualifikasi keuangan pada tender-tender bernilai besar.
+          <strong>Modul Bank Referensi</strong> mengelola permohonan surat dukungan keuangan dari bank mitra resmi (Bank Nagari, BNI, Bank Mandiri, Bank BRI). Surat referensi bank merupakan syarat mutlak pembuktian kualifikasi keuangan pada tender-tender lelang bernilai besar.
         </p>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Tombol di Modul Bank Referensi:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>+ Permohonan Dukungan Bank</code></strong></td>
+                <td>Pojok Kanan Atas</td>
+                <td>Membuka formulir pengajuan: pilih bank mitra, nomor rekening dinas, nama tender lelang, dan nominal dukungan yang diminta.</td>
+                <td>Pengajuan Dukungan Bank</td>
+              </tr>
+              <tr>
+                <td><strong><code>📄 Cetak Surat Permohonan</code></strong></td>
+                <td>Aksi Baris</td>
+                <td>Mencetak surat permohonan resmi berkop dinas yang ditujukan kepada Pemimpin Cabang Bank bersangkutan.</td>
+                <td>Surat Permohonan Resmi</td>
+              </tr>
+              <tr>
+                <td><strong><code>📎 Unggah Scan Asli Bank</code></strong></td>
+                <td>Aksi Baris</td>
+                <td>Mengunggah scan PDF asli Surat Dukungan Bank yang telah terbit sebagai arsip lampiran dokumen penawaran SPSE.</td>
+                <td>Arsip Dokumen Tender</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <!-- 15. PENGATURAN -->
@@ -1568,84 +2348,154 @@
           <div class="module-badge-wrap">
             <div class="module-icon">⚙️</div>
             <div class="module-titles">
-              <h3>Modul 15: Pengaturan Sistem & Manajemen Hak Akses (RBAC)</h3>
-              <div class="module-sub">Saklar Modul Aktif, Manajemen Akun Staf, Peran Pengguna & Proteksi Data</div>
+              <h3>Modul 15: Pengaturan Sistem &amp; Manajemen Hak Akses (RBAC)</h3>
+              <div class="module-sub">Saklar Modul On/Off, Manajemen Akun Staf, Tingkatan Peran Pengguna (Role) &amp; Proteksi Database Cloud</div>
             </div>
           </div>
           <span class="module-tag">ADMINISTRATOR</span>
         </div>
 
         <p>
-          Dikhususkan untuk Direktur atau Administrator Utama untuk mengatur hak akses pengguna (*Role-Based Access Control*):
+          <strong>Modul Pengaturan Sistem</strong> adalah pusat kendali tata kelola keamanan sistem yang hanya dapat diakses oleh Direktur Utama atau Administrator Sistem (<em>Superuser</em>). Mengatur hak akses pengguna berdasarkan tugas (*Role-Based Access Control / RBAC*), saklar aktivasi modul, dan pemulihan data.
         </p>
+
+        <div class="sub-title"><span class="sub-title-icon">🔐</span> Tingkatan Hak Akses Pengguna (Role-Based Access Control):</div>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th>Tingkat Peran (Role)</th>
-                <th>Hak Akses & Otoritas</th>
+                <th style="width:24%;">Tingkat Peran (Role)</th>
+                <th style="width:38%;">Otoritas &amp; Wewenang Akses</th>
+                <th style="width:38%;">Batasan Keamanan</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong>Superuser / Direktur</strong></td>
-                <td>Akses penuh ke seluruh modul, pengaturan keuangan, persetujuan hapus data permanen, dan saklar modul.</td>
+                <td>Akses penuh 100% ke seluruh 17 modul, pengaturan rekening dinas, persetujuan hapus data permanen, dan saklar modul.</td>
+                <td>Tidak memiliki batasan sistem.</td>
               </tr>
               <tr>
                 <td><strong>User Teknik / Estimator</strong></td>
-                <td>Dapat mengelola RAB, AI KAK, Personil, dan data paket berjalan. Tidak dapat mengubah nomor rekening perusahaan.</td>
+                <td>Dapat mengelola RAB 9 Tab, AI KAK, Personil, dan data proyek.</td>
+                <td>Dilarang mengubah nomor rekening bank perusahaan dan pengaturan hak akses pengguna lain.</td>
               </tr>
               <tr>
-                <td><strong>User Tender / Admin</strong></td>
-                <td>Dapat menginput tender, mengunduh CV, memantau radar SPSE. Watermark nama aktif secara otomatis untuk mencegah kebocoran dokumen.</td>
+                <td><strong>User Tender / Admin Lelang</strong></td>
+                <td>Dapat menginput tender, mengunduh CV tenaga ahli, memantau radar SPSE, dan membuat dokumen PQ KSO.</td>
+                <td>Watermark nama pengguna otomatis tercetak pada dokumen untuk mencegah kebocoran berkas lelang internal.</td>
               </tr>
               <tr>
-                <td><strong>User Biasa / Tamu</strong></td>
-                <td>Akses hanya-lihat (*read-only*) tanpa izin hapus atau ekspor rahasia.</td>
+                <td><strong>User Keuangan</strong></td>
+                <td>Mengelola penagihan termin, membuat invoice MC, BAP, kwitansi, dan memantau pengembalian uang muka.</td>
+                <td>Dilarang mengubah data pokok legalitas akta dan SBU perusahaan.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Tombol di Modul Pengaturan:</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Nama Tombol</th>
+                <th style="width:16%;">Lokasi</th>
+                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
+                <th style="width:24%;">Dampak Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>+ Tambah Pengguna Baru</code></strong></td>
+                <td>Tab Pengguna</td>
+                <td>Mendaftarkan staf baru: Nama, Email, Kata Sandi, dan Tingkatan Peran (Role).</td>
+                <td>Akses Akun Baru</td>
+              </tr>
+              <tr>
+                <td><strong><code>🔘 Saklar Modul (On/Off)</code></strong></td>
+                <td>Tab Saklar Modul</td>
+                <td>Menyalakan atau menonaktifkan tampilan modul tertentu di menu sidebar (misal: menyembunyikan modul AI jika kuota habis).</td>
+                <td>Kustomisasi Antarmuka</td>
+              </tr>
+              <tr>
+                <td><strong><code>☁️ Backup Database Cloud</code></strong></td>
+                <td>Tab Pemeliharaan</td>
+                <td>Mengekspor seluruh tabel database Supabase ke dalam file JSON terenkripsi sebagai cadangan keamanan data.</td>
+                <td>Cadangan Keamanan Data</td>
+              </tr>
+              <tr>
+                <td><strong><code>🔄 Reset Cache Lokal</code></strong></td>
+                <td>Tab Pemeliharaan</td>
+                <td>Membersihkan cache memori browser staf jika terjadi ketidaksesuaian tampilan tanpa merusak database cloud.</td>
+                <td>Pemecahan Masalah Tampilan</td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- 16. DOCK UTILITY TOOLS -->
+      <!-- 16. SIDEBAR DOCK TOOLS -->
       <section class="module-card module-pane" id="docktools">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">🛠️</div>
             <div class="module-titles">
-              <h3>16. Sidebar Dock Tools (Peralatan Cepat)</h3>
-              <div class="module-sub">Peralatan Bantu Ringkas di Pojok Kiri Bawah Aplikasi</div>
+              <h3>Modul 16: Sidebar Dock Tools (Utilitas Terpadu)</h3>
+              <div class="module-sub">Brankas Sandi SPSE, Kalender Hari Kerja &amp; Kontrak SPMK, Generator Tanda Tangan &amp; Stempel Digital</div>
             </div>
           </div>
-          <span class="module-tag">ALAT BANTU</span>
+          <span class="module-tag">UTILITAS CEPAT</span>
         </div>
 
         <p>
-          Pada bagian bawah bilah samping (sidebar), terdapat 5 ikon cepat yang dapat dibuka kapan saja tanpa meninggalkan pekerjaan:
+          <strong>Sidebar Dock Tools</strong> adalah laci alat bantu cepat yang terletak di pojok kiri bawah layar aplikasi. Dock ini dapat dibuka kapan saja tanpa meninggalkan modul yang sedang Anda kerjakan melalui 5 ikon cepat:
         </p>
-        <ul class="step-list">
-          <li class="step-item">
-            <strong>📝 Catatan & Password (Vault Akun):</strong>
-            Buku catatan terenkripsi untuk menyimpan akun SPSE dari berbagai kabupaten/kota, sandi email dinas, dan nomor kontak Pokja.
-          </li>
-          <li class="step-item">
-            <strong>📅 Kalkulator Hari Kalender & Hari Kerja:</strong>
-            Alat hitung cepat selisih tanggal. Cukup masukkan tanggal SPMK dan durasi kontrak (misal: 120 Hari Kalender), sistem langsung menampilkan tanggal jatuh tempo PHO lengkap dengan peringatan hari libur nasional.
-          </li>
-          <li class="step-item">
-            <strong>✍️ Bank Tanda Tangan Digital:</strong>
-            Penyimpanan spesimen tanda tangan Direktur dan Tenaga Ahli berformat PNG transparan.
-          </li>
-          <li class="step-item">
-            <strong>💮 Bank Cap Stempel Perusahaan:</strong>
-            Penyimpanan cap stempel basah digital yang otomatis diberi efek kemiringan alami saat ditempelkan ke lembar permohonan.
-          </li>
-          <li class="step-item">
-            <strong>◐ Pengubah Tema Gelap / Terang:</strong>
-            Beralih tampilan antara tema terang dan tema gelap (*Dark Mode*) untuk kenyamanan mata saat bekerja malam hari.
-          </li>
-        </ul>
+
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:12%; text-align:center;">Ikon</th>
+                <th style="width:25%;">Nama Utilitas</th>
+                <th style="width:38%;">Fungsi Utama</th>
+                <th style="width:25%;">Cara Pakai</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center; font-size:18px;"><strong>📝</strong></td>
+                <td><strong>Catatan Sandi SPSE (Brankas Akun)</strong></td>
+                <td>Menyimpan username, sandi, dan kode OTP akun portal LPSE berbagai kementerian dan pemda secara terenkripsi.</td>
+                <td>Klik ikon <code>📝</code>, klik tombol <em>Salin</em> di samping sandi akun SPSE yang dibutuhkan.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center; font-size:18px;"><strong>📅</strong></td>
+                <td><strong>Kalender Hari Kerja &amp; SPMK</strong></td>
+                <td>Menghitung durasi hari kalender vs hari kerja efektif (otomatis memotong hari libur nasional dan cuti bersama).</td>
+                <td>Klik ikon <code>📅</code>, masukkan tanggal SPMK dan durasi bulan, sistem otomatis memunculkan tanggal akhir kontrak.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center; font-size:18px;"><strong>✍️</strong></td>
+                <td><strong>Tanda Tangan Digital</strong></td>
+                <td>Papan gambar digital untuk membuat tanda tangan direktur dengan latar belakang transparan (.png).</td>
+                <td>Goreskan tanda tangan di kanvas, klik <em>Simpan Transparan</em>.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center; font-size:18px;"><strong>💮</strong></td>
+                <td><strong>Stempel Perusahaan Digital</strong></td>
+                <td>Generator stempel lingkaran dinas resmi lengkap dengan nama PT dan bintang pengaman.</td>
+                <td>Pilih warna stempel (Biru / Merah / Ungu), ketik nama perusahaan, lalu simpan.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center; font-size:18px;"><strong>◐</strong></td>
+                <td><strong>Pengubah Tema (Gelap / Terang)</strong></td>
+                <td>Mengubah skema warna sistem antara Mode Siang (terang elegan) dan Mode Malam (gelap hemat daya).</td>
+                <td>Klik ikon <code>◐</code> untuk beralih mode warna seketika.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <!-- FOOTER -->
