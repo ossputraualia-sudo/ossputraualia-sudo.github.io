@@ -1403,97 +1403,318 @@
 
       <!-- 3. PORTOFOLIO SIKAP -->
       <!-- 3. PORTOFOLIO SIKAP -->
+      <!-- 3. PORTOFOLIO SIKAP -->
       <section class="module-card module-pane" id="portofolio">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📈</div>
             <div class="module-titles">
-              <h3>Modul 3: Data Pengalaman (Portofolio SIKAP)</h3>
-              <div class="module-sub">Rekam Jejak Kontrak Selesai 100%, Bukti BAST/FHO, Perhitungan Nilai KD &amp; Sinkronisasi SIKAP LKPP</div>
+              <h3>Modul 3: Data Pengalaman Perusahaan (Portofolio SIKAP)</h3>
+              <div class="module-sub">Rekam Jejak Kontrak Selesai 100%, Bukti BAST/FHO, Perhitungan Nilai KD, Integrasi Tenaga Ahli &amp; Ekspor Cetak SPSE</div>
             </div>
           </div>
           <span class="module-tag">KUALIFIKASI TENDER</span>
         </div>
 
         <p>
-          <strong>Modul Data Pengalaman (Portofolio SIKAP)</strong> berfungsi sebagai brankas rekam jejak pekerjaan yang telah selesai 100% dan telah diserahterimakan kepada Pejabat Pembuat Komitmen (dilengkapi Berita Acara Serah Terima / BAST / FHO). Data pengalaman ini menjadi rujukan utama penghitungan <strong>Kemampuan Dasar (KD)</strong> pada tender lelang bernilai besar dan menengah di portal SPSE LKPP.
+          <strong>Modul Data Pengalaman (Portofolio SIKAP)</strong> adalah brankas rekam jejak pekerjaan resmi yang memuat seluruh riwayat kontrak pengawasan dan perencanaan konstruksi yang telah selesai 100% dan telah diserahterimakan kepada Pejabat Pembuat Komitmen (PPK). Data pada modul ini menjadi instrumen pembuktian utama dalam penentuan <strong>Kemampuan Dasar (KD)</strong> serta penyusunan lembar kualifikasi pengalaman sejenis pada portal SPSE LKPP.
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">📐</span> Rumus Resmi Perhitungan Kemampuan Dasar (KD):</div>
-        <div class="alert-callout alert-info">
-          <div>
-            Menurut <strong>Perpres No. 12/2021</strong> dan <strong>Permen PUPR No. 14/2020</strong>, untuk tender jasa konsultansi konstruksi kualifikasi usaha menengah dan besar, nilai Kemampuan Dasar (KD) dihitung dengan rumus baku:<br>
-            <div style="font-size:16px; font-weight:800; margin:10px 0; color:var(--primary-dark); text-align:center;">
-              $$KD = 3 	imes 	ext{Nilai Kontrak Tertinggi dalam 10 Tahun Terakhir}$$
-            </div>
-            <em>Catatan Penting:</em> Pengalaman yang dapat dihitung sebagai KD wajib berasal dari sub-bidang klasifikasi yang sejenis dengan paket pekerjaan yang dilelangkan dan telah memiliki BAST akhir.
-          </div>
+        <!-- ======================================================== -->
+        <!-- BAGIAN 1: PETA LAYAR UTAMA DATA PENGALAMAN (GAMBAR 3.1) -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🧭</span> 1. Anatomi &amp; Peta Layar Utama Data Pengalaman:</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/pengalaman_1_utama.png" alt="Layar Utama Data Pengalaman Perusahaan" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 3.1: Layar Utama Data Pengalaman Perusahaan dengan 7 Zona Sorotan Interaktif &amp; Panel Rincian Kontrak.</em>
+          </p>
         </div>
 
-        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Seluruh Tombol di Modul Portofolio SIKAP:</div>
+        <p>Berdasarkan <strong>Gambar 3.1</strong> di atas, layar terbagi menjadi bilah filter atas, tabel portofolio di sisi kiri, dan lembar kerja rincian kontrak di sisi kanan:</p>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th style="width:22%;">Nama Tombol</th>
-                <th style="width:16%;">Lokasi</th>
-                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
-                <th style="width:24%;">Dampak Sistem</th>
+                <th style="width:10%; text-align:center;">Pin</th>
+                <th style="width:24%;">Nama Komponen</th>
+                <th style="width:36%;">Data Riil &amp; Elemen Tampilan</th>
+                <th style="width:30%;">Fungsi Operasional &amp; Efek Klik</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong><code>+ Tambah Pengalaman</code></strong></td>
-                <td>Pojok Kanan Atas</td>
-                <td>Membuka modal input data kontrak selesai: Nama Paket, Pemberi Tugas, Nomor Kontrak, Nilai Kontrak, dan Tanggal Selesai.</td>
-                <td>Penambahan Arsip KD</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
+                <td><strong>Pencarian &amp; 5 Filter Multi-Level</strong></td>
+                <td>
+                  • Kotak teks <code>🔍 Cari paket..</code><br>
+                  • Filter Perusahaan: <code>Semua... ˅</code><br>
+                  • Filter Lokasi: <code>📍 Lokasi ˅</code> (Kab. Kampar, Kab. Agam, dll)<br>
+                  • Filter Periode: <code>🗓️ Tahun ˅</code><br>
+                  • Filter SBU: <code>🏷️ SBU ˅</code> (RK003, RE202, dll)
+                </td>
+                <td>Memungkinkan tim estimator menyaring pengalaman yang presisi sesuai kriteria Kerangka Acuan Kerja (KAK) tender hanya dalam 2 detik.</td>
               </tr>
               <tr>
-                <td><strong><code>🔍 Filter Sub-Bidang</code></strong></td>
-                <td>Atas Tabel Data</td>
-                <td>Menyaring pengalaman berdasarkan klasifikasi (misal: Pengawasan Jalan &amp; Jembatan, Pengawasan Gedung, SDA/Irigasi).</td>
-                <td>Pencocokan Cepat KAK</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
+                <td><strong>Tab Status Pengalaman</strong></td>
+                <td>
+                  • <code>🟩 Utama (199)</code> (199 Kontrak Valid Terverifikasi)<br>
+                  • <code>Draft</code> (Kontrak Baru Hasil Import/Menunggu BAST)
+                </td>
+                <td>Memisahkan data kontrak yang sudah siap cetak untuk dokumen penawaran resmi dari draf yang masih dalam proses verifikasi lampiran.</td>
               </tr>
               <tr>
-                <td><strong><code>🧮 Hitung KD Otomatis</code></strong></td>
-                <td>Bilah Metrik</td>
-                <td>Menemukan kontrak nilai tertinggi pada sub-bidang terpilih dan mengalikan nominalnya dengan 3x secara otomatis.</td>
-                <td>Kalkulasi Ambang Batas KD</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#0284c7; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
+                <td><strong>Bilah Tombol Aksi Universal</strong></td>
+                <td>
+                  • <code>🖨️ Cetak ˅</code> (Cetak Rekap &amp; Uraian Sejenis)<br>
+                  • <code>📥 Tarik</code> (Tarik dari Paket Berjalan)<br>
+                  • <code>✏️ Edit</code> (Ubah Rincian Kontrak)<br>
+                  • <code>🗑️</code> (Hapus Data Terpilih)<br>
+                  • <code>+ Tambah</code> (Input Kontrak Manual)
+                </td>
+                <td>Pusat kendali eksekusi data portofolio: mencetak berkas, menarik data proyek selesai, mengedit nilai, atau menambah proyek manual.</td>
               </tr>
               <tr>
-                <td><strong><code>📎 Upload File BAST/FHO</code></strong></td>
-                <td>Tabel Riwayat</td>
-                <td>Mengunggah scan PDF Berita Acara Serah Terima Pekerjaan sebagai bukti sah kualifikasi evaluasi lelang.</td>
-                <td>Bukti Otentik SPSE</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
+                <td><strong>Tabel Riwayat 199 Kontrak Selesai</strong></td>
+                <td>Daftar kontrak yang memuat nomor urut, checkbox multi-select, nama paket, kode SBU (<code>RK003 - Pengawasan</code>), lokasi kabupaten, dan badge jumlah tenaga ahli (contoh: <code>👥 2 Ahli</code>).</td>
+                <td><strong>Mengklik salah satu baris kontrak</strong> langsung membuka rincian lengkap pekerjaan, pejabat dinas, nilai kontrak, serta daftar tenaga ahli di panel sisi kanan.</td>
               </tr>
               <tr>
-                <td><strong><code>📊 Ekspor Portofolio (.xlsx)</code></strong></td>
-                <td>Atas Kanan Tabel</td>
-                <td>Mengekspor daftar seluruh pengalaman kerja dalam format tabel Excel berstandar formulir kualifikasi lelang.</td>
-                <td>Dokumen Lampiran Tender</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[5]</span></td>
+                <td><strong>Rincian Kontrak Terpilih</strong></td>
+                <td>
+                  • <strong>Paket:</strong> Pengawasan Jalan Sei.Pagar-Rantau Kasih-BTS Pelalawan<br>
+                  • <strong>Pelaksana:</strong> PT. Putra Aulia Konsultan<br>
+                  • <strong>No. Kontrak:</strong> <code>40.2/KONTRAK/WASTEK-JLN/DBH/PUPR-BJJ/VIII/2025</code><br>
+                  • <strong>Pemberi Tugas:</strong> Dinas PUPR Kab. Kampar<br>
+                  • <strong>Nilai Kontrak:</strong> <code>Rp. 297.094.300</code><br>
+                  • <strong>BAST Akhir:</strong> <code>17 November 2025</code>
+                </td>
+                <td>Menampilkan seluruh metadata penting yang wajib dicantumkan pada formulir kualifikasi tender SPSE. Data ini menjadi rujukan legalitas kontrak.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#7c3aed; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[6]</span></td>
+                <td><strong>Tenaga Ahli Terlibat (2 Posisi)</strong></td>
+                <td>
+                  • Formulir input: Posisi usulan, SKK/Keahlian, jumlah orang, tombol <code>+ Tambah</code><br>
+                  • <strong>Tag 1:</strong> <code>Supervision Engineer - Ahli Teknik Jalan ✕</code><br>
+                  • <strong>Tag 2:</strong> <code>Ahli K3 Konstruksi - Ahli K3 Konstruksi ✕</code>
+                </td>
+                <td>Mencatat personil yang bertugas pada proyek tersebut. Sangat penting karena saat mencetak CV Tenaga Ahli di Modul 7, proyek ini otomatis muncul sebagai riwayat pengalaman ahli bersangkutan!</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#d97706; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[7]</span></td>
+                <td><strong>Berkas Lampiran Kontrak &amp; BAST</strong></td>
+                <td>Tombol <code>📤 Upload Kontrak</code> dan status peringatan (<em>"Belum ada scan dokumen kontrak atau BAST diunggah"</em>).</td>
+                <td>Mengunggah scan fisik berkas SPK dan BAST akhir dalam format PDF agar tim tender dapat langsung mencetaknya saat pembuktian kualifikasi lelang.</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="sub-title"><span class="sub-title-icon">📋</span> SOP Input dan Validasi Pengalaman Kerja:</div>
-        <ol class="step-list">
-          <li class="step-item">
-            <strong>Langkah 1:</strong> Buka modul Portofolio SIKAP, klik tombol <code>+ Tambah Pengalaman</code>.
-          </li>
-          <li class="step-item">
-            <strong>Langkah 2:</strong> Pilih nama badan usaha pelaksana (misal: <em>PT. PUTRA AULIA KONSULTAN</em>).
-          </li>
-          <li class="step-item">
-            <strong>Langkah 3:</strong> Masukkan Nama Paket Pekerjaan, Nama Instansi / Satker Pengguna Jasa, Nomor Kontrak, Tanggal Kontrak, dan Nilai Kontrak Bersih (tanpa PPN).
-          </li>
-          <li class="step-item">
-            <strong>Langkah 4:</strong> Pilih Sub-Klasifikasi SBU yang sesuai (contoh: <em>RE202 - Jasa Pengawasan Rekayasa Pekerjaan Teknik Sipil Transportasi</em>).
-          </li>
-          <li class="step-item">
-            <strong>Langkah 5:</strong> Masukkan Nomor dan Tanggal BAST Akhir (FHO), unggah salinan PDF BAST, lalu klik <strong>Simpan Pengalaman</strong>. Nilai KD sub-bidang otomatis terbarui seketika!
-          </li>
-        </ol>
+        <!-- ======================================================== -->
+        <!-- BAGIAN 2: MENU DROPDOWN CETAK SPSE LKPP (GAMBAR 3.2)   -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🖨️</span> 2. Panduan Cetak Formulir Kualifikasi SPSE (Gambar 3.2):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/pengalaman_2_cetak.png" alt="Menu Dropdown Cetak SPSE LKPP" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 3.2: Fitur Multi-Select Kontrak dan Pilihan Cetak Rekap Daftar &amp; Uraian Sejenis Standar LPSE.</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 3.2</strong>, sistem menyediakan 2 format dokumen cetak resmi yang sesuai dengan Standar Dokumen Pemilihan (SDP) Pengadaan Pemerintah:</p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:10%; text-align:center;">Pin</th>
+                <th style="width:25%;">Nama Elemen</th>
+                <th style="width:35%;">Tampilan &amp; Tindakan Pengguna</th>
+                <th style="width:30%;">Hasil Format Dokumen yang Terbit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
+                <td><strong>Checkbox Multi-Select</strong></td>
+                <td>Mencentang kotak centang di samping nomor kontrak (pada foto: baris 1 dan baris 2 dicentang).</td>
+                <td>Memilih beberapa paket proyek sekaligus yang sejenis dengan Kerangka Acuan Kerja (KAK) tender lelang.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
+                <td><strong>Indikator Item Terpilih</strong></td>
+                <td>Badge merah <code>🗑️ (2)</code> di bilah atas samping tombol cetak.</td>
+                <td>Menunjukkan jumlah kontrak aktif yang siap diekspor atau dicetak secara massal.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#0284c7; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
+                <td><strong>Dropdown Menu Cetak</strong></td>
+                <td>Tombol <code>🖨️ Cetak ˅</code></td>
+                <td>Membuka pilihan format cetak dokumen pengadaan pemerintah.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
+                <td><strong>Pilihan Format Cetak Resmi</strong></td>
+                <td>
+                  • <code>📄 Rekap Daftar (PDF)</code><br>
+                  • <code>📑 Uraian Sejenis (PDF)</code>
+                </td>
+                <td>
+                  • <strong>Rekap Daftar (PDF):</strong> Menghasilkan tabel rangkuman seluruh pengalaman berurutan kronologis tahun dan nilai kontrak.<br>
+                  • <strong>Uraian Sejenis (PDF):</strong> Menghasilkan lembar isian resmi per kontrak yang memuat rincian nama PPK, lingkup pekerjaan teknis, alokasi tenaga ahli, dan tanggal BAST sesuai formulir kualifikasi lelang SPSE.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 3: MODAL UNGGAH LAMPIRAN KONTRAK & BAST (GAMBAR 3.3) -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">📤</span> 3. Panduan Unggah Berkas Bukti Otentik Kontrak &amp; BAST (Gambar 3.3):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/pengalaman_3_upload.png" alt="Modal Unggah Lampiran Kontrak BAST" style="width: 100%; max-width: 900px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 3.3: Modal Unggah Berkas Scan Bukti Otentik (SPK, BAST, SPMK) dengan Drag &amp; Drop hingga 25MB.</em>
+          </p>
+        </div>
+
+        <p>Setiap pengalaman wajib dilengkapi berkas pendukung sebagai bukti otentik saat pembuktian kualifikasi oleh Pokja Pemilihan:</p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:10%; text-align:center;">Pin</th>
+                <th style="width:25%;">Nama Elemen Formulir</th>
+                <th style="width:35%;">Pengisian Riil pada Foto</th>
+                <th style="width:30%;">Peran Bukti Kualifikasi SPSE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
+                <td><strong>Header &amp; Tutup (✕)</strong></td>
+                <td><code>📎 Unggah Lampiran Kontrak / BAST</code></td>
+                <td>Menutup jendela modal unggah file tanpa menyimpan berkas.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
+                <td><strong>Informasi Paket Terkunci</strong></td>
+                <td>
+                  • Paket: <code>Pengawasan Jalan Sei.Pagar-Rantau Kasih-BTS Pelalawan</code><br>
+                  • No. Kontrak: <code>40.2/KONTRAK/WASTEK-JLN/DBH/PUPR-BJJ/VIII/2025</code>
+                </td>
+                <td>Sistem secara otomatis mengunci nama paket dan nomor kontrak agar berkas scan tidak salah masuk ke proyek lain.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#0284c7; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
+                <td><strong>Jenis Dokumen</strong></td>
+                <td>Dropdown: <code>📄 Surat Perjanjian / Kontrak (SPK)</code></td>
+                <td>Pilihan kategori berkas:<br>• Surat Perjanjian / Kontrak (SPK)<br>• Berita Acara Serah Terima (BAST / FHO)<br>• Surat Perintah Mulai Kerja (SPMK)<br>• Referensi Kerja Dinas</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
+                <td><strong>Nama / Judul Dokumen</strong></td>
+                <td><code>Kontrak Pengawasan Jalan Sei.Pagar-Rantau Kasih-BTS Pelalawan</code></td>
+                <td>Memberikan identitas arsip yang jelas pada tabel lampiran agar mudah dicari saat pembuktian dokumen fisik.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#d97706; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[5]</span></td>
+                <td><strong>Area Drag &amp; Drop File</strong></td>
+                <td>Kotak seret berkas: <em>"Klik atau seret file PDF / Scan ke sini"</em> (Maks 25MB, format: .pdf, .jpg, .png, .docx).</td>
+                <td>Cukup seret file scan dari Windows Explorer ke area ini untuk mengunggah pindaian tanda tangan dan materai asli.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[6]</span></td>
+                <td><strong>Tombol Unggah Berkas (<code>📤</code>)</strong></td>
+                <td>Tombol hijau <code>Unggah Berkas</code></td>
+                <td>Menyimpan file ke cloud storage Supabase dan memperbarui status dokumen menjadi aktif terlampir.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 4: MODAL TARIK DARI PAKET BERJALAN (GAMBAR 3.4)  -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">📥</span> 4. Panduan Tarik Data Otomatis dari Paket Berjalan (Gambar 3.4):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/pengalaman_4_tarik.png" alt="Modal Tarik Data dari Paket Berjalan" style="width: 100%; max-width: 900px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 3.4: Fitur Integrasi Otomatis Menyalin Kontrak yang Telah Selesai 100% dari Modul 10 ke Portofolio Pengalaman.</em>
+          </p>
+        </div>
+
+        <p>Fitur ini menghubungkan langsung <strong>Modul 10 (Paket Berjalan)</strong> dengan <strong>Modul 3 (Data Pengalaman)</strong> tanpa staf perlu mengetik ulang data kontrak:</p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:10%; text-align:center;">Pin</th>
+                <th style="width:25%;">Nama Bagian</th>
+                <th style="width:35%;">Data Riil pada Foto</th>
+                <th style="width:30%;">Cara Kerja Otomatisasi Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
+                <td><strong>Header &amp; Panduan Import</strong></td>
+                <td>Judul: <code>📥 Tarik Data dari Paket Berjalan</code><br>Sub-teks: <em>"Pilih paket untuk disalin ke Database Pengalaman. Paket ini akan masuk ke tab Draft Tarikan."</em></td>
+                <td>Menjelaskan bahwa proses penarikan data aman dan masuk ke folder draf terlebih dahulu untuk diverifikasi sebelum dipublikasikan.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#0284c7; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
+                <td><strong>Filter Perusahaan</strong></td>
+                <td>Dropdown: <code>Semua Perusahaan ˅</code></td>
+                <td>Menyaring proyek berjalan berdasarkan entitas pelaksana (PT. Putra Aulia Konsultan atau PT. Raissa Gemilang).</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
+                <td><strong>Pencarian Nama Paket</strong></td>
+                <td>Kotak teks: <code>🔍 Cari nama paket...</code></td>
+                <td>Mencari nama tender spesifik yang baru saja serah terima FHO di lapangan.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
+                <td><strong>Daftar Proyek Siap Import</strong></td>
+                <td>
+                  1. <code>Pengawasan/Supervisi Pembangunan Jembatan Paket 2</code> (PT. Raissa Gemilang | Kab. Pasaman Barat)<br>
+                  2. <code>Pengawasan Pembangunan Jembatan Ruas Lubuk Sikaping-Talu</code> (PT. Raissa Gemilang | Prov Sumbar)<br>
+                  3. <code>Perencanaan Teknis Jalan Paket VI, VIII dan X</code> (PT. Putra Aulia Konsultan | Kab. Agam)<br>
+                  4. <code>Pengawasan Teknis Jalan Paket V</code> (PT. Putra Aulia Konsultan | Kab. Agam)<br>
+                  5. <code>Pengawasan Jalan Paket I (DBH SAWIT)</code> (PT. Putra Aulia Konsultan | Kab. Agam)
+                </td>
+                <td>Menampilkan proyek yang telah rampung masa pelaksanaannya. Cukup centang kotak di samping nomor proyek untuk mengimpor secara serentak.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[5]</span></td>
+                <td><strong>Tombol Import Terpilih (<code>📥</code>)</strong></td>
+                <td>Tombol hijau <code>Import Terpilih</code></td>
+                <td>Menyalin seluruh data nomor kontrak, tanggal, nilai, nama PPK, dan susunan personil ke dalam tab <strong>Draft</strong> Modul Pengalaman secara otomatis!</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert-callout alert-tip">
+          <div>
+            🎯 <strong>Rumus Perhitungan Kemampuan Dasar (KD) Otomatis:</strong><br>
+            Sesuai regulasi <strong>Perpres No. 12/2021</strong> dan <strong>Permen PUPR No. 14/2020</strong>, untuk tender jasa konsultansi kualifikasi Menengah dan Besar, nilai KD dihitung sebesar:<br>
+            <div style="font-size:16px; font-weight:800; margin:8px 0; color:var(--primary-dark); text-align:center;">
+              $$KD = 3 	imes 	ext{Nilai Kontrak Tertinggi dalam 10 Tahun Terakhir}$$
+            </div>
+            Contoh: Jika kontrak tertinggi pada sub-bidang pengawasan jalan bernilai <strong>Rp 550.000.000</strong>, maka sistem otomatis mencatat nilai $KD = 3 	imes 	ext{Rp } 550.000.000 = 	ext{	extbf{Rp 1.650.000.000}}$ sehingga perusahaan memenuhi syarat kualifikasi lelang hingga nilai HPS Rp 1,65 Milyar!
+          </div>
+        </div>
       </section>
 
       <!-- 4. RADAR TENDER & WA BOT -->
