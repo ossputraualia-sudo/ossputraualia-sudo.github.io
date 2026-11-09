@@ -1719,25 +1719,186 @@
 
       <!-- 4. RADAR TENDER & WA BOT -->
       <!-- 4. RADAR TENDER & WA BOT -->
+      <!-- 4. RADAR TENDER & WA BOT -->
       <section class="module-card module-pane" id="radartender">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📡</div>
             <div class="module-titles">
               <h3>Modul 4: Radar SPSE &amp; Forwarder WhatsApp Bot</h3>
-              <div class="module-sub">Pemantauan Paket LPSE Otomatis 24/7, Notifikasi Resmi Email SPSE ke WhatsApp Group &amp; Filter Anti-Spam</div>
+              <div class="module-sub">Pemantauan Paket LPSE Otomatis 24/7, Notifikasi Resmi Email SPSE ke WhatsApp Group &amp; Sistem Klaim Tender</div>
             </div>
           </div>
           <span class="module-tag">INTEGRASI BOT</span>
         </div>
 
         <p>
-          <strong>Modul Radar SPSE &amp; Forwarder WhatsApp</strong> bekerja secara otonom tanpa henti (24 jam sehari, 7 hari seminggu) memantau pengumuman lelang pengadaan jasa konsultansi di puluhan portal LPSE (Sumatera Barat, Riau, Jambi, kementerian pusat) serta meneruskan email pemberitahuan SPSE (undangan pembuktian kualifikasi, berita acara penjelasan/aanwijzing, perubahan jadwal lelang, dan pengumuman pemenang) langsung ke grup WhatsApp internal kantor (<code>PT. PA - SUMBAR</code>).
+          <strong>Modul Radar SPSE &amp; Forwarder WhatsApp</strong> bekerja secara otonom tanpa henti (24 jam sehari, 7 hari seminggu) memantau pengumuman lelang pengadaan jasa konsultansi di puluhan portal LPSE (Kementerian PUPR, Balai Wilayah Sungai, Balai Jalan Nasional, Pemprov Sumbar, Riau, Jambi) serta meneruskan email pemberitahuan resmi SPSE langsung ke grup WhatsApp internal kantor (<code>PT. PA - SUMBAR</code>).
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">🛡️</span> Sistem Proteksi Cerdas Anti-Spam (Penjelasan Gambar Notifikasi WA):</div>
+        <!-- ======================================================== -->
+        <!-- PETA LAYAR RADAR SPSE DENGAN 3 KOTAK PENANDA USER       -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🧭</span> 1. Peta Layar Utama Radar SPSE &amp; Penjelasan 3 Kotak Penanda:</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/radartender_user.jpg" alt="Layar Utama Radar SPSE dengan 3 Kotak Penanda Merah" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 4.1: Tampilan Layar Utama Radar SPSE dengan 3 Kotak Penanda Merah (Bilah Filter Atas, Tabel Radar Lelang, dan Kolom Aksi Klaim).</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 4.1</strong> di atas, layar terbagi menjadi <strong>3 Kotak Penanda Merah Utama</strong> yang saling terintegrasi:</p>
+
+        <!-- KOTAK 1: BILAH ATAS FILTER & PENCARIAN -->
+        <div class="sub-title"><span class="sub-title-icon">🔍</span> Kotak Merah Bagian Atas: Bilah Pencarian &amp; Filter Cepat Radar SPSE</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:24%;">Nama Elemen Filter</th>
+                <th style="width:36%;">Data &amp; Pilihan pada Foto</th>
+                <th style="width:40%;">Fungsi Operasional &amp; Cara Kerja</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>🔍 Cari nama paket / kode...</code></strong></td>
+                <td>Kotak input teks pencarian cerdas</td>
+                <td>Memfilter daftar lelang secara seketika berdasarkan kata kunci nama pekerjaan (misal: <em>Pengawasan Jalan</em>) atau 11 digit <strong>Kode Tender SPSE</strong> (contoh: <code>10178337000</code>).</td>
+              </tr>
+              <tr>
+                <td><strong><code>Semua Lokasi ... ˅</code></strong></td>
+                <td>Dropdown filter wilayah LPSE</td>
+                <td>Menyaring paket lelang berdasarkan portal LPSE penyelenggara (misal: LPSE Kementerian PU, LPSE Provinsi Sumatera Barat, Balai Wilayah Sungai, dll).</td>
+              </tr>
+              <tr>
+                <td><strong><code>🏷️ Semua Status ˅</code></strong></td>
+                <td>Dropdown filter status klaim</td>
+                <td>Menyaring paket berdasarkan status ketersediaan: <em>Semua Status</em>, <em>Belum Diklaim (Tersedia)</em>, atau <em>Sudah Diklaim</em>.</td>
+              </tr>
+              <tr>
+                <td><strong><code>🔄 Reset</code></strong></td>
+                <td>Tombol pembersih filter</td>
+                <td>Mengembalikan seluruh parameter pencarian dan filter ke kondisi semula (default) untuk menampilkan seluruh paket.</td>
+              </tr>
+              <tr>
+                <td><strong>Badge <code>7 Paket</code></strong></td>
+                <td>Pojok kanan atas bilah navigasi</td>
+                <td>Menampilkan jumlah kumulatif paket lelang aktif yang berhasil dipindai oleh mesin radar pada siklus pemantauan berjalan.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK 2: TABEL RADAR PAKET LELANG & JADWAL KRITIS -->
+        <div class="sub-title"><span class="sub-title-icon">📊</span> Kotak Merah Bagian Tengah: Tabel Radar Paket Lelang &amp; Jadwal Kritis SPSE</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:20%;">Kolom Tabel</th>
+                <th style="width:40%;">Rincian Informasi pada Foto</th>
+                <th style="width:40%;">Fungsi Analisis bagi Tim Estimator</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>NO</code> &amp; <code>INSTANSI</code></strong></td>
+                <td>• Urutan: 1 s/d 5<br>• Instansi: <code>[PU] LPSE PU</code></td>
+                <td>Menunjukkan urutan prioritas lelang dan lembaga pengadaan pemerintah (Kementerian Pekerjaan Umum).</td>
+              </tr>
+              <tr>
+                <td><strong><code>NAMA PAKET &amp; STATUS</code></strong></td>
+                <td>
+                  • <strong>Paket 1:</strong> PWJD-3 Pengawasan Teknis Jalan Kenukut - Samak, Paoh Desa - Umin Jaya (Kode: <code>10178337000</code>, Status: <code>🔵 Belum Diklaim (Tersedia)</code>)<br>
+                  • <strong>Paket 2:</strong> Pengawasan IJD MYC PJN Wilayah I Provinsi Sumatera Barat (Kode: <code>10177841000</code>, Status: <code>🟢 Sudah Diklaim</code>)<br>
+                  • <strong>Paket 3, 4, 5:</strong> PWJD-05, PWJD-04, PWJD-03 Pengawasan Teknis Jalan Daerah Provinsi Kalimantan Tengah (Status: <code>🔵 Belum Diklaim</code>)
+                </td>
+                <td>
+                  • <strong>Status Belum Diklaim:</strong> Paket baru yang masih terbuka untuk diambil oleh estimator.<br>
+                  • <strong>Status Sudah Diklaim:</strong> Paket yang sudah dikunci oleh staf kantor agar tidak terjadi duplikasi pengerjaan berkas oleh personil lain.
+                </td>
+              </tr>
+              <tr>
+                <td><strong><code>JADWAL TAHAPAN SPSE</code></strong></td>
+                <td>
+                  Setiap baris paket memuat 5 tanggal penting:<br>
+                  • <strong>Jadwal PQ:</strong> <code>09 November 2026</code> (Batas upload kualifikasi)<br>
+                  • <strong>Pembuktian:</strong> <code>18 November 2026</code> (Verifikasi fisik di Pokja)<br>
+                  • <strong>Penawaran:</strong> <code>30 November / 01 Desember 2026</code> (Upload penawaran harga &amp; teknis)<br>
+                  • <strong>Pemenang:</strong> <code>10 Desember 2026</code> (Pengumuman pemenang lelang)<br>
+                  • <strong>Negosiasi:</strong> <code>17 / 18 Desember 2026</code> (Klarifikasi &amp; negosiasi biaya)
+                </td>
+                <td>Memberikan visibilitas garis waktu (*timeline*) yang lengkap sehingga direksi dan estimator dapat mengantisipasi jadwal penugasan dan ketersediaan tenaga ahli jauh-jauh hari.</td>
+              </tr>
+              <tr>
+                <td><strong><code>NILAI HPS</code></strong></td>
+                <td>
+                  Nilai pagu HPS dalam kotak hijau muda:<br>
+                  • Paket 1: <code>Rp. 2.060.848.000,00</code><br>
+                  • Paket 2: <code>Rp. 2.853.246.000,00</code><br>
+                  • Paket 3: <code>Rp. 2.277.725.000,00</code><br>
+                  • Paket 4: <code>Rp. 2.167.643.000,00</code><br>
+                  • Paket 5: <code>Rp. 1.076.812.000,00</code>
+                </td>
+                <td>Menjadi rujukan pagu anggaran tertinggi Pejabat Pembuat Komitmen (PPK). Menjadi dasar pengecekan kecukupan nilai Kemampuan Dasar (KD) perusahaan di Modul 3.</td>
+              </tr>
+              <tr>
+                <td><strong><code>TAHAPAN BERJALAN &amp; BATAS WAKTU</code></strong></td>
+                <td>
+                  Indikator jam pasir (<code>⏳</code>):<br>
+                  • <em>⏳ Pengumuman Prakualifikasi (4 November 2026 08:00)</em><br>
+                  • <em>⏳ Download Dokumen Kualifikasi (13 November 2026 12:00)</em>
+                </td>
+                <td>Menampilkan tahapan lelang yang sedang aktif saat ini persis sesuai server SPSE beserta batas jam penutupannya, mencegah keterlambatan mengunduh dokumen pemilihan.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK 3: KOLOM AKSI TENDER -->
+        <div class="sub-title"><span class="sub-title-icon">⚡</span> Kotak Merah Bagian Kanan: Kolom Aksi Tender (SPSE &amp; Klaim)</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:24%;">Tombol / Aksi</th>
+                <th style="width:36%;">Tampilan pada Foto</th>
+                <th style="width:40%;">Cara Kerja Otomatisasi Antar Modul</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tombol <code>🌐 SPSE</code></strong></td>
+                <td>Tombol putih berbingkai biru dengan ikon bola dunia</td>
+                <td><strong>Pintasan Portal Resmi:</strong> Mengklik tombol ini langsung membuka lembar paket tender resmi di portal LPSE Kementerian PU (<code>lpse.pu.go.id</code>) pada tab baru browser tanpa perlu login dan mencari kode tender secara manual.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>📥 Klaim</code></strong></td>
+                <td>Tombol hijau toska tua (pada paket belum diklaim)</td>
+                <td>
+                  <strong>Pengambilan Alih Tender:</strong><br>
+                  1. Mengubah status tender menjadi <code>🟢 Sudah Diklaim</code>.<br>
+                  2. <strong>Secara otomatis menyalin dan mendaftarkan</strong> nama paket, kode lelang, instansi, HPS, dan jadwalnya ke <strong>Modul 5 (Data Tender)</strong> untuk langsung digarap RAB dan proposal teknisnya!
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Badge <code>✓ Terklaim</code> &amp; Tombol <code>🚫 Batal Klaim</code></strong></td>
+                <td>Tampil pada Paket 2 (Pengawasan IJD PJN Sumbar): badge abu-abu dan tombol merah</td>
+                <td>
+                  • <strong>Terklaim:</strong> Menandakan paket sedang dalam pengerjaan dokumen.<br>
+                  • <strong>Batal Klaim:</strong> Jika setelah dikaji ternyata kualifikasi tidak memenuhi syarat, klik tombol merah ini untuk mengembalikan paket ke status <em>Belum Diklaim</em> agar dapat dipelajari oleh divisi lain.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SISTEM PROTEKSI WA BOT -->
+        <div class="sub-title"><span class="sub-title-icon">🛡️</span> Sistem Proteksi Cerdas Anti-Spam WhatsApp Group:</div>
         <p>
-          Di lapangan, banyak penyedia pihak ketiga seperti <code>info@tenderid.com</code> atau portal lelang komersial berbayar mengirimkan promosi ke email kantor. Sistem bot PT. Putra Aulia Group dilengkapi <strong>Gerbang Filter Keamanan Ketat</strong>:
+          Sistem bot WhatsApp PT. Putra Aulia Group (<code>Azhar_bot</code>) bekerja berdampingan dengan Radar SPSE. Di lapangan, banyak pihak ketiga seperti <code>info@tenderid.com</code> mengirim promosi lelang berbayar. Sistem membedakannya secara ketat:
         </p>
         <div class="table-responsive">
           <table class="doc-table">
@@ -1755,59 +1916,22 @@
                 <td>Diteruskan dalam hitungan detik dengan label tebal <code>⚡ [PRIORITAS] SPSE INAPROC</code>, memuat nama paket, link lelang, dan batas waktu tindakan.</td>
               </tr>
               <tr>
-                <td><strong>Email Pihak Ketiga / Iklan</strong><br>Contoh: <code>*@tenderid.com</code>, vendor software, penawaran pelatihan berbayar</td>
+                <td><strong>Email Pihak Ketiga / Iklan</strong><br>Contoh: <code>*@tenderid.com</code>, vendor software, promosi berbayar</td>
                 <td><span class="module-tag" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">DIBLOKIR / DIBUANG OTOMATIS</span></td>
-                <td>Tidak akan diteruskan ke grup utama direksi, mencegah grup menjadi bising dengan pesan promosi non-resmi yang tidak memiliki kekuatan hukum lelang.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Tombol di Modul Radar SPSE:</div>
-        <div class="table-responsive">
-          <table class="doc-table">
-            <thead>
-              <tr>
-                <th style="width:22%;">Nama Tombol</th>
-                <th style="width:16%;">Lokasi</th>
-                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
-                <th style="width:24%;">Dampak Sistem</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong><code>🔄 Scan Ulang LPSE</code></strong></td>
-                <td>Pojok Kanan Atas</td>
-                <td>Menjalankan pemindaian darurat (force scraping) ke portal LPSE untuk mencari lelang baru yang baru tayang 1 jam terakhir.</td>
-                <td>Pembaruan Radar Lelang</td>
-              </tr>
-              <tr>
-                <td><strong><code>📍 Filter Wilayah</code></strong></td>
-                <td>Bilah Atas Radar</td>
-                <td>Menyaring daftar lelang berdasarkan provinsi (Sumbar, Riau, Jambi) atau kementerian pusat (KemenPUPR, BWS, BPJN).</td>
-                <td>Fokus Wilayah Kerja</td>
-              </tr>
-              <tr>
-                <td><strong><code>💬 Uji Kirim Pesan WA</code></strong></td>
-                <td>Panel Bot</td>
-                <td>Mengirim pesan uji coba ke grup WhatsApp <code>PT. PA - SUMBAR</code> untuk memastikan token gateway bot WA tetap aktif.</td>
-                <td>Verifikasi Koneksi Bot</td>
-              </tr>
-              <tr>
-                <td><strong><code>📋 Salin Format Ringkasan</code></strong></td>
-                <td>Setiap Kartu Tender</td>
-                <td>Menyalin data HPS, lokasi, dan batas upload ke papan klip dalam format teks rapi siap dibagikan ke tim estimator.</td>
-                <td>Koordinasi Cepat</td>
+                <td>Tidak diteruskan ke grup utama kantor, menjaga grup WhatsApp tetap bersih hanya untuk pengumuman lelang resmi yang memiliki kekuatan hukum.</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="case-box">
-          <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
-          <div class="case-title">Pemberitahuan Kilat Undangan Pembuktian Kualifikasi Jam 21.00 WIB</div>
+          <span class="case-badge">💡 Contoh Alur Kerja Lapangan Nyata</span>
+          <div class="case-title">Dari Radar SPSE Menuju Pemenangan Tender PJN Sumbar (Rp 2,85 Milyar)</div>
           <div class="case-content">
-            Pokja UKPBJ mengirim email resmi perubahan jadwal pembuktian kualifikasi tender Pengawasan Jalan pada pukul 21.15 WIB. Dalam waktu 90 detik, bot WhatsApp meneruskan ringkasan paket, batas waktu hadir, serta berkas fisik yang harus dibawa langsung ke grup WA direksi. Tim langsung menyiapkan dokumen malam itu juga sehingga kehadiran pembuktian di kantor Pokja keesokan paginya berjalan lancar tanpa risiko gugur!
+            1. Pukul 08.00 WIB, estimator membuka Radar SPSE dan melihat paket <strong>"Pengawasan IJD MYC PJN Wilayah I Provinsi Sumatera Barat"</strong> senilai <strong>Rp 2.853.246.000,00</strong>.<br>
+            2. Estimator mengklik tombol <strong><code>📥 Klaim</code></strong>. Status paket berubah menjadi <code>🟢 Sudah Diklaim</code> (seperti pada Paket 2 di Gambar 4.1).<br>
+            3. Sistem otomatis mendaftarkan paket ini ke <strong>Modul 5 (Data Tender)</strong> dan <strong>Modul 6 (Dokumen PQ KSO)</strong>.<br>
+            4. Tim langsung menyusun RAB 9 Tab dan Formulir Prakualifikasi KSO sebelum batas waktu <code>Jadwal PQ: 09 November 2026</code>. Koordinasi cepat ini memungkinkan dokumen penawaran selesai 2 hari lebih awal dari jadwal penutupan SPSE!
           </div>
         </div>
       </section>
