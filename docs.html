@@ -552,6 +552,144 @@
       }
       .case-box { border: 1px solid #0f766e !important; background: #fafafa !important; }
     }
+  
+    /* =========================================================
+     * SINGLE-MODULE VIEW (PAGINASI PER MODUL - ANTI BERSAMBUNG)
+     * ========================================================= */
+    .module-pane {
+      display: none !important;
+    }
+    .module-pane.active {
+      display: block !important;
+      animation: fadeInModule 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeInModule {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* BREADCRUMBS */
+    .doc-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .crumb-root, .crumb-link {
+      cursor: pointer;
+      color: var(--primary);
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .crumb-root:hover, .crumb-link:hover {
+      text-decoration: underline;
+    }
+    .crumb-sep { opacity: 0.5; font-size: 11px; }
+    .crumb-current {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* PAGER (NAVIGASI SEBELUMNYA / SELANJUTNYA) */
+    .module-pager {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 36px;
+      padding: 20px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+    .pager-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--surface-sub);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .pager-btn:hover:not(:disabled) {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+    .pager-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .pager-info {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* SEARCH RESULTS POPUP OVERLAY */
+    .search-results-overlay {
+      position: absolute;
+      top: calc(var(--header-h) - 6px);
+      right: 240px;
+      width: 380px;
+      max-height: 450px;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      z-index: 1200;
+      padding: 12px;
+      display: none;
+    }
+    .search-results-overlay.open {
+      display: block;
+    }
+    .search-res-item {
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .search-res-item:last-child { border-bottom: none; }
+    .search-res-item:hover {
+      background: var(--surface-sub);
+    }
+    .search-res-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .search-res-snippet {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* PRINT SINGLE MODULE */
+    @media print {
+      .module-pane { display: none !important; }
+      .module-pane.active { display: block !important; }
+      .doc-breadcrumbs, .module-pager, .search-results-overlay { display: none !important; }
+    }
+  
   </style>
 </head>
 <body>
@@ -626,8 +764,18 @@
     <!-- MAIN CONTENT AREA -->
     <main class="doc-content">
 
+      <!-- BREADCRUMBS NAVIGASI MODUL -->
+      <nav class="doc-breadcrumbs" id="docBreadcrumbs" aria-label="Breadcrumb">
+        <span class="crumb-root" onclick="showModule('dashboard')">🏠 Panduan Sistem</span>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-category" id="crumbCat">Modul Operasional</span>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-current" id="crumbCurrent">1. Dashboard</span>
+      </nav>
+  
+
       <!-- HERO BANNER -->
-      <section class="hero-banner" id="pengantar">
+      <section class="hero-banner module-pane" id="pengantar">
         <h2>Buku Manual Operasional Sistem (SOP)</h2>
         <p>
           Dokumentasi resmi dan panduan langkah-demi-langkah pengoperasian aplikasi terpadu manajemen administrasi, pengadaan (SPSE), remunerasi tenaga ahli (INKINDO), dan penagihan termin (MC PU) PT. PUTRA AULIA GROUP.
@@ -641,7 +789,7 @@
       </section>
 
             <!-- 1. DASHBOARD -->
-      <section class="module-card" id="dashboard">
+      <section class="module-card module-pane" id="dashboard">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📊</div>
@@ -858,7 +1006,7 @@
       </section>
 
       <!-- 2. DATA PERUSAHAAN & KSO -->
-      <section class="module-card" id="perusahaan">
+      <section class="module-card module-pane" id="perusahaan">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">🏢</div>
@@ -904,7 +1052,7 @@
       </section>
 
       <!-- 3. PORTOFOLIO SIKAP -->
-      <section class="module-card" id="portofolio">
+      <section class="module-card module-pane" id="portofolio">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📈</div>
@@ -926,7 +1074,7 @@
       </section>
 
       <!-- 4. RADAR TENDER & WA BOT -->
-      <section class="module-card" id="radartender">
+      <section class="module-card module-pane" id="radartender">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📡</div>
@@ -957,7 +1105,7 @@
       </section>
 
       <!-- 5. DATA TENDER -->
-      <section class="module-card" id="tender">
+      <section class="module-card module-pane" id="tender">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📋</div>
@@ -980,7 +1128,7 @@
       </section>
 
       <!-- 6. DOKUMEN PQ -->
-      <section class="module-card" id="dokumenpq">
+      <section class="module-card module-pane" id="dokumenpq">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📑</div>
@@ -998,7 +1146,7 @@
       </section>
 
       <!-- 7. PERSONIL & CV GENERATOR -->
-      <section class="module-card" id="personil">
+      <section class="module-card module-pane" id="personil">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">👷</div>
@@ -1036,7 +1184,7 @@
       </section>
 
       <!-- 8. AI KAK & TANGGAPAN DOKUMEN -->
-      <section class="module-card" id="kaktanggapan">
+      <section class="module-card module-pane" id="kaktanggapan">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">🤖</div>
@@ -1062,7 +1210,7 @@
       </section>
 
       <!-- 9. PEMBUAT RAB 9 TAB -->
-      <section class="module-card" id="rab">
+      <section class="module-card module-pane" id="rab">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">💰</div>
@@ -1147,7 +1295,7 @@
       </section>
 
       <!-- 10. DATA PAKET BERJALAN -->
-      <section class="module-card" id="paket">
+      <section class="module-card module-pane" id="paket">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📦</div>
@@ -1169,7 +1317,7 @@
       </section>
 
       <!-- 11. PEMBUAT INVOICE & LEMBAR MC -->
-      <section class="module-card" id="invoice">
+      <section class="module-card module-pane" id="invoice">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">🧾</div>
@@ -1278,7 +1426,7 @@
       </section>
 
       <!-- 12. PANTAU PERSONIL OVERLAP -->
-      <section class="module-card" id="pantaupersonil">
+      <section class="module-card module-pane" id="pantaupersonil">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">👥</div>
@@ -1303,7 +1451,7 @@
       </section>
 
       <!-- 13. MASTER SURAT -->
-      <section class="module-card" id="surat">
+      <section class="module-card module-pane" id="surat">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">✉️</div>
@@ -1326,7 +1474,7 @@
       </section>
 
       <!-- 14. BANK REFERENSI -->
-      <section class="module-card" id="bankref">
+      <section class="module-card module-pane" id="bankref">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">🏛️</div>
@@ -1344,7 +1492,7 @@
       </section>
 
       <!-- 15. PENGATURAN -->
-      <section class="module-card" id="pengaturan">
+      <section class="module-card module-pane" id="pengaturan">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">⚙️</div>
@@ -1390,7 +1538,7 @@
       </section>
 
       <!-- 16. DOCK UTILITY TOOLS -->
-      <section class="module-card" id="docktools">
+      <section class="module-card module-pane" id="docktools">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">🛠️</div>
@@ -1438,24 +1586,191 @@
     </main>
   </div>
 
-  <!-- SCRIPT UTAMA -->
+  
+  <!-- SCRIPT UTAMA: SINGLE-MODULE TAB CONTROLLER -->
   <script>
-    // 1. FILTER SEARCH PENCARIAN CEPAT
-    function filterDocs() {
-      var query = (document.getElementById('docSearchInput').value || '').toLowerCase().trim();
-      var sections = document.querySelectorAll('.module-card');
-      
-      sections.forEach(function(sec) {
-        var text = sec.innerText.toLowerCase();
-        if (!query || text.indexOf(query) !== -1) {
-          sec.style.display = 'block';
+    var MODULE_ORDER = [
+      { id: 'pengantar', title: 'Pengantar & Standar', cat: 'Navigasi Utama' },
+      { id: 'dashboard', title: '1. Dashboard Eksekutif', cat: 'Modul Operasional' },
+      { id: 'perusahaan', title: '2. Perusahaan & KSO', cat: 'Modul Operasional' },
+      { id: 'portofolio', title: '3. Data Pengalaman (SIKAP)', cat: 'Modul Operasional' },
+      { id: 'radartender', title: '4. Radar SPSE & WA Bot', cat: 'Modul Operasional' },
+      { id: 'tender', title: '5. Tender & Evaluasi', cat: 'Modul Operasional' },
+      { id: 'dokumenpq', title: '6. PQ Anggota KSO', cat: 'Modul Operasional' },
+      { id: 'personil', title: '7. Personil & CV Otomatis', cat: 'Modul Operasional' },
+      { id: 'kaktanggapan', title: '8. AI KAK & Tanggapan', cat: 'Modul Operasional' },
+      { id: 'rab', title: '9. Pembuat RAB 9 Tab', cat: 'Modul Operasional' },
+      { id: 'paket', title: '10. Paket Berjalan', cat: 'Modul Operasional' },
+      { id: 'invoice', title: '11. Invoice & Lembar MC', cat: 'Modul Operasional' },
+      { id: 'pantaupersonil', title: '12. Pantau Jadwal Personil', cat: 'Modul Operasional' },
+      { id: 'surat', title: '13. Master Surat', cat: 'Modul Operasional' },
+      { id: 'bankref', title: '14. Bank Referensi', cat: 'Modul Operasional' },
+      { id: 'pengaturan', title: '15. Pengaturan & Hak Akses', cat: 'Modul Operasional' },
+      { id: 'docktools', title: '16. Sidebar Dock Tools', cat: 'Utilitas Tambahan' }
+    ];
+
+    var CURRENT_MODULE_ID = 'dashboard';
+
+    // 1. TAMPILKAN HANYA 1 MODUL SAJA (ANTI-BERSAMBUNG)
+    function showModule(modId, updateHistory) {
+      if (!modId) modId = 'dashboard';
+      modId = String(modId).replace(/^#/, '').trim();
+
+      var foundIndex = -1;
+      for (var i = 0; i < MODULE_ORDER.length; i++) {
+        if (MODULE_ORDER[i].id === modId) {
+          foundIndex = i;
+          break;
+        }
+      }
+      if (foundIndex === -1) {
+        modId = 'dashboard';
+        foundIndex = 1;
+      }
+
+      CURRENT_MODULE_ID = modId;
+
+      // Sembunyikan SEMUA modul, tampilkan HANYA modul ini
+      var allPanes = document.querySelectorAll('.module-pane');
+      allPanes.forEach(function(pane) {
+        pane.classList.remove('active');
+        pane.style.display = 'none';
+      });
+
+      var targetPane = document.getElementById(modId);
+      if (targetPane) {
+        targetPane.classList.add('active');
+        targetPane.style.display = 'block';
+      }
+
+      // Perbarui Breadcrumbs
+      var curInfo = MODULE_ORDER[foundIndex];
+      var crumbCat = document.getElementById('crumbCat');
+      var crumbCurrent = document.getElementById('crumbCurrent');
+      if (crumbCat) crumbCat.textContent = curInfo.cat;
+      if (crumbCurrent) crumbCurrent.textContent = curInfo.title;
+
+      // Perbarui Sidebar Active State
+      document.querySelectorAll('.nav-link').forEach(function(link) {
+        var href = link.getAttribute('href') || '';
+        if (href === '#' + modId) {
+          link.classList.add('active');
         } else {
-          sec.style.display = 'none';
+          link.classList.remove('active');
         }
       });
+
+      // Render / Update Pager di bagian bawah modul aktif
+      renderPager(targetPane, foundIndex);
+
+      // Scroll ke bagian paling atas
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Perbarui URL hash tanpa reload
+      if (updateHistory !== false) {
+        try {
+          history.pushState(null, '', '#' + modId);
+        } catch (e) {
+          window.location.hash = '#' + modId;
+        }
+      }
+
+      // Tutup menu mobile jika sedang terbuka
+      var sb = document.getElementById('docSidebar');
+      if (sb && window.innerWidth <= 900) {
+        sb.classList.remove('open');
+      }
     }
 
-    // 2. TOGGLE DARK / LIGHT THEME
+    // 2. RENDER PAGER (SEBELUMNYA / SELANJUTNYA)
+    function renderPager(targetPane, curIndex) {
+      if (!targetPane) return;
+      var oldPager = targetPane.querySelector('.module-pager');
+      if (oldPager) oldPager.remove();
+
+      var prevMod = curIndex > 0 ? MODULE_ORDER[curIndex - 1] : null;
+      var nextMod = curIndex < MODULE_ORDER.length - 1 ? MODULE_ORDER[curIndex + 1] : null;
+
+      var pagerEl = document.createElement('div');
+      pagerEl.className = 'module-pager';
+
+      var prevHtml = prevMod 
+        ? '<button type="button" class="pager-btn" onclick="showModule(\'' + prevMod.id + '\')">⬅️ ' + prevMod.title + '</button>'
+        : '<button type="button" class="pager-btn" disabled>⬅️ Modul Pertama</button>';
+
+      var infoHtml = '<div class="pager-info">Modul ' + (curIndex + 1) + ' dari ' + MODULE_ORDER.length + '</div>';
+
+      var nextHtml = nextMod
+        ? '<button type="button" class="pager-btn" onclick="showModule(\'' + nextMod.id + '\')">' + nextMod.title + ' ➡️</button>'
+        : '<button type="button" class="pager-btn" disabled>Modul Terakhir 🏁</button>';
+
+      pagerEl.innerHTML = prevHtml + infoHtml + nextHtml;
+      targetPane.appendChild(pagerEl);
+    }
+
+    // 3. PENCARIAN CEPAT DENGAN HASIL CERDAS
+    function filterDocs() {
+      var query = (document.getElementById('docSearchInput').value || '').toLowerCase().trim();
+      var overlay = document.getElementById('searchResultsOverlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'searchResultsOverlay';
+        overlay.className = 'search-results-overlay';
+        document.body.appendChild(overlay);
+      }
+
+      if (!query) {
+        overlay.classList.remove('open');
+        overlay.innerHTML = '';
+        return;
+      }
+
+      var matches = [];
+      MODULE_ORDER.forEach(function(m) {
+        var sec = document.getElementById(m.id);
+        if (!sec) return;
+        var text = sec.innerText.toLowerCase();
+        var qIdx = text.indexOf(query);
+        if (qIdx !== -1) {
+          var start = Math.max(0, qIdx - 30);
+          var snippet = sec.innerText.substring(start, start + 90).replace(/\s+/g, ' ');
+          matches.push({ id: m.id, title: m.title, snippet: snippet });
+        }
+      });
+
+      if (matches.length === 0) {
+        overlay.innerHTML = '<div style="padding:16px; font-size:12.5px; color:var(--text-muted); text-align:center;">Tidak ada materi yang cocok dengan pencarian.</div>';
+      } else {
+        var html = '<div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">Ditemukan di ' + matches.length + ' Modul:</div>';
+        matches.forEach(function(item) {
+          html += '<div class="search-res-item" onclick="selectSearchResult(\'' + item.id + '\')">' +
+            '<div class="search-res-title">' + item.title + '</div>' +
+            '<div class="search-res-snippet">...' + item.snippet + '...</div>' +
+          '</div>';
+        });
+        overlay.innerHTML = html;
+      }
+
+      overlay.classList.add('open');
+    }
+
+    function selectSearchResult(modId) {
+      var overlay = document.getElementById('searchResultsOverlay');
+      if (overlay) overlay.classList.remove('open');
+      var searchInput = document.getElementById('docSearchInput');
+      if (searchInput) searchInput.value = '';
+      showModule(modId);
+    }
+
+    document.addEventListener('click', function(e) {
+      var overlay = document.getElementById('searchResultsOverlay');
+      var input = document.getElementById('docSearchInput');
+      if (overlay && !overlay.contains(e.target) && e.target !== input) {
+        overlay.classList.remove('open');
+      }
+    });
+
+    // 4. TOGGLE TEMA GELAP / TERANG
     function toggleTheme() {
       var isDark = document.body.classList.toggle('dark');
       try {
@@ -1465,7 +1780,6 @@
       if (icon) icon.textContent = isDark ? '☀️' : '◐';
     }
 
-    // Load initial theme from localStorage
     try {
       if (localStorage.getItem('PAG_THEME_MODE') === 'dark') {
         document.body.classList.add('dark');
@@ -1474,42 +1788,36 @@
       }
     } catch(e) {}
 
-    // 3. TOGGLE MOBILE SIDEBAR
+    // 5. TOGGLE MOBILE SIDEBAR
     function toggleNav() {
       var sb = document.getElementById('docSidebar');
       if (sb) sb.classList.toggle('open');
     }
 
-    // Close mobile nav on click link
+    // 6. PASANG LISTENER PADA SEMUA SIDEBAR NAV LINK
     document.querySelectorAll('.nav-link').forEach(function(link) {
-      link.addEventListener('click', function() {
-        var sb = document.getElementById('docSidebar');
-        if (sb && window.innerWidth <= 900) {
-          sb.classList.remove('open');
-        }
-        document.querySelectorAll('.nav-link').forEach(function(l) { l.classList.remove('active'); });
-        link.classList.add('active');
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = (link.getAttribute('href') || '').replace('#', '');
+        showModule(targetId);
       });
     });
 
-    // 4. HIGHLIGHT ACTIVE NAV ON SCROLL
-    window.addEventListener('scroll', function() {
-      var sections = document.querySelectorAll('.module-card, .hero-banner');
-      var scrollPos = window.scrollY + 100;
+    // 7. INISIALISASI SAAT HALAMAN DIMUAT (ROUTING HASH)
+    window.addEventListener('hashchange', function() {
+      var hash = (window.location.hash || '').replace('#', '');
+      if (hash && hash !== CURRENT_MODULE_ID) {
+        showModule(hash, false);
+      }
+    });
 
-      sections.forEach(function(sec) {
-        var top = sec.offsetTop;
-        var height = sec.offsetHeight;
-        var id = sec.getAttribute('id');
-        if (scrollPos >= top && scrollPos < top + height) {
-          document.querySelectorAll('.nav-link').forEach(function(link) {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === '#' + id) {
-              link.classList.add('active');
-            }
-          });
-        }
-      });
+    document.addEventListener('DOMContentLoaded', function() {
+      var initHash = (window.location.hash || '').replace('#', '');
+      if (initHash) {
+        showModule(initHash, false);
+      } else {
+        showModule('dashboard', false); // Default langsung buka Modul 1: Beranda / Dashboard
+      }
     });
   </script>
 </body>
