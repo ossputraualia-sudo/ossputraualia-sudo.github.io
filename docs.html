@@ -1078,128 +1078,325 @@
 
       <!-- 2. DATA PERUSAHAAN & KSO -->
       <!-- 2. DATA PERUSAHAAN & KSO -->
+      <!-- 2. DATA PERUSAHAAN & KSO -->
       <section class="module-card module-pane" id="perusahaan">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">🏢</div>
             <div class="module-titles">
-              <h3>Modul 2: Data Perusahaan &amp; KSO (Konsorsium)</h3>
-              <div class="module-sub">Manajemen Badan Usaha Master, Legalitas SBU/NIB, Rekening Bank Dinas, Kop Surat, Stempel &amp; Kemitraan KSO</div>
+              <h3>Modul 2: Data Perusahaan &amp; KSO (Master Entity)</h3>
+              <div class="module-sub">Manajemen Badan Usaha, Legalitas SBU/NIB, Rekening Bank Dinas, Kop Surat, Stempel, Tanda Tangan &amp; Formulir Kualifikasi SPSE Bab A-G</div>
             </div>
           </div>
           <span class="module-tag">DATA MASTER</span>
         </div>
 
         <p>
-          <strong>Modul Data Perusahaan &amp; KSO</strong> adalah fondasi data utama (<em>Master Entity Repository</em>) yang menyimpan seluruh identitas hukum badan usaha di bawah naungan PT. Putra Aulia Group (seperti PT. PUTRA AULIA KONSULTAN, PT. RAISSA GEMILANG, maupun perusahaan mitra KSO). Seluruh data legalitas di modul ini terhubung otomatis ke modul Tender, Dokumen PQ, Invoice MC, dan Master Surat.
+          <strong>Modul Data Perusahaan &amp; KSO</strong> adalah pusat data induk (<em>Master Entity Repository</em>) yang mengelola profil hukum, perizinan berusaha, rekening dinas penampung termin, serta instrumen pengesahan digital seluruh badan usaha di bawah naungan PT. Putra Aulia Group (antara lain: <strong>CV. Putra Cipta Mandiri Consultant</strong>, <strong>PT. Putra Aulia Konsultan</strong>, <strong>PT. Raissa Gemilang</strong>, PT. Lima Pilar Persada, PT. Multhi Phi Beta, dan PT. Puri Dimensi). Seluruh data legalitas di modul ini terhubung otomatis ke modul Dokumen PQ KSO, Data Tender, Invoice MC, dan Master Surat.
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">🏛️</span> Struktur Pengelolaan Data Badan Usaha:</div>
-        <ul class="step-list">
-          <li class="step-item">
-            <strong>Identitas Pokok Badan Usaha:</strong>
-            Nama resmi badan usaha, bentuk hukum (PT / CV / Firma), nomor NPWP 16 digit format terbaru, alamat domisili kantor resmi, nomor telepon, dan email dinas.
-          </li>
-          <li class="step-item">
-            <strong>Perizinan &amp; Legalitas (NIB &amp; SBU):</strong>
-            Nomor Induk Berusaha (NIB) berbasis OSS RBA, Sertifikat Badan Usaha (SBU) Jasa Pengawasan dan Perencanaan Konstruksi dari LPJK/Kementerian PUPR, masa berlaku, dan tanggal kedaluwarsa.
-          </li>
-          <li class="step-item">
-            <strong>Rekening Bank Penampung:</strong>
-            Daftar rekening bank resmi dinas (Bank Nagari, BNI, Bank Mandiri, BRI) yang memuat nama bank, kantor cabang, nomor rekening, dan nama pemilik rekening persis sesuai buku tabungan.
-          </li>
-          <li class="step-item">
-            <strong>Pengesahan &amp; Kop Surat Digital:</strong>
-            Pindaian stempel resmi basah perusahaan berlatar transparan (.png), tanda tangan digital Direktur Utama, dan logo kop surat resolusi tinggi.
-          </li>
-          <li class="step-item">
-            <strong>Pengaturan Kemitraan KSO Default:</strong>
-            Konfigurasi konsorsium bawaan antara perusahaan induk sebagai <em>Lead Firm</em> dan mitra sebagai <em>Partner Firm</em> beserta pembagian hak porsi modal kerja.
-          </li>
-        </ul>
+        <!-- ======================================================== -->
+        <!-- BAGIAN 1: PETA LAYAR UTAMA DATA PERUSAHAAN (GAMBAR 2.1) -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🧭</span> 1. Anatomi &amp; Peta Layar Utama Modul Data Perusahaan:</div>
 
-        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Seluruh Tombol di Modul Perusahaan:</div>
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/perusahaan_1_utama.png" alt="Peta Layar Utama Modul Data Perusahaan" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 2.1: Tampilan Layar Utama Modul Data Perusahaan dengan 9 Zona Sorotan Interaktif Utama.</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 2.1</strong> di atas, layar terbagi menjadi 2 panel utama yang saling terhubung (Panel Kiri: Daftar Entitas, Panel Kanan: Rincian Profil &amp; Legalitas):</p>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th style="width:22%;">Nama Tombol</th>
-                <th style="width:16%;">Lokasi</th>
-                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
-                <th style="width:24%;">Dampak Sistem</th>
+                <th style="width:10%; text-align:center;">Pin</th>
+                <th style="width:24%;">Nama Komponen</th>
+                <th style="width:36%;">Data Riil &amp; Elemen Tampilan</th>
+                <th style="width:30%;">Fungsi Operasional &amp; Efek Klik</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong><code>+ Tambah Perusahaan</code></strong></td>
-                <td>Pojok Kanan Atas</td>
-                <td>Membuka modal formulir input badan usaha baru (Nama, Bentuk Usaha, NPWP 16 Digit, Domisili).</td>
-                <td>Penambahan Master Data</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
+                <td><strong>Pencarian &amp; Filter A-Z</strong></td>
+                <td>Kotak teks <code>🔍 Cari perusahaan atau...</code>, dropdown urutan <code>Nama (A-Z)</code>, dan tombol <code>🔄 Reset</code>.</td>
+                <td>Menyaring daftar perusahaan secara instan berdasarkan nama atau nomor NPWP saat database memiliki banyak entitas rekanan.</td>
               </tr>
               <tr>
-                <td><strong><code>✏️ Edit Profil</code></strong></td>
-                <td>Tabel Perusahaan</td>
-                <td>Membuka lembar pengubahan informasi alamat, direksi, nomor kontak, atau rekening bank penampung.</td>
-                <td>Pembaruan Data Instan</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#0284c7; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
+                <td><strong>Tombol Formulir <code>📑 Bab A-G</code></strong></td>
+                <td>Tombol biru di bilah atas samping kanan.</td>
+                <td><strong>Sangat Penting:</strong> Membuka jendela penyusunan Formulir Isian Kualifikasi Prakualifikasi (PQ) standar LKPP yang memuat Bab A sampai Bab G secara utuh.</td>
               </tr>
               <tr>
-                <td><strong><code>📁 Kelola Dokumen Izin</code></strong></td>
-                <td>Aksi Tabel</td>
-                <td>Menampilkan daftar lampiran SBU, NIB, Akta Notaris, dan KSWP beserta alarm hitung mundur kedaluwarsa.</td>
-                <td>Audit Legalitas Usaha</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
+                <td><strong>Tombol <code>+ Perusahaan</code></strong></td>
+                <td>Tombol hijau di pojok kanan atas layar.</td>
+                <td>Membuka modal pendaftaran badan usaha baru untuk menambahkan PT / CV mitra baru ke dalam ekosistem sistem.</td>
               </tr>
               <tr>
-                <td><strong><code>🏦 Atur Rekening Bank</code></strong></td>
-                <td>Tab Rekening</td>
-                <td>Menambah atau memilih rekening bank utama yang akan dicetak pada lembar penagihan Monthly Certificate (MC).</td>
-                <td>Integrasi Modul Invoice</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
+                <td><strong>Daftar Entitas Badan Usaha</strong></td>
+                <td>Tabel daftar 6 perusahaan:<br>
+                  • <strong>CV. Putra Cipta Mandiri Consultant</strong> (14 Dok)<br>
+                  • <strong>PT. LIMA PILAR PERSADA</strong> (0 Dok)<br>
+                  • <strong>PT. MULTHI PHI BETA</strong> (0 Dok)<br>
+                  • <strong>PT. PURI DIMENSI</strong> (0 Dok)<br>
+                  • <strong>PT. Putra Aulia Konsultan</strong> (27 Dok)<br>
+                  • <strong>PT. Raissa Gemilang</strong> (2 Dok)
+                </td>
+                <td><strong>Mengklik salah satu nama perusahaan</strong> langsung memperbarui seluruh tampilan panel kanan (Kop surat, identitas, direksi, dan daftar dokumen legalitas).</td>
               </tr>
               <tr>
-                <td><strong><code>🖼️ Unggah Kop &amp; Stempel</code></strong></td>
-                <td>Tab Pengesahan</td>
-                <td>Mengunggah berkas gambar stempel dan tanda tangan berlatar transparan untuk dicetak otomatis pada surat dinas.</td>
-                <td>Otomatisasi Berkas Cetak</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#d97706; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[5]</span></td>
+                <td><strong>Tombol Aksi Edit &amp; Hapus</strong></td>
+                <td>Tombol oranye <code>✏️ Edit</code> dan tombol merah <code>🗑️ Hapus</code> di setiap baris entitas.</td>
+                <td>• <strong>Edit:</strong> Membuka modal pengubahan data pokok.<br>• <strong>Hapus:</strong> Menghapus entitas dari database (hanya untuk Superuser).</td>
               </tr>
               <tr>
-                <td><strong><code>🤝 Tab Kemitraan KSO</code></strong></td>
-                <td>Bilah Atas Modul</td>
-                <td>Mengatur perjanjian konsorsium, menentukan Lead Firm, nama rekening bersama KSO, dan persentase saham.</td>
-                <td>Sinkronisasi Modul PQ</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[6]</span></td>
+                <td><strong>Kop Surat Resmi Perusahaan</strong></td>
+                <td>Preview kop surat resmi <strong>PCM CONSULTANT</strong> lengkap dengan logo, alamat Jalan Pekanbaru No. 24 Padang, tombol <code>🔍 Perbesar</code>, dan <code>Hapus</code>.</td>
+                <td>Menampilkan visual kop surat yang akan dicetak secara otomatis pada seluruh surat keluar, berita acara termin, dan invoice penagihan MC.</td>
               </tr>
               <tr>
-                <td><strong><code>🗑️ Hapus Perusahaan</code></strong></td>
-                <td>Aksi Tabel</td>
-                <td>Menghapus data entitas (hanya dapat diakses oleh Superuser / Direktur dengan konfirmasi keamanan).</td>
-                <td>Proteksi Penghapusan Data</td>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[7]</span></td>
+                <td><strong>Ringkasan Profil &amp; Domisili</strong></td>
+                <td>Kartu ringkas memuat:<br>
+                  • <strong>Bidang:</strong> SBU:RK001-RK002-RK003<br>
+                  • <strong>NPWP:</strong> 83.816.714.6-201.000<br>
+                  • <strong>Pimpinan:</strong> Ir. Nevi Aulia<br>
+                  • <strong>Alamat:</strong> Jl. Pekanbaru No 24, Asratek Ulak Karang Selatan, Padang
+                </td>
+                <td>Memberikan ikhtisar instan nomor pokok wajib pajak dan alamat domisili untuk pengecekan kesesuaian dokumen lelang.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#7c3aed; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[8]</span></td>
+                <td><strong>Direksi &amp; Tanda Tangan Digital</strong></td>
+                <td>Menampilkan nama Direktur (<strong>Ir. NEVI AULIA</strong>, NIK: 1371110707630010, Akta No. 02), tombol edit TTD (<code>✏️</code>), hapus (<code>❌</code>), dan kanvas TTD transparan.</td>
+                <td>Memastikan spesimen tanda tangan pimpinan siap disematkan otomatis pada dokumen invoice termin dan surat pernyataan lelang.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[9]</span></td>
+                <td><strong>Tabel Legalitas &amp; Dokumen (14)</strong></td>
+                <td>Tabel perizinan memuat:<br>
+                  • <strong>Rekening Koran</strong> (Status: <code>5884 hari</code>)<br>
+                  • <strong>SBU - RK003</strong> (No: 202212071110208378499, Status: <code>727 hari</code>)<br>
+                  • <strong>SBU - RK002</strong> (No: 202212071035521907225, Status: <code>728 hari</code>)<br>
+                  • Tombol aksi: <code>👁️ View</code>, <code>✏️ Edit</code>, <code>🗑️ Hapus</code>
+                </td>
+                <td>Memantau sisa hari aktif perizinan berusaha. Badge hijau menunjukkan masa berlaku masih aman (> 30 hari). Tombol <strong>👁️ View</strong> untuk melihat berkas scan PDF asli.</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="sub-title"><span class="sub-title-icon">📋</span> SOP Langkah-demi-Langkah Pendaftaran Perusahaan Baru:</div>
-        <ol class="step-list">
-          <li class="step-item">
-            <strong>Langkah 1:</strong> Klik tombol <code>+ Tambah Perusahaan</code>, isi Nama Lengkap Badan Usaha (misal: <em>PT. PUTRA AULIA KONSULTAN</em>), pilih Bentuk Usaha (PT), dan ketik NPWP 16 digit.
-          </li>
-          <li class="step-item">
-            <strong>Langkah 2:</strong> Masukkan alamat domisili resmi sesuai Akta Notaris, kota, nomor telepon kantor, dan alamat email resmi kantor.
-          </li>
-          <li class="step-item">
-            <strong>Langkah 3:</strong> Pada bagian Rekening Bank, pilih bank (contoh: <em>Bank Nagari Cabang Utama Padang</em>), masukkan nomor rekening dan nama pemilik rekening persis sesuai buku tabungan.
-          </li>
-          <li class="step-item">
-            <strong>Langkah 4:</strong> Masukkan izin usaha SBU dan NIB beserta tanggal berakhirnya izin agar sistem Early Warning di Beranda dapat memantau masa berlakunya secara otomatis.
-          </li>
-          <li class="step-item">
-            <strong>Langkah 5:</strong> Unggah file logo kop surat (.png), tanda tangan direktur, dan stempel basah berlatar transparan, lalu klik <strong>Simpan Perusahaan</strong>.
-          </li>
-        </ol>
+        <!-- ======================================================== -->
+        <!-- BAGIAN 2: MODAL EDIT DATA POKOK PERUSAHAAN (GAMBAR 2.2) -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">✏️</span> 2. Panduan Pengisian Formulir Edit Data Pokok Perusahaan:</div>
 
-        <div class="case-box">
-          <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
-          <div class="case-title">Penyusunan Perjanjian Kemitraan KSO Tender PUPR</div>
-          <div class="case-content">
-            Pada tender <em>Pengawasan Pembangunan Gedung Rumah Sakit</em> senilai Rp 800 Juta, disepakati konsorsium antara <strong>PT. PUTRA AULIA KONSULTAN (Lead Firm 65%)</strong> dan <strong>PT. RAISSA GEMILANG (Anggota 35%)</strong>. Dengan memasukkan data ini di Modul Perusahaan, saat membuat invoice atau surat permohonan penagihan, kop surat, nomor rekening bersama, dan pembagian hak tagih otomatis tersinkronisasi tanpa salah hitung.
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/perusahaan_2_edit.png" alt="Modal Edit Data Pokok Perusahaan" style="width: 100%; max-width: 800px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 2.2: Modal Formulir Edit Data Pokok Badan Usaha dengan 6 Kolom Input Utama &amp; Tombol Simpan.</em>
+          </p>
+        </div>
+
+        <p>Berikut adalah tata cara dan aturan pengisian setiap kolom pada <strong>Gambar 2.2</strong>:</p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:10%; text-align:center;">Pin</th>
+                <th style="width:25%;">Nama Kolom Input</th>
+                <th style="width:35%;">Contoh Isian Riil</th>
+                <th style="width:30%;">Aturan Validasi Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
+                <td><strong>Header &amp; Tutup (✕)</strong></td>
+                <td>Judul: <code>Edit Perusahaan</code></td>
+                <td>Menutup jendela modal tanpa menyimpan perubahan.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
+                <td><strong>Nama Perusahaan *</strong></td>
+                <td><code>CV. Putra Cipta Mandiri Consultant</code></td>
+                <td><strong>Kolom Wajib Isi (*):</strong> Tuliskan nama lengkap badan usaha persis sesuai Akta Notaris terbaru termasuk singkatan PT/CV.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
+                <td><strong>Bidang Usaha &amp; NPWP</strong></td>
+                <td>• Bidang: <code>SBU:RK001-RK002-RK003</code><br>• NPWP: <code>83.816.714.6-201.000</code></td>
+                <td>NPWP wajib diisi 16 digit format terbaru Ditjen Pajak. Kode SBU mencantumkan sub-bidang pengawasan/perencanaan yang dimiliki.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
+                <td><strong>Penanggung Jawab / Pimpinan</strong></td>
+                <td><code>Ir. Nevi Aulia</code></td>
+                <td>Nama Direktur Utama / Pimpinan yang berhak menandatangani kontrak dinas dan dokumen penawaran lelang.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[5]</span></td>
+                <td><strong>Email Dinas &amp; Alamat</strong></td>
+                <td>• Email: <code>putracipta2017@gmail.com</code><br>• Alamat: <code>Jl. Pekanbaru No 24, Asratek Ulak Karang Selatan, Padang</code></td>
+                <td>Alamat domisili lengkap wajib sama persis dengan yang tercantum pada NIB OSS dan SK Kemenkumham RI.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[6]</span></td>
+                <td><strong>Tombol Simpan (<code>💾</code>)</strong></td>
+                <td><code>Simpan Perusahaan</code> (Tombol Hijau)</td>
+                <td>Menyimpan perubahan ke memori lokal dan mengunggahnya langsung ke tabel database Supabase secara real-time.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 3: MODAL DOKUMEN LEGALITAS & ALARM (GAMBAR 2.3) -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">📁</span> 3. Panduan Pengelolaan Dokumen Izin &amp; Tanggal Kadaluarsa:</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/perusahaan_3_dokumen.png" alt="Modal Edit Dokumen Legalitas" style="width: 100%; max-width: 800px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 2.3: Modal Manajemen Dokumen Izin, Masa Berlaku, dan Upload Scan Asli.</em>
+          </p>
+        </div>
+
+        <p>Setiap dokumen legalitas (SBU, NIB, Rekening Koran, KSWP) dipantau masa berlakunya oleh sistem Early Warning Beranda:</p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:10%; text-align:center;">Pin</th>
+                <th style="width:25%;">Nama Elemen Formulir</th>
+                <th style="width:35%;">Pengisian Dokumen Riil</th>
+                <th style="width:30%;">Peran bagi Kualifikasi Lelang</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
+                <td><strong>Header Dokumen</strong></td>
+                <td><code>Edit Dokumen Legalitas — CV. Putra Cipta Mandiri Consultant</code></td>
+                <td>Mengonfirmasi nama dokumen dan identitas perusahaan yang sedang dikelola.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
+                <td><strong>Nama Dokumen *</strong></td>
+                <td><code>Rekening Koran</code> (atau SBU - RK002, NIB, NPWP)</td>
+                <td><strong>Kolom Wajib Isi (*):</strong> Memberi judul baku agar mudah dicari pada modul Dokumen PQ KSO.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
+                <td><strong>Nomor Dokumen</strong></td>
+                <td>Nomor SBU: <code>202212071035521907225</code></td>
+                <td>Nomor registrasi resmi yang diterbitkan oleh LPJK, Kementerian PUPR, atau instansi penerbit.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#d97706; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
+                <td><strong>Tanggal Terbit &amp; Kadaluarsa *</strong></td>
+                <td>• Terbit: <code>dd/mm/yyyy</code><br>• Kadaluarsa: <code>18/12/2042</code></td>
+                <td><strong>Sangat Kritis (*):</strong> Tanggal kadaluarsa menjadi parameter perhitungan sisa hari aktif (misal: <code>728 hari</code>). Jika sisa hari &le; 7 hari, Beranda langsung membunyikan alarm peringatan merah!</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#0284c7; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[5]</span></td>
+                <td><strong>Ganti File (Upload Asli)</strong></td>
+                <td>Tombol <code>Choose File</code> (Pilih PDF / JPG)</td>
+                <td>Mengunggah scan berkas otentik beresolusi tinggi. Berkas ini dapat langsung dibuka oleh tim lelang dengan tombol <strong>👁️ View</strong> saat evaluasi pembuktian.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[6]</span></td>
+                <td><strong>Simpan Dokumen (<code>💾</code>)</strong></td>
+                <td>Tombol <code>Simpan Dokumen</code></td>
+                <td>Menyimpan pembaruan izin dan memperbarui status hitung mundur hari secara seketika.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 4: FORMULIR KUALIFIKASI PQ BAB A-G (GAMBAR 2.4) -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">📑</span> 4. Panduan Formulir Isian Kualifikasi PQ Standar SPSE (Bab A s/d Bab G):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/perusahaan_4_kualifikasi.png" alt="Formulir Isian Kualifikasi PQ Bab A-G" style="width: 100%; max-width: 950px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 2.4: Modal Formulir Isian Kualifikasi PQ Standar LKPP dengan 5 Tab Stepper (Bab A sampai Bab G).</em>
+          </p>
+        </div>
+
+        <p>Dengan mengklik tombol <code>📑 Bab A-G</code> di bilah atas layar utama (Pin [2] pada Gambar 2.1), sistem membuka modal kualifikasi standar pengadaan lelang pemerintah:</p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:10%; text-align:center;">Pin</th>
+                <th style="width:25%;">Nama Tab / Elemen</th>
+                <th style="width:35%;">Isi Dokumen yang Dikelola</th>
+                <th style="width:30%;">Kesesuaian Standar Dokumen SPSE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
+                <td><strong>Header Formulir PQ</strong></td>
+                <td><code>Formulir Isian Kualifikasi PQ: CV. Putra Cipta Mandiri Consultant</code></td>
+                <td>Dokumen resmi kualifikasi badan usaha sesuai SDP LKPP.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#0284c7; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
+                <td><strong>5 Tab Stepper Bab A-G</strong></td>
+                <td>
+                  • <strong>Tab 1:</strong> <code>📋 Bab A. Administrasi</code><br>
+                  • <strong>Tab 2:</strong> <code>📜 Bab B &amp; C. Izin &amp; SBU</code><br>
+                  • <strong>Tab 3:</strong> <code>📑 Bab D. Sertifikat &amp; KBLI</code><br>
+                  • <strong>Tab 4:</strong> <code>⚖️ Bab E. Landasan Hukum</code><br>
+                  • <strong>Tab 5:</strong> <code>👥 Bab F &amp; G. Pengurus &amp; Modal</code>
+                </td>
+                <td>Mengikuti urutan baku formulir prakualifikasi lelang SPSE sehingga tim administrasi tidak perlu menyalin manual satu per satu.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
+                <td><strong>A. Data Administrasi</strong></td>
+                <td>
+                  1. Nama Badan Usaha: <code>CV. Putra Cipta Mandiri Consultant</code><br>
+                  2. Status: Radio button <code>◉ Pusat</code> atau <code>○ Cabang</code><br>
+                  3. Alamat Kantor Pusat: <code>Jl. Pekanbaru No 24 Padang</code><br>
+                  • No. Telepon: <code>0751 - 8972809</code><br>
+                  • No. Fax: <code>0751 - 8972809</code><br>
+                  • E-mail: <code>putracipta2017@gmail.com</code>
+                </td>
+                <td>Identitas korespondensi resmi pengadaan. Seluruh data disinkronkan otomatis dari master profil perusahaan.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#7c3aed; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
+                <td><strong>Tombol <code>+ Tambah Kantor Cabang</code></strong></td>
+                <td>Tombol di bawah tabel administrasi</td>
+                <td>Digunakan jika perusahaan memiliki kantor cabang operasional di provinsi lain untuk keperluan pemenuhan syarat tender luar daerah.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[5]</span></td>
+                <td><strong>Simpan Formulir (<code>💾</code>)</strong></td>
+                <td>Tombol <code>Simpan Formulir Kualifikasi PQ</code></td>
+                <td>Menyimpan seluruh isian Bab A sampai Bab G ke database untuk ditarik otomatis oleh Modul 6 (Dokumen PQ KSO).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert-callout alert-tip">
+          <div>
+            ⚡ <strong>Tips Kunci Kualifikasi Perusahaan:</strong><br>
+            Selalu periksa kolom <strong>Status Exp</strong> pada tabel legalitas secara berkala. Dokumen SBU yang memiliki sisa masa berlaku di atas 60 hari memberikan jaminan mutlak kelolosan tahap evaluasi administrasi kualifikasi lelang di seluruh LPSE kementerian dan dinas daerah.
           </div>
         </div>
       </section>
