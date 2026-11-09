@@ -810,65 +810,104 @@
 
         <!-- SCREENSHOT ANNOTATED BERANDA -->
         <div class="tut-screenshot-wrap" style="margin: 22px 0 28px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
-          <img src="./img/dashboard_annotated.png" alt="Peta Sorotan Beranda Dashboard Eksekutif" style="width: 100%; max-width: 1100px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <img src="./img/dashboard_annotated.png" alt="Tangkapan Layar Nyata Beranda Dashboard Eksekutif PT. Putra Aulia Group" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
           <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
-            <span>📸</span> <em>Gambar 1.1: Peta Sorotan Layar Beranda (Dashboard) dengan 7 Zona Interaktif Utama yang Diberi Nomor Penanda.</em>
+            <span>📸</span> <em>Gambar 1.1: Tampilan Nyata Layar Beranda (Dashboard) dengan 9 Zona Sorotan Interaktif Utama &amp; Penanda Nomor Khusus.</em>
           </p>
         </div>
   
-        <p>Berdasarkan <strong>Gambar 1.1</strong> di atas, Layar Beranda terbagi menjadi <strong>7 Zona Sorotan Utama</strong> yang diberi nomor penanda merah. Setiap zona memiliki peran operasional spesifik yang saling terhubung:</p>
+        <p>Berdasarkan <strong>Gambar 1.1</strong> di atas, Layar Beranda terbagi menjadi <strong>9 Zona Sorotan Utama</strong> yang diberi penanda khusus:</p>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th style="width:12%; text-align:center;">Pin Sorotan</th>
+                <th style="width:10%; text-align:center;">Pin</th>
                 <th style="width:24%;">Nama Zona Layar</th>
-                <th style="width:36%;">Komponen &amp; Cara Interaksi</th>
-                <th style="width:28%;">Fungsi Operasional &amp; Dampak</th>
+                <th style="width:36%;">Data Riil &amp; Cara Interaksi</th>
+                <th style="width:30%;">Fungsi Operasional &amp; Dampak</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1]</span></td>
-                <td><strong>Bilah Atas (Topbar) &amp; Sinkronisasi</strong></td>
-                <td>Berisi tombol hamburger (<code>☰</code>), judul modul aktif, sub-judul status, dan tombol <strong>Segarkan (🔄)</strong>.</td>
-                <td>Memantau status aplikasi, melipat menu untuk memperluas layar kerja, serta menyegarkan data lokal langsung dari Supabase tanpa refresh browser.</td>
+                <td><strong>Bilah Status (Status Bar Topbar)</strong></td>
+                <td>Menampilkan badge modul aktif <code>📊 Dashboard</code> dan teks deskripsi <em>"Ikhtisar Operasional Realtime &amp; Radar Lelang"</em>.</td>
+                <td>Memastikan pengguna berada pada modul kendali utama sistem.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#0284c7; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[1B]</span></td>
+                <td><strong>Tombol Segarkan (<code>🔄</code>)</strong></td>
+                <td>Terletak di pojok kanan atas topbar. Tombol ini dapat diklik kapan saja oleh staf.</td>
+                <td>Menyinkronkan data lokal seketika dengan server Supabase tanpa me-refresh seluruh halaman browser.</td>
               </tr>
               <tr>
                 <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[2]</span></td>
                 <td><strong>7 Kartu Statistik Kilat (Micro Stat Cards)</strong></td>
-                <td>7 kartu metrik: <code>🏢 Perusahaan</code>, <code>📁 Dokumen</code>, <code>👷 Personil</code>, <code>📋 Tender</code>, <code>📦 Paket</code>, <code>✉️ Surat</code>, dan <code>⚠️ Overlap</code>. <em>Dapat diklik langsung!</em></td>
-                <td>Memberikan ikhtisar instan seluruh aset perusahaan. Jika ada bentrok personil, kartu Overlap langsung menyala <strong>merah</strong> dan saat diklik langsung membuka Gantt Chart.</td>
+                <td>
+                  • <code>🏢 6 Perusahaan</code><br>
+                  • <code>📁 43 Dokumen</code><br>
+                  • <code>👷 82 Personil</code><br>
+                  • <code>📋 1 Tender</code><br>
+                  • <code>📦 79 Paket</code><br>
+                  • <code>✉️ 0 Surat</code><br>
+                  • <code>⚠️ 0 Overlap</code> (Hijau Aman)<br>
+                  <em>Seluruh kartu dapat diklik langsung!</em>
+                </td>
+                <td>Memberikan gambaran instan skala operasional perusahaan. Jika nilai <strong>Overlap &gt; 0</strong>, kartu otomatis menyala <strong>merah peringatan</strong> untuk mencegah audit temuan BPK.</td>
               </tr>
               <tr>
                 <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[3]</span></td>
-                <td><strong>Jadwal Tender Terdekat (Countdown 30 Hari)</strong></td>
-                <td>Tabel prioritas tender aktif berurutan berdasarkan sisa waktu penutupan (Countdown). Dilengkapi badge warna (Merah, Oranye, Kuning). Klik baris untuk buka lelang.</td>
-                <td>Mencegah keterlambatan upload berkas penawaran SPSE atau menghadiri jadwal pembuktian kualifikasi lelang.</td>
+                <td><strong>Jadwal Tender Terdekat (30 Hari Countdown)</strong></td>
+                <td>Menampilkan paket aktif: <strong>"Pengawasan IJD MYC PJN Wilayah I Provinsi Sumatera Barat (📍 PU)"</strong> dengan badge merah <code>1 Hari Lagi</code> serta tahap <code>PQ (2026-11-09)</code>. Klik baris paket untuk membuka rincian lelang.</td>
+                <td>Menghindari keterlambatan unggah berkas penawaran kualifikasi lelang SPSE. Hitung mundur bergerak otomatis setiap hari.</td>
               </tr>
               <tr>
                 <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[4]</span></td>
-                <td><strong>Pusat Perhatian &amp; Early Warning</strong></td>
-                <td>Panel peringatan dokumen legalitas/sertifikat yang akan kedaluwarsa dalam <code>≤ 1 Hari</code>, <code>≤ 7 Hari</code>, <code>≤ 14 Hari</code>, dan <code>≤ 30 Hari</code>. Klik badge untuk perpanjangan.</td>
-                <td>Menjaga kepatuhan hukum dan kualifikasi izin usaha (SBU/IUJK/NIB) agar tidak gugur saat evaluasi kualifikasi tender LKPP.</td>
+                <td><strong>Pusat Perhatian (Early Warning Audit)</strong></td>
+                <td>Menampilkan dua indikator status otomatis:<br>
+                  • <code>✅ Jadwal Personil Aman (Tanpa Overlap)</code><br>
+                  • <code>✅ Dokumen Perusahaan Lengkap &amp; Aktif</code>
+                </td>
+                <td>Sistem secara otomatis mengaudit validitas SBU, IUJK, NPWP, dan jadwal tenaga ahli. Jika ada yang kritis (&le; 7 hari), sistem memunculkan tombol peringatan merah untuk aksi cepat.</td>
               </tr>
               <tr>
                 <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[5]</span></td>
                 <td><strong>Arsip Paket Berjalan</strong></td>
-                <td>Daftar ringkasan jumlah paket supervisi/perencanaan yang sedang dikerjakan per tahun anggaran (badge hijau). Klik badge untuk filter proyek.</td>
-                <td>Navigasi cepat menuju pengawasan fisik, rekap progres bulanan, dan invoice penagihan termin (MC) proyek yang aktif.</td>
+                <td>Menampilkan ringkasan kontrak berjalan per tahun anggaran: <strong>Tahun 2026</strong> dengan badge hijau <code>79 Paket</code>. Mengklik baris langsung menyaring paket pada tahun tersebut.</td>
+                <td>Akses cepat menuju manajemen pengawasan lapangan, input prestasi termin, dan pencetakan invoice MC (Monthly Certificate).</td>
               </tr>
               <tr>
                 <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[6]</span></td>
-                <td><strong>Rekapitulasi SKK Personil &amp; Wilayah Tender</strong></td>
-                <td>Panel lipatan (accordion) sertifikat keahlian tenaga ahli (Madya, Muda, Utama) dan chip sebaran lokasi lelang (contoh: Kab. Tanah Datar). Klik chip untuk profil/filter.</td>
-                <td>Memudahkan estimator mencocokkan ketersediaan tenaga ahli bersertifikat sesuai KAK tender tanpa harus membuka database personil satu-per-satu.</td>
+                <td><strong>Rekapitulasi SKK Personil (11 Posisi)</strong></td>
+                <td>Daftar sertifikat keahlian tenaga ahli perusahaan:<br>
+                  • Ahli K3 Konstruksi (20 Personil)<br>
+                  • Adm. Jalan &amp; Jembatan (18 Personil)<br>
+                  • Ahli Teknik Jalan (18 Personil)<br>
+                  • Ahli Teknik Jembatan (3 Personil)<br>
+                  • Teknisi Lab Beton Aspal (3 Personil)<br>
+                  • Ahli Keselamatan Jalan (2 Personil)<br>
+                  • Pengawas Konstruksi &amp; Struktur (2 Personil)<br>
+                  • Surveyor (2 Personil), Drafter (1 Personil).
+                </td>
+                <td>Klik tanda panah (<code>▶</code>) untuk membuka lipatan (*accordion*) guna melihat daftar nama personil dan jenjang keahlian (Utama, Madya, Muda). Memudahkan pencocokan tenaga ahli tender tanpa bongkar berkas manual.</td>
               </tr>
               <tr>
                 <td style="text-align:center;"><span class="module-tag" style="background:#ef4444; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[7]</span></td>
+                <td><strong>Sebaran Lokasi Tender Aktif</strong></td>
+                <td>Menampilkan chip sebaran lelang: <code>📍 PU (1)</code>. Mengklik chip langsung menyaring daftar lelang di kementerian bersangkutan.</td>
+                <td>Memetakan sebaran geografis lelang yang sedang diikuti konsorsium secara visual.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#7c3aed; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[8]</span></td>
                 <td><strong>Bilah Navigasi Samping &amp; Dock Utilitas</strong></td>
-                <td>Sidebar daftar menu 17 modul terpadu beserta dock utilitas di bagian bawah: Catatan Sandi (<code>📝</code>), Kalender Hari Kerja (<code>📅</code>), Tanda Tangan (<code>✍️</code>), Stempel (<code>💮</code>), dan Tema (<code>◐</code>).</td>
-                <td>Pusat perpindahan antar modul kerja serta alat bantu darurat saat pengisian portal SPSE atau penghitungan masa kontrak kerja (SPMK).</td>
+                <td>Bilah ikon vertikal di sebelah kiri: Pencarian (<kbd>Ctrl+K</kbd>), 15 modul inti, dan alat bantu dock bawah (Catatan Sandi <code>📝</code>, Kalender <code>📅</code>, TTD <code>✍️</code>, Stempel <code>💮</code>, Tema <code>◐</code>).</td>
+                <td>Jalur pintas universal untuk berpindah modul kerja kapan saja tanpa harus kembali ke halaman beranda.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><span class="module-tag" style="background:#059669; color:#fff; font-weight:800; border-radius:12px; padding:2px 8px;">[9]</span></td>
+                <td><strong>Tombol Mengambang (FAB <code>💬</code>)</strong></td>
+                <td>Tombol hijau melayang di pojok kanan bawah layar. Mengklik tombol membuka Speed-Dial Menu.</td>
+                <td>Membuka <strong>Pusat Tugas Staf (<code>📋</code>)</strong> dan <strong>PAG Messenger (<code>💬</code>)</strong> untuk koordinasi instan antar anggota tim lelang.</td>
               </tr>
             </tbody>
           </table>
@@ -1016,16 +1055,16 @@
         <!-- STUDI KASUS NYATA -->
         <div class="case-box">
           <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
-          <div class="case-title">Pemeriksaan Rutin Pagi Hari oleh Tim Estimator & Admin Tender</div>
+          <div class="case-title">Pemeriksaan Rutin Pagi Hari: Kesiapan Dokumen Kualifikasi Tender PJN Sumbar</div>
           <div class="case-content">
-            <strong>Kondisi Lapangan:</strong><br>
-            Pukul 08.15 WIB, staf membuka Beranda aplikasi PT. Putra Aulia Group.<br>
-            1. Pada baris kartu statistik, terlihat <strong>⚠️ Overlap bernilai 1</strong> (berwarna merah lembut).<br>
-            2. Staf mengklik kartu tersebut dan langsung diarahkan ke modul <em>Pantau Personil</em>. Terlihat bahwa <strong>Ir. Handoko (Site Engineer)</strong> dijadwalkan bersamaan pada Proyek Jembatan TKD dan Proyek Jalan Lingkar di bulan Oktober.<br>
-            3. Di panel <em>Pusat Perhatian</em>, terdapat badge <code>≤ 7 Hari (1 Dokumen)</code>. Setelah diklik, sistem membuka modul <em>Perusahaan</em> yang menunjukkan bahwa <strong>SBU Jasa Pengawasan Transportasi</strong> akan kedaluwarsa dalam 5 hari.<br>
-            4. Di panel <em>Jadwal Tender Terdekat</em>, paket <strong>"Pengawasan Jalan Lintas Sumbar"</strong> ber-badge merah (<code>HARI INI - Batas Upload Penawaran Pukul 15.00 WIB</code>).<br><br>
+            <strong>Kondisi Lapangan (Sesuai Gambar 1.1):</strong><br>
+            Pukul 08.00 WIB, tim admin lelang dan estimator membuka Beranda aplikasi PT. Putra Aulia Group.<br>
+            1. Pada panel <strong>Jadwal Tender Terdekat</strong>, terlihat paket penting <strong>"Pengawasan IJD MYC PJN Wilayah I Provinsi Sumatera Barat"</strong> ber-badge merah <code>1 Hari Lagi</code> untuk tahap <code>PQ (2026-11-09)</code>.<br>
+            2. Di panel <strong>Pusat Perhatian</strong>, sistem memberikan indikator hijau: <code>✅ Jadwal Personil Aman (Tanpa Overlap)</code> dan <code>✅ Dokumen Perusahaan Lengkap &amp; Aktif</code>.<br>
+            3. Pada baris statistik, terkonfirmasi bahwa terdapat <strong>82 Personil</strong> aktif dan <strong>⚠️ 0 Overlap</strong>.<br>
+            4. Di panel <strong>Rekap SKK Personil</strong>, estimator melihat ketersediaan <strong>18 Ahli Teknik Jalan</strong> dan <strong>20 Ahli K3 Konstruksi</strong> yang siap ditugaskan pada dokumen kualifikasi tanpa risiko sanggahan bentrok penugasan.<br><br>
             <strong>Tindakan yang Berhasil Diambil:</strong><br>
-            Tim segera membagi tugas: satu admin memproses perpanjangan SBU, estimator mengganti personil pendamping agar tidak terjadi temuan audit BPK, dan admin tender menyelesaikan proses upload dokumen sebelum jam 15.00 WIB. Seluruh risiko kegagalan lelang berhasil dicegah hanya dengan membaca informasi di Beranda selama 2 menit!
+            Dengan mengklik baris paket tersebut, admin tender langsung melompat ke Modul Tender untuk memeriksa kelengkapan file PDF formulir PQ dan mengunggahnya ke server SPSE sebelum batas penutupan 9 November. Semua keputusan strategis diambil dalam waktu kurang dari 3 menit langsung dari Beranda!
           </div>
         </div>
 
