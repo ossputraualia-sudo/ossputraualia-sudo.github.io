@@ -1938,85 +1938,351 @@
 
       <!-- 5. DATA TENDER -->
       <!-- 5. DATA TENDER -->
+      <!-- 5. DATA TENDER -->
       <section class="module-card module-pane" id="tender">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📋</div>
             <div class="module-titles">
-              <h3>Modul 5: Data Tender &amp; Evaluasi Penawaran</h3>
-              <div class="module-sub">Manajemen Siklus Pra-Kontrak, Kalkulator Persentase HPS, Simulasi Nilai Teknis &amp; Monitoring Sanggah</div>
+              <h3>Modul 5: Data Tender &amp; Manajemen Persiapan Lelang</h3>
+              <div class="module-sub">Manajemen Siklus Pra-Kontrak, Tracking Jadwal Kritis SPSE, Penugasan Tenaga Ahli, Delegasi Tugas &amp; Ekstraksi Jadwal LPSE Otomatis</div>
             </div>
           </div>
           <span class="module-tag">PRA-KONTRAK</span>
         </div>
 
         <p>
-          <strong>Modul Data Tender &amp; Evaluasi Penawaran</strong> adalah pusat persiapan dan pemenangan lelang. Modul ini mengawal seluruh tahapan lelang sejak pengumuman di portal SPSE, rapat pemberian penjelasan (aanwijzing), perakitan dokumen penawaran teknis dan biaya, simulasi skor evaluasi, hingga masa sanggah dan terbitnya Surat Penunjukan Penyedia Barang/Jasa (SPPBJ).
+          <strong>Modul Data Tender &amp; Manajemen Persiapan Lelang</strong> adalah ruang kerja kolaboratif utama bagi tim estimator, tenaga ahli, dan administrator lelang. Modul ini mengawal seluruh tahapan lelang sejak paket diklaim dari Radar SPSE, pembagian tugas pembuatan dokumen teknis/biaya, verifikasi penugasan personil, pemantauan checklist batas waktu tahapan, hingga penetapan pemenang lelang (SPPBJ).
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">🧮</span> Kalkulator Otomatis Persentase Penawaran HPS:</div>
-        <p>
-          Sistem menyediakan mesin kalkulator harga cerdas. Anda cukup memasukkan <strong>Nilai HPS</strong> dari Pokja (misal: <code>Rp 250.000.000</code>) dan target persentase penawaran (misal: <code>93,5%</code>):
-        </p>
-        <ul class="step-list">
-          <li class="step-item">Sistem menghitung nilai penawaran kotor (bruto).</li>
-          <li class="step-item">Memisahkan Biaya Langsung Pokok dan komponen <strong>PPN 11%</strong> secara presisi matematis.</li>
-          <li class="step-item">Menerapkan <strong>Pembulatan Ribuan Resmi</strong> yang diakui dokumen tender pengadaan pemerintah sehingga tidak ada selisih 1 rupiah pun antara form penawaran harga SPSE dan rincian RAB Inkindo.</li>
-        </ul>
+        <!-- ======================================================== -->
+        <!-- BAGIAN 1: PETA LAYAR UTAMA DATA TENDER (GAMBAR 5.1)      -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🧭</span> 1. Peta Layar Utama Modul Data Tender (Penjelasan 5 Kotak Penanda):</div>
 
-        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Seluruh Tombol di Modul Data Tender:</div>
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/tender_user_1.png" alt="Layar Utama Modul Data Tender dengan 5 Kotak Penanda Merah" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 5.1: Tampilan Layar Utama Modul Data Tender dengan 5 Kotak Penanda Merah (Bilah Filter, Daftar Paket, Rincian Jadwal, Personil, dan Delegasi Tugas).</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 5.1</strong> di atas, layar terbagi menjadi <strong>5 Kotak Penanda Merah Utama</strong>:</p>
+
+        <!-- KOTAK 1: BILAH ATAS FILTER & PENCARIAN -->
+        <div class="sub-title"><span class="sub-title-icon">🔍</span> Kotak Merah 1: Bilah Atas Navigasi &amp; Filter Cepat Tender</div>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th style="width:22%;">Nama Tombol</th>
-                <th style="width:16%;">Lokasi</th>
-                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
-                <th style="width:24%;">Dampak Sistem</th>
+                <th style="width:24%;">Nama Elemen Filter</th>
+                <th style="width:36%;">Pilihan &amp; Data pada Foto</th>
+                <th style="width:40%;">Fungsi Operasional &amp; Cara Kerja</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong><code>+ Tambah Tender Baru</code></strong></td>
-                <td>Pojok Kanan Atas</td>
-                <td>Membuka modal pendaftaran lelang baru (Kode SPSE, Nama Paket, Instansi, Nilai HPS, Tanggal Batas Upload).</td>
-                <td>Pendaftaran Lelang Baru</td>
+                <td><strong><code>🔍 Cari paket, lokasi...</code></strong></td>
+                <td>Kotak input teks pencarian cepat</td>
+                <td>Memfilter daftar tender secara seketika berdasarkan nama paket atau wilayah pekerjaan dinas.</td>
               </tr>
               <tr>
-                <td><strong><code>💰 Buka Pembuat RAB</code></strong></td>
-                <td>Aksi Baris Tender</td>
-                <td>Menghubungkan langsung paket lelang ini ke Modul 9 (Pembuat RAB 9 Tab) untuk menyusun rincian billing rate.</td>
-                <td>Integrasi RAB Inkindo</td>
+                <td><strong><code>Semua PT/CV ˅</code></strong></td>
+                <td>Dropdown filter badan usaha</td>
+                <td>Menyaring tender yang diikuti oleh entitas tunggal atau konsorsium KSO tertentu (misal: <em>PT. Multhi Phi Beta KSO PT. Lima Pilar Persada, PT. Puri Dimensi</em>).</td>
               </tr>
               <tr>
-                <td><strong><code>🤖 Buka AI KAK</code></strong></td>
-                <td>Aksi Baris Tender</td>
-                <td>Mengunggah KAK lelang ini ke Modul 8 untuk membedah syarat personil dan membuat proposal teknis otomatis.</td>
-                <td>Proposal Teknis Instan</td>
+                <td><strong><code>👤 Personil ˅</code></strong></td>
+                <td>Dropdown filter tenaga ahli</td>
+                <td>Menyaring tender berdasarkan nama personil yang ditugaskan (contoh: mencari paket mana saja yang mengusulkan <em>Febriyanto, ST</em>).</td>
               </tr>
               <tr>
-                <td><strong><code>📑 Buka Dokumen PQ</code></strong></td>
-                <td>Aksi Baris Tender</td>
-                <td>Membuka Modul 6 (Dokumen PQ KSO) dengan data paket yang langsung tersinkronisasi otomatis.</td>
-                <td>Persiapan Kualifikasi KSO</td>
+                <td><strong><code>📍 Lokasi ˅</code> &amp; <code>🗓️ Tahun ˅</code></strong></td>
+                <td>Dropdown wilayah &amp; tahun</td>
+                <td>Menyaring berdasarkan instansi (contoh: <code>PU</code>) dan tahun anggaran (contoh: <code>2026</code>).</td>
               </tr>
               <tr>
-                <td><strong><code>🏆 Status Menang (SPPBJ)</code></strong></td>
-                <td>Menu Status Lelang</td>
-                <td>Mengubah status tender menjadi <em>MENANG</em> dan secara otomatis meneruskan data paket ini ke Modul 10 (Paket Berjalan).</td>
-                <td>Transisi ke Pelaksanaan</td>
+                <td><strong><code>Terbaru ˅</code> &amp; <code>🔄 Reset</code></strong></td>
+                <td>Pengurutan &amp; pembersih filter</td>
+                <td>Mengurutkan berdasarkan tanggal batas upload terdekat serta mengembalikan seluruh filter ke kondisi awal.</td>
+              </tr>
+              <tr>
+                <td><strong>Badge <code>1 Paket</code> &amp; Tombol <code>🏆 Menang</code></strong></td>
+                <td>Indikator jumlah &amp; filter status</td>
+                <td>Menampilkan jumlah tender yang sedang diproses (1 Paket) dan tombol filter cepat untuk melihat tender yang sudah berstatus <em>Menang / SPPBJ</em>.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>+ Tambah Tender</code></strong></td>
+                <td>Tombol hijau toska pojok kanan atas</td>
+                <td>Membuka modal pendaftaran lelang baru secara manual jika tender tidak diambil melalui Radar SPSE.</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="sub-title"><span class="sub-title-icon">📋</span> SOP Persiapan Dokumen Tender 7 Hari Sebelum Penutupan SPSE:</div>
-        <ol class="step-list">
-          <li class="step-item"><strong>Hari H-7 (Pendaftaran):</strong> Daftarkan paket di Modul Tender, masukkan nilai HPS, instansi, dan batas waktu upload penawaran.</li>
-          <li class="step-item"><strong>Hari H-5 (Analisis KAK &amp; Personil):</strong> Buka AI KAK untuk mengekstrak syarat tenaga ahli. Buka Modul Personil untuk mengunci nama-nama personil dan unduh CV format LPJK.</li>
-          <li class="step-item"><strong>Hari H-3 (Penyusunan RAB):</strong> Buka Pembuat RAB, sesuaikan Billing Rate Inkindo dan biaya non-personil hingga nilai total penawaran berada di kisaran target 90-95% dari HPS.</li>
-          <li class="step-item"><strong>Hari H-1 (Pemberkasan Akhir):</strong> Cetak surat penawaran harga, pakta integritas, surat pernyataan, dan lakukan upload ke server SPSE sebelum pukul 15.00 WIB.</li>
-        </ol>
+        <!-- KOTAK 2: TABEL DAFTAR TENDER DI SISI KIRI -->
+        <div class="sub-title"><span class="sub-title-icon">📋</span> Kotak Merah 2: Tabel Daftar Tender Aktif di Sisi Kiri</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:20%;">Elemen Baris</th>
+                <th style="width:40%;">Data Riil pada Foto</th>
+                <th style="width:40%;">Fungsi Analisis bagi Tim Lelang</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Identitas Paket</strong></td>
+                <td>
+                  <strong>Pengawasan IJD MYC PJN Wilayah I Provinsi Sumatera Barat</strong><br>
+                  • Status: <code>⏳ Proses</code><br>
+                  • Konsorsium: <code>🏢 PT. Multhi Phi Beta KSO PT. Lima Pilar Persada, PT. Puri Dimensi</code><br>
+                  • Instansi &amp; Tahun: <code>📍 PU | 🗓️ 2026</code>
+                </td>
+                <td><strong>Mengklik baris paket ini</strong> langsung menyinkronkan seluruh lembar kerja di sisi kanan (Rincian jadwal SPSE, daftar tenaga ahli, dan delegasi tugas internal).</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol Aksi</strong></td>
+                <td>
+                  • <code>✏️ Edit</code> (Tombol oranye)<br>
+                  • <code>🗑️ Hapus</code> (Tombol merah)
+                </td>
+                <td>
+                  • <strong>Edit:</strong> Membuka modal pengubahan data tender, tanggal tahapan, dan fitur pintar ekstraksi jadwal LPSE otomatis.<br>
+                  • <strong>Hapus:</strong> Menghapus paket tender dari daftar (hanya dapat dilakukan oleh Superuser).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK 3: PANEL RINCIAN PAKET & JADWAL TAHAPAN KRITIS -->
+        <div class="sub-title"><span class="sub-title-icon">📅</span> Kotak Merah 3: Panel Rincian Paket &amp; Jadwal Tahapan Kritis SPSE</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Tahapan Lelang</th>
+                <th style="width:28%;">Tanggal SPSE &amp; Status Checklist</th>
+                <th style="width:50%;">Aturan &amp; Tindakan Wajib Staf</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Jadwal PQ (Kualifikasi)</strong></td>
+                <td><code>09 November 2026</code><br><span class="module-tag" style="background:#dcfce7; color:#15803d; border-color:#86efac;">✔ Selesai: azharlubis1945</span></td>
+                <td>Telah selesai diunggah dan ditandai selesai oleh user <strong>azharlubis1945</strong>. Dokumen kualifikasi kemitraan KSO telah terkirim sebelum batas penutupan server.</td>
+              </tr>
+              <tr>
+                <td><strong>Pembuktian</strong></td>
+                <td><code>18 November 2026</code><br>Checkbox: <code>☐ Tandai Selesai</code></td>
+                <td>Jadwal verifikasi fisik berkas legalitas asli dan sertifikat keahlian personil di kantor Pokja Pemilihan.</td>
+              </tr>
+              <tr>
+                <td><strong>Penawaran</strong></td>
+                <td><code>01 Desember 2026</code><br>Checkbox: <code>☐ Tandai Selesai</code></td>
+                <td>Batas akhir unggah berkas penawaran harga (RAB 9 Tab) dan proposal penawaran teknis (AI KAK) ke portal SPSE.</td>
+              </tr>
+              <tr>
+                <td><strong>Pemenang &amp; Negosiasi</strong></td>
+                <td>• Pemenang: <code>10 Desember 2026</code><br>• Negosiasi: <code>17 Desember 2026</code></td>
+                <td>Pengumuman pemenang lelang oleh Pokja dilanjutkan masa sanggah dan rapat klarifikasi/negosiasi teknis dan biaya sebelum penerbitan SPPBJ.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK 4 & 5: PERSONIL & TUGAS -->
+        <div class="sub-title"><span class="sub-title-icon">👥</span> Kotak Merah 4 &amp; 5: Penugasan Tenaga Ahli &amp; Delegasi Tugas Paket</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:24%;">Kotak Panel</th>
+                <th style="width:36%;">Elemen Tampilan pada Foto</th>
+                <th style="width:40%;">Fungsi Operasional Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Kotak 4: Personil Ditugaskan</strong></td>
+                <td>
+                  • Input Jabatan: <code>Ketik / pilih jabatan... ˅</code><br>
+                  • Input Nama: <code>Ketik / pilih personil... ˅</code><br>
+                  • Tombol: <code>+ Tambah</code><br>
+                  • Status: <em>"Belum ada personil yang ditugaskan."</em>
+                </td>
+                <td>Menentukan komposisi tim ahli (Site Engineer, Ahli K3, Ahli Jalan) untuk paket ini. Saat ditambahkan, sistem otomatis mengecek apakah ada jadwal bentrok di <strong>Modul 12 (Pantau Personil)</strong> untuk mencegah temuan audit BPK.</td>
+              </tr>
+              <tr>
+                <td><strong>Kotak 5: Tugas &amp; Delegasi Paket</strong></td>
+                <td>
+                  • Status: <code>0 Aktif</code><br>
+                  • Tombol: <code>+ Buat Tugas Paket Ini</code><br>
+                  • Status: <em>"Belum ada tugas yang dikaitkan dengan tender ini."</em>
+                </td>
+                <td>Membuka modal pendelegasian tugas pembuatan berkas spesifik kepada staf lelang tertentu lengkap dengan checklist langkah kerja dan tenggat waktu (deadline).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 2: ALUR CHECKLIST & TOMBOL DELEGASI (GAMBAR 5.2)  -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">⚡</span> 2. Panduan Interaktif Checklist Tahapan &amp; Delegasi Tugas (Gambar 5.2):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/tender_user_2.png" alt="Checklist Tahapan dan Tombol Delegasi Tugas Tender" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 5.2: Dua Kotak Penanda Merah Menyorot Checklist Penyelesaian Tahapan SPSE dan Tombol Pendelegasian Tugas Paket.</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 5.2</strong>, dua area yang disorot memiliki peran koordinasi kerja tim lelang:</p>
+        <ul class="step-list">
+          <li class="step-item">
+            <strong>Kotak Merah Atas (Checklist Otomatis Akuntabilitas Kerja):</strong>
+            Setiap kali suatu tahapan lelang selesai diunggah ke SPSE, staf cukup mencentang kotak <code>☐ Tandai Selesai</code>. Sistem otomatis merekam username staf dan stempel waktu selesai (contoh pada foto: <code>✔ Selesai: azharlubis1945</code> pada Jadwal PQ). Hal ini memberikan kepastian kepada pimpinan bahwa berkas telah sukses terunggah tanpa perlu konfirmasi manual berulang kali.
+          </li>
+          <li class="step-item">
+            <strong>Kotak Merah Bawah (Tombol <code>+ Buat Tugas Paket Ini</code>):</strong>
+            Tombol hijau toska tua untuk membuat penugasan kerja spesifik yang terikat langsung dengan tender ini, memunculkan modal pembuatan tugas baru (Gambar 5.3).
+          </li>
+        </ul>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 3: MODAL BUAT TUGAS BARU (GAMBAR 5.3)             -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">📝</span> 3. Panduan Pendelegasian Tugas Kerja Tim Lelang (Gambar 5.3):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/tender_user_3.png" alt="Modal Buat Tugas Baru" style="width: 100%; max-width: 800px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 5.3: Modal Pembuatan Tugas Baru Lengkap dengan Checklist Langkah Kerja dan Penetapan Deadline.</em>
+          </p>
+        </div>
+
+        <p>Setiap tugas yang dibuat melalui modal pada <strong>Gambar 5.3</strong> akan langsung muncul pada menu mengambang (FAB <code>💬</code>) di pojok kanan bawah staf yang ditugaskan:</p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Kolom Formulir Tugas</th>
+                <th style="width:35%;">Pengisian Riil pada Foto</th>
+                <th style="width:40%;">Dampak Kolaborasi Tim</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Judul Tugas / Pekerjaan *</strong></td>
+                <td>Placeholder: <em>"Ketik nama tugas atau pekerjaan yang harus diselesaikan..."</em></td>
+                <td><strong>Wajib Isi (*):</strong> Memberikan instruksi singkat dan padat (contoh: <em>"Susun Proposal Teknis &amp; Metodologi KAK Jalan"</em>).</td>
+              </tr>
+              <tr>
+                <td><strong>Nama Paket Berjalan</strong></td>
+                <td>Terkunci otomatis: <code>Pengawasan IJD MYC PJN Wilayah I Provinsi Sumatera Barat</code></td>
+                <td>Mengikat tugas ini langsung ke paket tender bersangkutan sehingga riwayat penugasan tersimpan rapi pada rekam jejak tender.</td>
+              </tr>
+              <tr>
+                <td><strong>Ditugaskan Kepada</strong></td>
+                <td>Dropdown: <code>Diri Sendiri (Azhar_Pe... ˅)</code></td>
+                <td>Memilih staf pelaksana (koordinator estimator, admin tender, atau drafter) yang bertanggung jawab menyelesaikan berkas.</td>
+              </tr>
+              <tr>
+                <td><strong>Prioritas &amp; Deadline</strong></td>
+                <td>• Prioritas: <code>★ Normal ˅</code> (bisa dipilih <em>Tinggi</em> atau <em>Darurat</em>)<br>• Deadline: Tanggal kalender <code>dd/mm/yyyy</code></td>
+                <td>Tugas dengan prioritas tinggi dan deadline mendekati penutupan SPSE akan memunculkan lencana peringatan merah pada panel tugas staf.</td>
+              </tr>
+              <tr>
+                <td><strong>Checklist Langkah Kerja</strong></td>
+                <td>Format 1 baris = 1 langkah:<br><em>"Siapkan dokumen laporan pendahuluan<br>Periksa kelengkapan TTD &amp; Stempel<br>Upload ke folder Drive paket"</em></td>
+                <td>Memberikan daftar periksa (*checklist*) yang dapat dicentang satu per satu oleh staf saat pekerjaan berlangsung hingga mencapai 100%.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>💾 Simpan Tugas</code></strong></td>
+                <td>Tombol hijau emerald di pojok kanan bawah modal</td>
+                <td>Mengirim tugas ke database dan meneruskan notifikasi tugas aktif ke dashboard staf bersangkutan.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 4: MODAL EDIT TENDER & AUTO-FILL LPSE (GAMBAR 5.4)-->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">⚡</span> 4. Fitur Pintar Ekstraksi Otomatis Jadwal LPSE (Gambar 5.4):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/tender_user_4.png" alt="Modal Edit Tender dan Fitur Auto-Fill Jadwal LPSE" style="width: 100%; max-width: 800px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 5.4: Modal Edit Tender dengan Fitur Cerdas Auto-Fill Jadwal LPSE/SPSE dan Form Pengaturan Paket.</em>
+          </p>
+        </div>
+
+        <p>Fitur paling revolusioner pada <strong>Gambar 5.4</strong> adalah kotak cerdas <strong>Auto-Fill Jadwal LPSE / SPSE</strong>:</p>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Bagian Formulir</th>
+                <th style="width:35%;">Pengisian Riil pada Foto</th>
+                <th style="width:40%;">Keunggulan Otomatisasi Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>⚡ Auto-Fill Jadwal LPSE / SPSE</strong></td>
+                <td>Area tempel teks: <em>"Salin tabel jadwal dari LPSE dan tempel di sini, lalu klik Ekstrak..."</em> beserta tombol <strong><code>Ekstrak Jadwal</code></strong></td>
+                <td><strong>Bebas Ketik Tanggal Manual:</strong> Cukup buka website LPSE, blok tabel tahapan lelang dengan mouse (Ctrl+C), tempel di kotak ini, lalu klik <em>Ekstrak Jadwal</em>. Sistem kecerdasan parser otomatis mengisi kolom tanggal PQ, Pembuktian, Penawaran, Pemenang, dan Negosiasi secara presisi 100%!</td>
+              </tr>
+              <tr>
+                <td><strong>Nama Paket Tender *</strong></td>
+                <td><code>Pengawasan IJD MYC PJN Wilayah I Provinsi Sumatera Barat</code></td>
+                <td>Nama resmi paket lelang sesuai dokumen pengadaan.</td>
+              </tr>
+              <tr>
+                <td><strong>Tahun &amp; Lokasi *</strong></td>
+                <td>• Tahun: <code>2026</code><br>• Lokasi: <code>PU</code></td>
+                <td>Mengelompokkan tender ke tahun anggaran berjalan dan instansi penyelenggara.</td>
+              </tr>
+              <tr>
+                <td><strong>Nama Perusahaan Pelaksana</strong></td>
+                <td>Dropdown: <code>PT. Multhi Phi Beta KSO PT. Lima Pilar Persada, PT. Puri Dimensi</code></td>
+                <td>Memilih apakah tender diikuti oleh badan usaha induk secara mandiri atau melalui konsorsium KSO.</td>
+              </tr>
+              <tr>
+                <td><strong>Kolom Tanggal Jadwal</strong></td>
+                <td>
+                  • Jadwal PQ: <code>09/11/2026</code><br>
+                  • Pembuktian: <code>18/11/2026</code><br>
+                  • Penawaran: <code>01/12/2026</code><br>
+                  • Pemenang: <code>10/12/2026</code><br>
+                  • Negosiasi: <code>17/12/2026</code>
+                </td>
+                <td>Tanggal-tanggal ini yang akan dipantau oleh radar hitung mundur (countdown) di Beranda dan diteruskan ke bot pengingat WhatsApp.</td>
+              </tr>
+              <tr>
+                <td><strong>Status Tender</strong></td>
+                <td>Dropdown: <code>⏳ Proses</code> (pilihan: <em>Proses</em>, <em>Menang</em>, <em>Kalah</em>, <em>Batal</em>)</td>
+                <td>Jika status diubah menjadi <strong>Menang</strong>, paket ini secara otomatis diteruskan ke <strong>Modul 10 (Paket Berjalan)</strong> untuk diterbitkan SPMK dan penagihan termin MC!</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>💾 Simpan Tender</code></strong></td>
+                <td>Tombol hijau emerald di bagian bawah modal</td>
+                <td>Mengunci seluruh pembaruan ke database cloud Supabase.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert-callout alert-tip">
+          <div>
+            ⚡ <strong>Tips Kecepatan Kerja Tim Tender:</strong><br>
+            Gunakan fitur <strong>Auto-Fill Jadwal LPSE</strong> setiap kali ada pengumuman addendum perubahan jadwal dari Pokja UKPBJ. Dalam waktu 5 detik setelah menyalin tabel dari SPSE, seluruh jadwal pembuktian dan batas upload penawaran langsung terbarui serentak di seluruh aplikasi dan notifikasi WhatsApp kantor!
+          </div>
+        </div>
       </section>
 
       <!-- 6. DOKUMEN PQ -->
