@@ -1895,34 +1895,48 @@
           </table>
         </div>
 
-        <!-- SISTEM PROTEKSI WA BOT -->
-        <div class="sub-title"><span class="sub-title-icon">🛡️</span> Sistem Proteksi Cerdas Anti-Spam WhatsApp Group:</div>
+        <!-- SISTEM PROTEKSI & ALUR NOTIFIKASI WA BOT VS BROWSER PUSH -->
+        <div class="sub-title"><span class="sub-title-icon">🛡️</span> Alur Kerja Notifikasi: Push Notifikasi Browser vs WhatsApp Group:</div>
         <p>
-          Sistem bot WhatsApp PT. Putra Aulia Group (<code>Azhar_bot</code>) bekerja berdampingan dengan Radar SPSE. Di lapangan, banyak pihak ketiga seperti <code>info@tenderid.com</code> mengirim promosi lelang berbayar. Sistem membedakannya secara ketat:
+          Untuk menjaga efektivitas komunikasi tim dan mencegah spam, sistem menerapkan <strong>pemisahan kanal notifikasi lelang secara ketat</strong>:
         </p>
+
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th style="width:25%;">Sumber Pengirim Email</th>
-                <th style="width:30%;">Perlakuan Sistem Bot</th>
-                <th style="width:45%;">Tanda di WhatsApp Group</th>
+                <th style="width:24%;">Kanal Notifikasi</th>
+                <th style="width:36%;">Pemicu &amp; Kriteria Alur</th>
+                <th style="width:40%;">Tujuan &amp; Format Notifikasi</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Resmi SPSE Pemerintah</strong><br>Domain <code>.go.id</code>, <code>inaproc.id</code>, <code>lpse.*.go.id</code></td>
-                <td><span class="module-tag" style="background:#dcfce7; color:#15803d; border-color:#86efac;">DILOLOSKAN PRIORITAS</span></td>
-                <td>Diteruskan dalam hitungan detik dengan label tebal <code>⚡ [PRIORITAS] SPSE INAPROC</code>, memuat nama paket, link lelang, dan batas waktu tindakan.</td>
+                <td><strong>🔔 Push Notifikasi Browser<br><small style="color:var(--text-muted);">(Web Push HP &amp; Desktop)</small></strong></td>
+                <td><strong>Semua Tender Baru Temuan Radar SPSE:</strong><br>Setiap kali mesin crawler/scraper menemukan pengumuman lelang baru di portal LPSE yang sesuai kriteria kata kunci/wilayah.</td>
+                <td>
+                  <strong>Notifikasi Cepat ke Admin &amp; Estimator:</strong><br>
+                  Muncul di layar HP / browser laptop staf untuk segera ditinjau di modul Radar Tender.<br>
+                  <em>⚠️ Alasan: Paket yang baru ditemukan belum tentu diikuti, sehingga tidak dikirim ke WhatsApp agar grup tidak banjir pesan.</em>
+                </td>
               </tr>
               <tr>
-                <td><strong>Email Pihak Ketiga / Iklan</strong><br>Contoh: <code>*@tenderid.com</code>, vendor software, promosi berbayar</td>
-                <td><span class="module-tag" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">DIBLOKIR / DIBUANG OTOMATIS</span></td>
-                <td>Tidak diteruskan ke grup utama kantor, menjaga grup WhatsApp tetap bersih hanya untuk pengumuman lelang resmi yang memiliki kekuatan hukum.</td>
+                <td><strong>💬 WhatsApp Group<br><small style="color:#25d366;">(PT. PA - SUMBAR via Bot Fonnte)</small></strong></td>
+                <td><strong>Hanya Tender yang Resmi DIKLAIM:</strong><br>Dipicu saat staf/estimator menekan tombol <strong><code>📥 Klaim</code></strong> pada baris paket di modul Radar Tender.</td>
+                <td>
+                  <strong>Pengumuman Resmi ke Seluruh Tim:</strong><br>
+                  Mengirim rincian lengkap: Nama Paket, Instansi, Nilai HPS, Batas PQ, Pembuktian, Penawaran, dan Staf Pengklaim.<br>
+                  <em>✅ Alasan: Paket yang diklaim otomatis dipindahkan ke Modul Data Tender dan <strong>pasti resmi diikuti</strong> oleh konsorsium perusahaan.</em>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <div class="sub-title"><span class="sub-title-icon">🛡️</span> Sistem Proteksi Anti-Spam Email Forwarder WhatsApp:</div>
+        <p>
+          Selain notifikasi klaim tender, bot WhatsApp PT. Putra Aulia Group (<code>Azhar_bot</code>) memantau kotak masuk email resmi tender (domain <code>.go.id</code>, <code>inaproc.id</code>, <code>lpse.*.go.id</code>) dan secara cerdas memblokir email promosi komersial dari vendor swasta (seperti <code>*@tenderid.com</code>, <code>tenderindonesia.com</code>) agar grup tetap bersih hanya untuk pengumuman lelang resmi yang memiliki kekuatan hukum.
+        </p>
 
         <div class="case-box">
           <span class="case-badge">💡 Contoh Alur Kerja Lapangan Nyata</span>
