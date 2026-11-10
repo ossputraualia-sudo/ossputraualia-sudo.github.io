@@ -2746,88 +2746,559 @@
 
       <!-- 7. PERSONIL & CV GENERATOR -->
       <!-- 7. PERSONIL & CV GENERATOR -->
+      <!-- 7. DATA PERSONIL -->
       <section class="module-card module-pane" id="personil">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">👷</div>
             <div class="module-titles">
               <h3>Modul 7: Data Personil</h3>
-              <div class="module-sub">Database Tenaga Ahli &amp; Pendukung, Integrasi SKK/SKA LPJK, Portofolio Proyek &amp; Ekspor CV Standar Permen PUPR</div>
+              <div class="module-sub">Database Tenaga Ahli &amp; Pendukung, Ekstraksi AI KTP/CV, Tracking SKK/SKA LPJK, Filter Pengalaman KAK &amp; Generator CV Otomatis Permen PUPR</div>
             </div>
           </div>
           <span class="module-tag">SDM TEKNIK</span>
         </div>
 
         <p>
-          <strong>Modul Data Personil &amp; Generator CV</strong> adalah pusat pengelolaan aset sumber daya manusia (SDM) perusahaan. Mengelola profil lengkap Tenaga Ahli (Site Engineer, Highway Engineer, Ahli Jembatan, Ahli K3 Konstruksi, Ahli Struktur, Geoteknik) dan Tenaga Pendukung (Inspector, Surveyor Lapangan, Operator CAD/Drafter, Petugas Lab, Tenaga Administrasi Proyek) lengkap dengan ijazah, sertifikat keahlian, dan riwayat penugasan.
+          <strong>Modul Data Personil &amp; Generator CV Standar Tender</strong> adalah pusat pengelolaan aset sumber daya manusia (SDM) dan tenaga ahli perusahaan. Modul ini mengawal seluruh siklus kesiapan personil: mulai dari pencatatan identitas KTP/NPWP, sertifikasi keahlian SKK/SKA LPJK, ekstraksi otomatis berkas melalui kecerdasan buatan (AI OCR), audit masa kerja pengalaman (Tab Master Pengalaman), penyaringan rekam jejak sesuai Kerangka Acuan Kerja (Tab Filter KAK), hingga penerbitan dokumen Curriculum Vitae resmi berstandar <strong>Permen PUPR No. 14/PRT/M/2020</strong> dan INKINDO.
         </p>
 
-        <div class="sub-title"><span class="sub-title-icon">⚡</span> Fitur Unggulan Generator CV Standar Tender (Format LPSE / INKINDO):</div>
-        <p>
-          Menghilangkan proses penyusunan CV manual di Microsoft Word yang memakan waktu berjam-jam. Cukup pilih nama personil dan posisi yang ditawarkan, sistem akan menyusun dokumen Curriculum Vitae 5-8 halaman berformat resmi yang memuat:
-        </p>
-        <ul class="step-list">
-          <li class="step-item"><strong>Data Identitas Pribadi:</strong> Nama Lengkap dengan Gelar, Tempat/Tanggal Lahir, Nomor KTP, NPWP, dan Status Kepegawaian (Tetap/Tidak Tetap).</li>
-          <li class="step-item"><strong>Pendidikan Formal:</strong> Perguruan Tinggi, Jurusan, Nomor Ijazah, dan Tahun Kelulusan.</li>
-          <li class="step-item"><strong>Sertifikat Kompetensi Kerja (SKK/SKA):</strong> Nomor registrasi LPJK, bidang keahlian, jenjang (Muda / Madya / Utama), masa berlaku, dan tanggal kedaluwarsa.</li>
-          <li class="step-item"><strong>Tabel Pengalaman Kerja Proyek Sejenis:</strong> Nama Pekerjaan, Lokasi, Pengguna Jasa/Satker, Nama Perusahaan Pelaksana, Posisi Penugasan, Uraian Tugas Teknis, Nilai Kontrak, serta Waktu Pelaksanaan (Orang-Bulan).</li>
-          <li class="step-item"><strong>Surat Pernyataan Kesediaan Ditugaskan:</strong> Format standar Kementerian PUPR bermaterai Rp 10.000 dengan tanda tangan asli personil.</li>
-        </ul>
+        <!-- ======================================================== -->
+        <!-- BAGIAN 1: PETA LAYAR UTAMA DATA PERSONIL (GAMBAR 7.1)    -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🧭</span> 1. Peta Layar Utama Modul Data Personil (Penjelasan 4 Kotak Penanda):</div>
 
-        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Seluruh Tombol di Modul Personil:</div>
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/personil_user_1.png" alt="Layar Utama Modul Data Personil dengan 4 Kotak Penanda Merah" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 7.1: Tampilan Layar Utama Modul Data Personil dengan 4 Kotak Penanda Merah (Bilah Filter Atas, Daftar Tenaga Ahli Kiri, Stepper 4 Tab Kanan Atas, dan Tab 1 Profil Diri Kanan Bawah).</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 7.1</strong> di atas, layar utama terbagi menjadi <strong>4 Kotak Penanda Merah Utama</strong>:</p>
+
+        <!-- KOTAK 1: BILAH FILTER ATAS -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah 1: Bilah Atas Navigasi, Filter Cepat &amp; Aksi Batch Personil</div>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th style="width:22%;">Nama Tombol</th>
-                <th style="width:16%;">Lokasi</th>
-                <th style="width:38%;">Cara Kerja &amp; Fungsi</th>
-                <th style="width:24%;">Dampak Sistem</th>
+                <th style="width:24%;">Nama Elemen / Tombol</th>
+                <th style="width:36%;">Pilihan &amp; Nilai pada Foto</th>
+                <th style="width:40%;">Fungsi Operasional &amp; Cara Kerja</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong><code>+ Tambah Personil</code></strong></td>
-                <td>Pojok Kanan Atas</td>
-                <td>Membuka modal input profil personil baru (Nama, NIK, NPWP, Pendidikan, Kontak, Ijazah).</td>
-                <td>Penambahan SDM Baru</td>
+                <td><strong><code>🔍 Cari personil / NIK...</code></strong></td>
+                <td>Kotak input teks pencarian cepat</td>
+                <td>Mencari data personil secara instan berdasarkan nama lengkap atau 16 digit NIK KTP.</td>
               </tr>
               <tr>
-                <td><strong><code>📜 Kelola SKK / SKA</code></strong></td>
-                <td>Profil Personil</td>
-                <td>Menambah sertifikat keahlian LPJK, nomor lisensi, jenjang kualifikasi, dan batas akhir masa berlaku.</td>
-                <td>Pembaruan Lisensi LPJK</td>
+                <td><strong><code>📜 Peng. Jalan ⌄</code></strong></td>
+                <td>Dropdown filter bidang pekerjaan</td>
+                <td>Memilih bidang keahlian tender yang sedang digarap (misal: <em>Pengawasan Jalan</em>, <em>Perencanaan Jembatan</em>, <em>Gedung</em>, atau <em>SDA</em>).</td>
               </tr>
               <tr>
-                <td><strong><code>📄 Generate CV Tender</code></strong></td>
-                <td>Aksi Baris Personil</td>
-                <td>Membuka modal pembuat CV otomatis: pilih posisi usulan, centang proyek sejenis, lalu hasilkan dokumen cetak.</td>
-                <td>Pembuatan CV Instan</td>
+                <td><strong><code>Semua SKK ⌄</code></strong></td>
+                <td>Dropdown filter klasifikasi SKK</td>
+                <td>Menyaring personil berdasarkan kepemilikan sertifikat SKK LPJK (misal: Ahli K3 Konstruksi, Ahli Teknik Jalan, Ahli Jembatan).</td>
               </tr>
               <tr>
-                <td><strong><code>🔍 Filter Posisi &amp; Jenjang</code></strong></td>
-                <td>Bilah Atas Tabel</td>
-                <td>Menyaring daftar ahli berdasarkan posisi usulan (misal: Ahli Madya Teknik Jalan atau Ahli K3).</td>
-                <td>Pencarian Tenaga Ahli</td>
+                <td><strong><code>📅 Diupdate ⌄</code> &amp; <code>🔄 Reset</code></strong></td>
+                <td>Dropdown sortir &amp; tombol pembersih</td>
+                <td>Mengurutkan daftar personil berdasarkan pembaruan data terakhir atau abjad (A-Z), serta tombol Reset untuk mengembalikan filter ke kondisi default.</td>
               </tr>
               <tr>
-                <td><strong><code>🖨️ Cetak / Unduh PDF CV</code></strong></td>
-                <td>Jendela Preview CV</td>
-                <td>Mengunduh berkas Curriculum Vitae resmi siap unggah ke portal lelang SPSE.</td>
-                <td>Dokumen Kualifikasi Siap Upload</td>
+                <td><strong>Tombol <code>📤 Upload AI / JSON</code></strong></td>
+                <td>Tombol putih berbingkai</td>
+                <td>Fitur impor massal data personil menggunakan file JSON atau ekstraksi berkas multi-format.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>📑 Batch CV</code></strong></td>
+                <td>Tombol oranye emas menyala</td>
+                <td><strong>Fitur Unggulan Multi-CV:</strong> Menerbitkan dokumen CV resmi untuk seluruh susunan tim usulan tender sekaligus dalam 1 klik tanpa harus membuka personil satu per satu!</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>+ Tambah Personil</code></strong></td>
+                <td>Tombol hijau toska tua di pojok kanan</td>
+                <td>Membuka modal pendaftaran tenaga ahli baru (dilengkapi fitur Ekstraksi AI otomatis).</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="sub-title"><span class="sub-title-icon">📋</span> SOP Pembuatan CV Tenaga Ahli untuk Tender:</div>
-        <ol class="step-list">
-          <li class="step-item"><strong>Langkah 1:</strong> Buka modul Personil, gunakan kotak pencarian untuk mencari nama personil (contoh: <em>Febriyanto, ST</em>).</li>
-          <li class="step-item"><strong>Langkah 2:</strong> Periksa badge SKK di samping nama. Pastikan masa berlaku sertifikat masih aktif (berwarna hijau).</li>
-          <li class="step-item"><strong>Langkah 3:</strong> Klik tombol <code>📄 Generate CV Tender</code>. Ketikkan Posisi yang Diusulkan (contoh: <em>Site Engineer / Koordinator Pengawasan</em>).</li>
-          <li class="step-item"><strong>Langkah 4:</strong> Centang 3 sampai 6 paket proyek pengalaman kerja terbaik yang sejenis dengan Kerangka Acuan Kerja (KAK) tender.</li>
-          <li class="step-item"><strong>Langkah 5:</strong> Klik tombol <strong>Pratinjau CV</strong>, periksa kelengkapan uraian tugas, lalu klik <strong>🖨️ Cetak / Unduh PDF</strong>. Dokumen CV 6 halaman format resmi siap dalam 60 detik!</li>
-        </ol>
+        <!-- KOTAK 2: DAFTAR PERSONIL KIRI -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah 2: Daftar Personil &amp; Status Kesiapan (Kolom Kiri)</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Komponen Kartu Personil</th>
+                <th style="width:35%;">Contoh Tampilan pada Foto</th>
+                <th style="width:40%;">Arti Status &amp; Indikator Kesiapan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Avatar Inisial &amp; Nama</strong></td>
+                <td>Lingkaran toska (<code>MR</code>, <code>IT</code>, <code>HP</code>, dll) + Nama Lengkap</td>
+                <td>Identitas visual cepat personil (Mefri Riski, Irwanto Taufani, Heru Perdana, Fauzan Aprianto, Ade Irawan, Reno Naldi, Wilson Masri, dll).</td>
+              </tr>
+              <tr>
+                <td><strong>Lencana SKK LPJK</strong></td>
+                <td>
+                  <span class="badge b-teal" style="font-size:10.5px;">Ahli K3 Konstruksi (Madya)</span><br>
+                  <span class="badge b-teal" style="font-size:10.5px;">Ahli Teknik Jalan (Muda)</span>
+                </td>
+                <td>Menampilkan sertifikat keahlian resmi yang terdaftar dan diakui LPJK Kementerian PUPR beserta jenjang kualifikasinya (Muda, Madya, Utama).</td>
+              </tr>
+              <tr>
+                <td><strong>Indikator <code>● Siap ● Lengkap</code></strong></td>
+                <td>Titik hijau dengan teks status</td>
+                <td>Menandakan dokumen identitas KTP, NPWP, ijazah, dan SKK personil telah lengkap dan valid untuk digunakan maju lelang.</td>
+              </tr>
+              <tr>
+                <td><strong>Status CV Bidang</strong></td>
+                <td><code>Peng. Jalan: ✓ Terbit</code> / <code>O Belum</code></td>
+                <td>Memantau apakah personil telah memiliki CV resmi yang siap dilampirkan pada penawaran tender bidang bersangkutan.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol Aksi Cepat</strong></td>
+                <td>Ikon Folder Kuning (📁) &amp; Tong Sampah Merah (🗑️)</td>
+                <td>Tombol kuning untuk membuka rekam jejak personil, dan tombol merah untuk menghapus personil dari database.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK 3: STEPPER 4 TAB KANAN ATAS -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah 3: Stepper 4 Tab Alur Kerja Penerbitan CV Lengkap</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Tahapan Tab</th>
+                <th style="width:35%;">Nama &amp; Status pada Foto</th>
+                <th style="width:40%;">Fokus Kerja &amp; Output Dokumen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tab 1</strong></td>
+                <td><strong><code>1. Diri ✓</code></strong> <small style="color:var(--primary); font-weight:700;">(Aktif)</small></td>
+                <td>Pencatatan profil identitas pribadi, gelar, ijazah pendidikan formal, alamat KTP, dan sertifikat SKK aktif.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 2</strong></td>
+                <td><strong><code>2. Master Pengalaman ✓</code></strong></td>
+                <td>Pengelolaan seluruh basis data riwayat proyek dan referensi masa kerja personil sepanjang kariernya.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 3</strong></td>
+                <td><strong><code>3. Filter Pengalaman ✓</code></strong></td>
+                <td>Penyaringan riwayat proyek sesuai syarat Kerangka Acuan Kerja (KAK) tender dan verifikasi ambang batas masa kerja.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 4</strong></td>
+                <td><strong><code>4. Cetak CV ✓</code></strong></td>
+                <td>Pengisian parameter penugasan tender dan penerbitan Curriculum Vitae resmi berstandar Permen PUPR / INKINDO.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK 4: TAB 1 PROFIL DIRI KANAN BAWAH -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah 4: Formulir Profil Identitas Diri &amp; Sertifikat SKK (Tab 1)</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Nama Kolom Form</th>
+                <th style="width:35%;">Nilai Data pada Foto</th>
+                <th style="width:40%;">Keterangan &amp; Validasi Sistem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Header Profil</strong></td>
+                <td><code>● Profil: Ade Firman (NIK: 1373012109730001)</code></td>
+                <td>Dilengkapi lencana hijau <strong><code>✓ Tersinkron</code></strong> yang menjamin data terhubung realtime ke database pusat.</td>
+              </tr>
+              <tr>
+                <td><strong>Nama Lengkap &amp; Gelar</strong></td>
+                <td>Nama: <code>ADE FIRMAN</code><br>Gelar Depan: <code>Ir.</code> | Belakang: <code>S.T.</code></td>
+                <td>Penulisan gelar akademik yang akan dicantumkan secara formal pada lembar penawaran tenaga ahli.</td>
+              </tr>
+              <tr>
+                <td><strong>NIK &amp; NPWP</strong></td>
+                <td>NIK: <code>1373012109730001</code><br>NPWP: <code>82.015.254.4-203.000</code></td>
+                <td>Nomor identitas kependudukan dan perpajakan resmi untuk verifikasi SPSE.</td>
+              </tr>
+              <tr>
+                <td><strong>Tempat, Tgl Lahir</strong></td>
+                <td><code>Sawah Lunto, 21 September 1973</code></td>
+                <td>Data kelahiran untuk perhitungan batas usia maksimal tenaga ahli sesuai syarat KAK lelang.</td>
+              </tr>
+              <tr>
+                <td><strong>Pendidikan Formal</strong></td>
+                <td><code>Sekolah Ukur Matur (SUMA)</code></td>
+                <td>Asal institusi pendidikan dan jurusan ijazah yang diakui.</td>
+              </tr>
+              <tr>
+                <td><strong>Alamat KTP</strong></td>
+                <td><code>KEL. PASAR NO. 227 RT. 002/001 KEL/DESA: PASAR KECAMATAN: LEMBAH SEGAR KOTA SAWAHLUNTO</code></td>
+                <td>Alamat domisili sah sesuai KTP elektronik.</td>
+              </tr>
+              <tr>
+                <td><strong>Manajemen SKK</strong></td>
+                <td>Tag: <code>Administrasi Jalan dan Jembatan (Jenjang 4) ✕</code></td>
+                <td>Dapat menambahkan beberapa SKK sekaligus melalui dropdown <em>Tambah SKK</em> dan tombol <em>+ Tambah SKK</em>.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol Aksi</strong></td>
+                <td><strong><code>💾 Simpan Identitas</code></strong></td>
+                <td>Menyimpan seluruh perubahan identitas personil ke database server.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 2: MODAL TAMBAH PERSONIL & AI OCR (GAMBAR 7.2)    -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🤖</span> 2. Modal Pop-Up Tambah Personil &amp; Ekstraksi Otomatis AI:</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/personil_user_2.png" alt="Modal Pop-Up Tambah Personil Baru dengan 3 Kotak Penanda Merah" style="width: 100%; max-width: 780px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 7.2: Jendela Dialog "+ Tambah Personil Baru" dengan 3 Kotak Penanda Merah (Zona Ekstraksi AI, Form Identitas Diri, dan Sertifikat SKK).</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 7.2</strong> di atas, modal penambahan personil dilengkapi teknologi cerdas yang terbagi menjadi <strong>3 Kotak Penanda Merah</strong>:</p>
+
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:28%;">Zona Kotak Penanda</th>
+                <th style="width:32%;">Fitur &amp; Elemen pada Foto</th>
+                <th style="width:40%;">Keunggulan &amp; Alur Kerja Otomatisasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Kotak Merah Atas<br>(Ekstraksi Otomatis AI)</strong></td>
+                <td>
+                  • Label: <code>🤖 Ekstraksi Otomatis AI (Opsional)</code><br>
+                  • Bidang: <code>Peng. Jalan</code><br>
+                  • Tombol: <code>📑 Mode Manual (JSON)</code><br>
+                  • Kotak Unggah: <em>Upload data diri (KTP/CV/SKK) dan Referensi di sini</em>
+                </td>
+                <td>
+                  <strong>Revolusi Input 0 Ketik Manual:</strong><br>
+                  Staf cukup men-drop file dokumen (PDF CV lama, scan KTP, scan ijazah, atau sertifikat SKK). Mesin AI Vision secara instan membaca teks dokumen, mengekstrak NIK, nama, tanggal lahir, riwayat pendidikan, dan pengalaman kerja, lalu **secara otomatis mengisi seluruh kolom formulir di bawahnya** dalam 3 detik!
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Kotak Merah Tengah<br>(Identitas Diri Personil)</strong></td>
+                <td>
+                  Form isian lengkap: Nama Lengkap (tanpa gelar), Gelar Depan, Gelar Belakang, NIK 16 digit, NPWP, HP/WA, Email, Tempat/Tanggal Lahir, Pendidikan Formal &amp; Non-Formal, serta Alamat KTP.
+                </td>
+                <td>
+                  <strong>Pengecekan Duplikasi Otomatis:</strong><br>
+                  Sistem langsung memvalidasi nomor NIK di database untuk mencegah pendaftaran personil ganda (*anti-duplicate check*).
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Kotak Merah Bawah<br>(Sertifikat SKK &amp; Simpan)</strong></td>
+                <td>
+                  • Dropdown <code>Tambah SKK: -- Pilih SKK --</code><br>
+                  • Dropdown <code>Utama ⌄</code><br>
+                  • Tombol <code>+ Tambah SKK</code><br>
+                  • Tombol <code>Batal</code> &amp; <code>💾 Simpan Personil Baru</code>
+                </td>
+                <td>
+                  <strong>Penyimpanan Instan:</strong><br>
+                  Menautkan klasifikasi SKK awal dan langsung menyimpan personil ke daftar aktif sehingga segera muncul pada panel kiri.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 3: TAB 2 MASTER PENGALAMAN (GAMBAR 7.3)           -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">📊</span> 3. Tab 2 — Master Pengalaman Proyek &amp; Perhitungan Akumulasi Masa Kerja:</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/personil_user_3.png" alt="Tab 2 Master Pengalaman Proyek dengan Kotak Penanda Merah" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 7.3: Tampilan Tab 2 (Master Pengalaman) dengan Kotak Penanda Merah Mengelilingi Seluruh Tabel Riwayat Kontrak Proyek dan Akumulasi 14.0 Tahun.</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 7.3</strong> di atas, Tab 2 berfungsi sebagai brankas rekam jejak pengalaman kerja tenaga ahli:</p>
+
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Fitur / Kolom Tabel</th>
+                <th style="width:35%;">Tampilan pada Foto</th>
+                <th style="width:40%;">Fungsi Teknis &amp; Tata Cara</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Bilah Aksi Master</strong></td>
+                <td>
+                  <code>📎 Klaim Ref</code> | <code>🔍 Perbesar</code> | <code>⇅ Urutkan</code> | <code>✕ Hapus</code>
+                </td>
+                <td>
+                  • <strong>Klaim Ref:</strong> Menarik pengalaman dari Bank Referensi Proyek kantor.<br>
+                  • <strong>Perbesar:</strong> Membuka tabel secara layar penuh (*fullscreen*).<br>
+                  • <strong>Urutkan:</strong> Menyusun riwayat otomatis dari tahun terbaru ke terlama.<br>
+                  • <strong>Hapus:</strong> Menghapus baris pengalaman yang tidak relevan.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Kolom Tabel Riwayat (12 Baris Pengalaman)</strong></td>
+                <td>
+                  • <strong>TAHUN:</strong> 2023 s/d 2014.<br>
+                  • <strong>NO. REFERENSI / SK:</strong> No kontrak resmi dinas.<br>
+                  • <strong>NAMA KEGIATAN:</strong> Penyelenggaraan Jalan Pasaman Barat, Rekonstruksi Jalan Agam, Jembatan Sasak, Jalan Sirilanggai Mentawai, dll.<br>
+                  • <strong>LOKASI &amp; PEMBERI TUGAS:</strong> Dinas PU Pemkab / Pemprov Sumbar.
+                </td>
+                <td>
+                  <strong>Penyimpanan Terstruktur Standar SPSE:</strong><br>
+                  Setiap baris mencatat nomor kontrak/referensi resmi dan instansi pemberi kerja sebagai bukti validitas saat tahap pembuktian kualifikasi oleh Pokja.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Kotak Centang <code>PILIH (☑)</code></strong></td>
+                <td>Checklist di setiap baris proyek</td>
+                <td>Memungkinkan estimator memilih atau menonaktifkan proyek tertentu tanpa harus menghapus datanya dari master personil.</td>
+              </tr>
+              <tr>
+                <td><strong>Footer Ringkasan &amp; Lanjut</strong></td>
+                <td>
+                  • Tombol: <code>+ Tambah Baris</code><br>
+                  • Badge: <strong><code>Total Master: 14.0 Tahun</code></strong><br>
+                  • Tombol: <strong><code>💾 Simpan &amp; Lanjut ke Filter</code></strong>
+                </td>
+                <td>
+                  <strong>Kalkulator Otomatis Masa Kerja:</strong><br>
+                  Sistem menghitung total akumulasi pengalaman personil (pada foto: <strong>14.0 Tahun</strong>). Klik tombol hijau toska untuk menyimpan dan melangkah langsung ke Tab 3.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 4: TAB 3 FILTER PENGALAMAN KAK (GAMBAR 7.4)       -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🎯</span> 4. Tab 3 — Filter Pengalaman Sesuai Syarat KAK (Audit Kelulusan Evaluasi Pokja):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/personil_user_4.png" alt="Tab 3 Filter Pengalaman KAK dengan 2 Kotak Penanda Merah" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 7.4: Tampilan Tab 3 (Filter Pengalaman) dengan 2 Kotak Penanda Merah (Panel Syarat KAK Kualifikasi di Atas dan Tabel Riwayat Terfilter Siap Kunci di Bawah).</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 7.4</strong> di atas, Tab 3 adalah fitur vital penentu kelulusan teknis lelang yang terbagi menjadi <strong>2 Kotak Penanda Merah</strong>:</p>
+
+        <!-- KOTAK ATAS: SYARAT KAK & FILTER JABATAN -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah Atas: Parameter Kualifikasi KAK &amp; Audit Ambang Batas Otomatis</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Parameter Filter KAK</th>
+                <th style="width:35%;">Nilai pada Foto</th>
+                <th style="width:40%;">Ketentuan Evaluasi Pokja LPSE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>TARGET JABATAN *</code></strong></td>
+                <td><code>Inspector</code></td>
+                <td>Posisi jabatan tenaga ahli yang disyaratkan dalam dokumen Kerangka Acuan Kerja (KAK) tender.</td>
+              </tr>
+              <tr>
+                <td><strong><code>FILTER JABATAN TERPILIH</code></strong></td>
+                <td><code>Inspector, Inspector Jalan ⌄</code></td>
+                <td>Memilih sinonim nama jabatan yang relevan agar proyek dengan nama posisi serupa tetap terjaring dalam perhitungan.</td>
+              </tr>
+              <tr>
+                <td><strong><code>TAHUN LULUS</code></strong></td>
+                <td><code>2018</code></td>
+                <td><strong>Aturan Pokja:</strong> Pengalaman kerja yang sah dihitung hanyalah pengalaman yang diperoleh **setelah tahun kelulusan ijazah**. Proyek sebelum 2018 otomatis disaring keluar demi mencegah diskualifikasi.</td>
+              </tr>
+              <tr>
+                <td><strong><code>MIN. TAHUN</code></strong></td>
+                <td><code>4</code> Tahun</td>
+                <td>Ambang batas minimal tahun pengalaman yang diminta panitia lelang.</td>
+              </tr>
+              <tr>
+                <td><strong>Rekapitulasi Kalkulasi</strong></td>
+                <td>
+                  <code>Syarat KAK: 4.0 Thn</code> | <code>Terfilter: 5.9 Thn</code> | <code>Bank Ref: 0.0 Thn</code> | <strong><code>Total: 5.9 Thn</code></strong>
+                </td>
+                <td>Perhitungan matematis real-time membandingkan masa kerja terfilter (5.9 Thn) terhadap syarat minimal KAK (4.0 Thn).</td>
+              </tr>
+              <tr>
+                <td><strong>Badge Kelulusan</strong></td>
+                <td><strong><span class="badge b-teal" style="font-size:12px;">✓ Terpenuhi</span></strong></td>
+                <td>Lencana hijau yang menjamin personil ini **100% memenuhi syarat ambang batas KAK lelang**!</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK BAWAH: RIWAYAT TERFILTER SIAP KUNCI -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah Bawah: Riwayat Proyek Terfilter &amp; Penguncian Final</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Komponen Tabel</th>
+                <th style="width:35%;">Tampilan pada Foto</th>
+                <th style="width:40%;">Penjelasan Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tabel Paket Lolos Saring</strong></td>
+                <td>Daftar 10 paket proyek (tahun 2015 s/d 2001) yang memenuhi syarat jabatan dan durasi.</td>
+                <td>Hanya paket-paket yang tercentang di sini yang akan dimasukkan ke dalam format tabel lampiran Curriculum Vitae.</td>
+              </tr>
+              <tr>
+                <td><strong>Counter &amp; Tombol Kunci</strong></td>
+                <td>
+                  • Lencana: <code>Terpilih: 10 Paket</code><br>
+                  • Tombol: <strong><code>🔒 Kunci Riwayat Final</code></strong> (Hijau Toska Tua)
+                </td>
+                <td>
+                  <strong>Penguncian Rekam Jejak (*Data Freezing*):</strong><br>
+                  Mengklik tombol kunci akan memfinalisasi daftar pengalaman agar siap dituangkan ke Tab 4 (Cetak CV) tanpa risiko teracak atau terhapus.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 5: TAB 4 CETAK CV OTOMATIS (GAMBAR 7.5)           -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🖨️</span> 5. Tab 4 — Cetak CV Otomatis Standar Permen PUPR &amp; INKINDO:</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/personil_user_5.png" alt="Tab 4 Cetak CV Otomatis dengan 2 Kotak Penanda Merah" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 7.5: Tampilan Tab 4 (Cetak CV) dengan 2 Kotak Penanda Merah (Parameter Penugasan CV di Atas dan Brankas CV Terbit dengan Tombol Generate CV di Bawah).</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 7.5</strong> di atas, tahap akhir penerbitan CV terbagi menjadi <strong>2 Kotak Penanda Merah</strong>:</p>
+
+        <!-- KOTAK ATAS: PARAMETER PENUGASAN CV -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah Atas: Parameter Penugasan &amp; Legalitas Badan Usaha Pengusul</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Nama Kolom Parameter</th>
+                <th style="width:35%;">Nilai / Pilihan pada Foto</th>
+                <th style="width:40%;">Muatan Otomatis Dokumen Penawaran</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>PAKET TENDER *</code></strong></td>
+                <td><code>-- Pilih Paket -- ⌄</code></td>
+                <td>Menautkan penerbitan CV ke paket tender yang dituju (mengambil otomatis nama PPK, dinas, dan nomor lelang).</td>
+              </tr>
+              <tr>
+                <td><strong><code>BADAN USAHA PENGUSUL *</code></strong></td>
+                <td><code>CV. Putra Cipta Mandiri Consultant ⌄</code></td>
+                <td>Memilih bendera perusahaan yang mengusulkan tenaga ahli dalam tender (perusahaan tunggal atau salah satu anggota KSO).</td>
+              </tr>
+              <tr>
+                <td><strong>Kop Surat Resmi</strong></td>
+                <td><code>☑ Kop Resmi Terpasang</code> | Tombol <code>Kop</code></td>
+                <td>Secara otomatis menempelkan kop surat resmi berlogo, alamat, dan legalitas perusahaan pengusul di bagian atas setiap lembar CV.</td>
+              </tr>
+              <tr>
+                <td><strong><code>STATUS KEPEGAWAIAN</code></strong></td>
+                <td><code>Tetap ⌄</code> (atau Tidak Tetap / Kontrak)</td>
+                <td>Menentukan klausul pernyataan status kepegawaian personil pada badan usaha pengusul sesuai format LKPP.</td>
+              </tr>
+              <tr>
+                <td><strong><code>DURASI PENUGASAN</code></strong></td>
+                <td><code>4</code> Bulan (<code>120 Hari</code>)</td>
+                <td>Durasi waktu keterlibatan personil di lapangan sesuai jadwal pelaksanaan paket lelang.</td>
+              </tr>
+              <tr>
+                <td><strong><code>KOTA &amp; TANGGAL SURAT</code></strong></td>
+                <td><code>Padang</code> | <code>10/11/2026 📅</code></td>
+                <td>Kota dan tanggal resmi pembubuhan tanda tangan lembar pernyataan kesediaan ditugaskan.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK BAWAH: BRANKAS CV & GENERATE CV -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah Bawah: Brankas CV Terbit &amp; Tombol Generator CV</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Elemen Brankas CV</th>
+                <th style="width:35%;">Tampilan pada Foto</th>
+                <th style="width:40%;">Hasil Output &amp; Standar Format</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Status Brankas</strong></td>
+                <td><em>Belum ada CV yang diterbitkan untuk bidang Pengawasan Jalan dan Jembatan.</em></td>
+                <td>Menampilkan daftar riwayat berkas CV yang telah diterbitkan sebelumnya lengkap dengan tanggal generate.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol Utama</strong></td>
+                <td><strong><code>⚡ Generate CV</code></strong> (Tombol Hijau Toska Tua)</td>
+                <td>
+                  <strong>Penerbitan Dokumen Sekali Klik:</strong><br>
+                  Mengklik tombol ini menghasilkan dokumen Curriculum Vitae 5-8 lembar berformat resmi Permen PUPR / INKINDO yang memuat:<br>
+                  1. Kop surat resmi perusahaan pengusul.<br>
+                  2. Pas foto &amp; data identitas diri lengkap.<br>
+                  3. Riwayat pendidikan &amp; sertifikat SKK LPJK.<br>
+                  4. Tabel rekam jejak pengalaman yang telah dikunci di Tab 3.<br>
+                  5. Surat pernyataan kesediaan untuk ditugaskan bermaterai fisik / e-meterai.<br>
+                  6. Kolom tanda tangan tenaga ahli dan direktur perusahaan.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="case-box">
+          <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
+          <div class="case-title">Penyusunan CV Tenaga Ahli Inspector Jalan Paket PJN Sumbar</div>
+          <div class="case-content">
+            1. Estimator membuka Modul Data Personil dan memilih <strong>Ade Firman (Ir., S.T.)</strong> dari daftar kiri.<br>
+            2. Memeriksa Tab 1: NIK, ijazah Sekolah Ukur Matur, dan SKK Administrasi Jalan Jenjang 4 sudah tersinkron aktif.<br>
+            3. Membuka Tab 2: Memverifikasi 12 baris riwayat proyek dengan total akumulasi 14.0 Tahun.<br>
+            4. Membuka Tab 3: Memasang filter KAK (Target Jabatan: <em>Inspector</em>, Min. Pengalaman: <em>4 Tahun</em>). Sistem memvalidasi personil memiliki masa kerja <strong>5.9 Tahun</strong> dengan status <strong>✓ Terpenuhi</strong>. Estimator mengklik <code>🔒 Kunci Riwayat Final</code>.<br>
+            5. Membuka Tab 4: Memilih tender <em>Pengawasan IJD PJN Wilayah I Sumbar</em>, perusahaan pengusul <em>CV. Putra Cipta Mandiri Consultant</em>, durasi 120 hari, lalu mengklik <strong><code>⚡ Generate CV</code></strong>.<br>
+            6. Dokumen CV 6 halaman berstandar resmi Permen PUPR langsung terbit rapi dan siap diunggah ke portal SPSE tanpa perlu editing manual di Microsoft Word!
+          </div>
+        </div>
       </section>
 
       <!-- 8. AI KAK & TANGGAPAN DOKUMEN -->
