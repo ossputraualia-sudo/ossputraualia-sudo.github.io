@@ -2300,197 +2300,446 @@
       </section>
 
       <!-- 6. DOKUMEN PQ -->
+      <!-- 6. DOKUMEN PQ ANGGOTA KSO -->
       <section class="module-card module-pane" id="dokumenpq">
         <div class="module-header">
           <div class="module-badge-wrap">
             <div class="module-icon">📑</div>
             <div class="module-titles">
               <h3>Modul 6: PQ Anggota KSO</h3>
-              <div class="module-sub">Pemberkasan Kualifikasi Kemitraan KSO, Perjanjian Konsorsium, Pakta Integritas & Isian Kualifikasi SPSE</div>
+              <div class="module-sub">Pemberkasan Kualifikasi Kemitraan KSO, Perjanjian Konsorsium, Pakta Integritas &amp; Isian Kualifikasi SPSE</div>
             </div>
           </div>
-          <span class="module-tag">DOKUMEN KSO</span>
+          <span class="module-tag">KSO &amp; KEMITRAAN</span>
         </div>
 
         <p>
-          <strong>Modul Dokumen PQ Anggota KSO</strong> adalah modul spesialis yang dirancang khusus untuk memfasilitasi penyusunan dokumen <strong>Prakualifikasi (PQ)</strong> dan kemitraan <em>Kerja Sama Operasi (KSO / Konsorsium)</em>. Sesuai dengan <strong>Permen PUPR No. 14/PRT/M/2020</strong> dan Standar Dokumen Pemilihan SPSE LKPP v4.5, keikutsertaan lelang secara KSO menuntut keselarasan mutlak antara pembagian porsi saham, hak tanggung renteng, rekening bank bersama, serta kelengkapan formulir kualifikasi dari masing-masing badan usaha anggota kemitraan.
+          <strong>Modul PQ Anggota KSO (Prakualifikasi &amp; Konsorsium)</strong> adalah instrumen spesialis yang dirancang khusus untuk memfasilitasi penyusunan dokumen kemitraan <em>Kerja Sama Operasi (KSO)</em> sesuai standar <strong>Permen PUPR No. 14/PRT/M/2020</strong> dan Pedoman Dokumen Pemilihan SPSE LKPP v4.5. Modul ini menyelaraskan pembagian porsi saham/modal, penetapan Lead Firm (perusahaan utama), tanggung jawab renteng, hingga pencetakan otomatis lembar Perjanjian KSO, Surat Kuasa KSO, dan Pakta Integritas berkode barcode resmi.
         </p>
 
-        <!-- ARSITEKTUR LAYAR MODUL PQ -->
-        <div class="sub-title"><span class="sub-title-icon">🖥️</span> Arsitektur Layar: Workspace Hybrid Split-Screen</div>
-        <p>
-          Modul ini menerapkan antarmuka kerja ganda (*Split-Screen Workspace*):
-        </p>
-        <ul class="step-list">
-          <li class="step-item">
-            <strong>Panel Kiri (Formulir Input Interaktif):</strong>
-            Tempat pengguna memilih paket lelang, menentukan Lead Firm dan Mitra, mengisikan persentase saham, memilih rekening bank, dan mengonfirmasi data legalitas. Dilengkapi dengan <em>3 Stepper Tab</em> (Step 1: KSO, Step 2: Kualifikasi, Step 3: Pengalaman).
-          </li>
-          <li class="step-item">
-            <strong>Panel Kanan (Live Preview Kertas Fisik A4):</strong>
-            Pratinjau fisik dokumen cetak berformat kertas A4 standar dinas lengkap dengan kop surat resmi, penomoran otomatis, klausul hukum tanggung renteng, tabel porsi kepemilikan, dan area tanda tangan bermaterai Rp 10.000 yang langsung terbarui saat Anda mengetik di sisi kiri.
-          </li>
-        </ul>
+        <!-- ======================================================== -->
+        <!-- BAGIAN 1: BILAH ATAS & STEPPER TAB (GAMBAR 6.1)          -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🧭</span> 1. Bilah Atas Universal Toolbar &amp; Navigasi Stepper Tab:</div>
 
-        <!-- TIGA TAHAPAN STEPPER DOKUMEN PQ -->
-        <div class="sub-title"><span class="sub-title-icon">📚</span> Struktur 3 Tahap Penyusunan Dokumen PQ:</div>
-        
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/kso_user_1.png" alt="Bilah Atas dan Tab Bar Modul PQ Anggota KSO dengan 2 Kotak Penanda Merah" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 6.1: Tampilan Bilah Atas Universal Toolbar dan Stepper 3 Tab Ganda dengan 2 Kotak Penanda Merah.</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 6.1</strong> di atas, bagian atas modul terbagi menjadi <strong>2 Kotak Penanda Merah</strong>:</p>
+
+        <!-- KOTAK 1: BILAH ATAS TOOLBAR -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah 1: Bilah Atas Universal Toolbar &amp; Aksi Master Dokumen PQ</div>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th style="width:18%;">Tahap / Step</th>
-                <th style="width:28%;">Nama Dokumen yang Dihasilkan</th>
-                <th style="width:54%;">Rincian Data &amp; Klausul Hukum yang Disusun</th>
+                <th style="width:24%;">Nama Elemen / Tombol</th>
+                <th style="width:36%;">Tampilan pada Foto</th>
+                <th style="width:40%;">Fungsi Operasional &amp; Cara Kerja</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Step 1</strong><br><span class="module-tag" style="background:#e0f2fe; color:#0369a1;">PERJANJIAN KSO</span></td>
-                <td><strong>Surat Perjanjian Kemitraan / KSO &amp; Pakta Integritas</strong></td>
+                <td><strong><code>📑 PQ Anggota KSO</code></strong></td>
+                <td>Label judul modul di pojok kiri atas</td>
+                <td>Identitas resmi modul penyusunan dokumen Prakualifikasi dan Kemitraan KSO.</td>
+              </tr>
+              <tr>
+                <td><strong><code>-- Pilih Nama Paket Tender -- ⌄</code></strong></td>
+                <td>Dropdown filter tender aktif</td>
+                <td>Memilih paket lelang yang sedang diikuti (terhubung langsung dengan data tender yang telah diklaim dari Modul 5 Data Tender).</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>📁 Riwayat &amp; Arsip</code></strong></td>
+                <td>Tombol putih berbingkai emas</td>
+                <td>Membuka arsip draf perjanjian KSO masa lalu yang pernah dibuat untuk proyek-proyek sebelumnya agar dapat di-kloning tanpa ketik ulang.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>+ Baru</code></strong></td>
+                <td>Tombol putih dengan ikon tambah</td>
+                <td>Mengosongkan form dan memulai penyusunan kemitraan KSO baru dari awal.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>🖨️ Cetak ⌄</code></strong></td>
+                <td>Tombol dropdown cetak</td>
+                <td>Membuka jendela modal pilihan cetak resmi (Cetak 3 Lembar Lengkap, Surat Perjanjian KSO, Surat Kuasa, atau Pakta Integritas).</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>📦 ZIP Word</code></strong></td>
+                <td>Tombol putih berbingkai coklat</td>
+                <td>Mengekspor seluruh berkas dokumen kualifikasi KSO dan formulir Bab A-G ke dalam arsip format ZIP berisi file Microsoft Word (.docx editable) untuk kebutuhan tanda tangan basah / materai fisik.</td>
+              </tr>
+              <tr>
+                <td><strong>Tombol <code>💾 Simpan</code></strong></td>
+                <td>Tombol hijau toska tua di pojok kanan atas</td>
+                <td>Menyimpan seluruh konfigurasi konsorsium, nomor perjanjian, persentase modal, dan data direksi ke database cloud Supabase.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK 2: STEPPER 3 TAB GANDA -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah 2: Stepper 3 Tab Ganda Form &amp; Lembar Kerja Cetak</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Nama Tab</th>
+                <th style="width:35%;">Sisi Formulir Kiri (Input)</th>
+                <th style="width:40%;">Sisi Lembar Kanan (Live Preview)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tab 1: Data KSO</strong><br><small style="color:var(--primary); font-weight:700;">(Aktif pada foto)</small></td>
+                <td>Formulir parameter kontrak KSO, nomor surat, tanggal, kota, sharing modal (70% - 30%), data Lead Firm, dan Anggota Mitra 1 &amp; 2.</td>
+                <td>Menampilkan live preview fisik <strong>Surat Perjanjian Kemitraan (KSO)</strong> lengkap dengan Barcode resmi lelang, klausul tanggung renteng, dan tabel keikutsertaan modal.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 2: Dokumen Kualifikasi</strong></td>
+                <td>Penyusunan Surat Kuasa KSO penunjukan pimpinan utama dan naskah Pakta Integritas Kemitraan bersama.</td>
+                <td>Menampilkan preview lembar <strong>Surat Kuasa KSO</strong> dan <strong>Pakta Integritas</strong> siap cetak / ekspor.</td>
+              </tr>
+              <tr>
+                <td><strong>Tab 3: Filter Pengalaman</strong></td>
+                <td>Penggabungan rekam jejak BAST portofolio sejenis dari Lead Firm dan Anggota KSO.</td>
+                <td>Kalkulasi otomatis pemenuhan ambang batas <strong>Nilai Kemampuan Dasar (KD)</strong> konsorsium sesuai syarat tender SPSE.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 2: WORKSPACE SPLIT-SCREEN (GAMBAR 6.2)            -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🖥️</span> 2. Arsitektur Workspace Hybrid Split-Screen (Sinkronisasi Realtime):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/kso_user_2.png" alt="Arsitektur Split-Screen Modul PQ Anggota KSO dengan 2 Kotak Penanda Merah Vertikal" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 6.2: Layar Terbelah Dua (Split-Screen) — Kotak Kiri (Formulir Input Data) dan Kotak Kanan (Live Document Realtime Preview Ber-Barcode).</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 6.2</strong> di atas, layar dirancang dengan konsep kerja berdampingan (*Dual-Pane Live Sync*):</p>
+
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Zona Layar</th>
+                <th style="width:35%;">Komponen yang Tampil pada Foto</th>
+                <th style="width:40%;">Mekanisme &amp; Keunggulan Kerja</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Kotak Merah Kiri<br>(Formulir Input Dinamis)</strong></td>
                 <td>
-                  • <strong>Pemilihan Tender:</strong> Memilih lelang aktif di SPSE (otomatis menyinkronkan nama paket, instansi, lokasi, dan HPS).<br>
-                  • <strong>Lead Firm vs Partner Firm:</strong> Menentukan badan usaha pemimpin KSO (misal: PT. Putra Aulia Konsultan) dan perusahaan mitra.<br>
-                  • <strong>Porsi Pembagian Saham (%):</strong> Membagi hak dan modal kerja (misal: 65% : 35% atau 70% : 30%).<br>
-                  • <strong>Rekening Bank Bersama:</strong> Menentukan bank penampung dana termin KSO.<br>
-                  • <strong>Penomoran Otomatis Cerdas:</strong> Format resmi <code>01/KSO/[Inisial Lead]-PAG/[Inisial Paket]/[Bulan Romawi]/[Tahun]</code>.<br>
-                  • <strong>Klausul Tanggung Renteng:</strong> Pernyataan hukum bahwa seluruh anggota KSO bertanggung jawab penuh secara bersama-sama kepada PPK.
+                  • Tab Stepper Navigasi.<br>
+                  • Kartu 1: Parameter Kontrak &amp; Perjanjian KSO.<br>
+                  • Kartu 2: Lead Firm (CV. Putra Cipta Mandiri Consultant).<br>
+                  • Kartu 3: Anggota KSO 1 (PT. LIMA PILAR PERSADA).
+                </td>
+                <td>
+                  <strong>Input Sekali, Otomatis Terhubung:</strong><br>
+                  Staf memasukkan data direksi, akta pendirian/perubahan, nomor perjanjian, dan persentase sharing modal. Validasi sistem memastikan seluruh data legalitas terisi lengkap.
                 </td>
               </tr>
               <tr>
-                <td><strong>Step 2</strong><br><span class="module-tag" style="background:#fef3c7; color:#b45309;">FORMULIR KUALIFIKASI</span></td>
-                <td><strong>Formulir Isian Kualifikasi Badan Usaha Anggota KSO</strong></td>
+                <td><strong>Kotak Merah Kanan<br>(Live Preview Dokumen Ber-Barcode)</strong></td>
                 <td>
-                  • <strong>Identitas Pokok:</strong> Nama Badan Usaha, NPWP 16 Digit, Bentuk Usaha (PT/CV), Domisili Kantor.<br>
-                  • <strong>Izin Usaha / NIB:</strong> Nomor Induk Berusaha berbasis OSS RBA dan masa berlaku.<br>
-                  • <strong>Sertifikat Badan Usaha (SBU):</strong> Sub-bidang Jasa Pengawasan / Perencanaan Konstruksi, nomor LPJK, dan kualifikasi usaha.<br>
-                  • <strong>Landasan Hukum &amp; Akta:</strong> Akta Pendirian, Akta Perubahan Terakhir, SK Pengesahan Kemenkumham RI.<br>
-                  • <strong>Pengurus &amp; Saham:</strong> Susunan Direksi, Komisaris, serta persentase kepemilikan modal.<br>
-                  • <strong>Pajak &amp; KSWP:</strong> Konfirmasi Status Wajib Pajak valid dan bukti pelaporan SPT Tahunan PPh Badan.
+                  • Barcode Resmi Sistem: <code>||| | ||||| | ||| KSO - 2026</code>.<br>
+                  • Judul: <em>SURAT PERJANJIAN KEMITRAAN / KERJA SAMA OPERASI (KSO)</em>.<br>
+                  • Pihak 1: CV. Putra Cipta Mandiri Consultant.<br>
+                  • Pihak 2: PT. LIMA PILAR PERSADA.<br>
+                  • Pasal 1 (Nama KSO &amp; Lead Firm), Pasal 2 (Modal 70% : 30%), Pasal 3 &amp; 4 (Tanggung Renteng).
                 </td>
-              </tr>
-              <tr>
-                <td><strong>Step 3</strong><br><span class="module-tag" style="background:#dcfce7; color:#15803d;">PENGALAMAN &amp; FASILITAS</span></td>
-                <td><strong>Daftar Pengalaman Kontrak 10 Tahun &amp; Fasilitas Alat</strong></td>
                 <td>
-                  • <strong>Tabel Pengalaman 10 Tahun:</strong> Riwayat pekerjaan sejenis yang telah selesai 100% (dilengkapi nomor kontrak dan tanggal BAST/FHO).<br>
-                  • <strong>Perhitungan Nilai KD Otomatis:</strong> Rumus $KD = 3 \times \text{Nilai Kontrak Tertinggi}$. Membuktikan pemenuhan syarat kualifikasi teknis lelang menengah/besar.<br>
-                  • <strong>Fasilitas Kantor &amp; Peralatan:</strong> Daftar inventaris kantor pendukung (perangkat keras, perangkat lunak analisis struktur/CAD, peralatan uji lapangan, kendaraan survei).
+                  <strong>Render Instan 0 Milidetik (WYSIWYG):</strong><br>
+                  Setiap huruf atau angka persentase modal yang diketik di panel kiri langsung tercermin ke lembar preview A4 di sebelah kanan secara realtime tanpa perlu menekan tombol refresh. Lembar ini identik dengan hasil cetak akhir.
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- DAFTAR TOMBOL INTERAKTIF PADA MODUL PQ -->
-        <div class="sub-title"><span class="sub-title-icon">🖲️</span> Rincian Fungsi Setiap Tombol di Modul Dokumen PQ:</div>
+        <!-- ======================================================== -->
+        <!-- BAGIAN 3: PARAMETER KSO & LEAD FIRM (GAMBAR 6.3)         -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🏛️</span> 3. Parameter Kontrak KSO &amp; Legalitas Lead Firm (Perusahaan Utama):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/kso_user_3.png" alt="Rincian Parameter KSO dan Lead Firm dengan 2 Kotak Penanda Merah" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 6.3: Rincian Kotak Atas (Parameter Kontrak KSO) dan Kotak Bawah (Formulir Legalitas Lengkap Lead Firm).</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 6.3</strong> di atas, terdapat 2 blok input krusial:</p>
+
+        <!-- KOTAK ATAS: PARAMETER KONTRAK & PERJANJIAN KSO -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah Atas: Parameter Kontrak &amp; Pembagian Porsi Modal KSO</div>
         <div class="table-responsive">
           <table class="doc-table">
             <thead>
               <tr>
-                <th style="width:22%;">Nama Tombol</th>
-                <th style="width:16%;">Lokasi</th>
-                <th style="width:40%;">Cara Kerja &amp; Fungsi</th>
-                <th style="width:22%;">Hasil Aksi</th>
+                <th style="width:25%;">Nama Kolom Input</th>
+                <th style="width:35%;">Nilai pada Foto</th>
+                <th style="width:40%;">Penjelasan Teknis Permen PUPR</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Dropdown Pilih Tender (<code>📋</code>)</strong></td>
-                <td>Bagian Teratas Formulir</td>
-                <td>Memilih daftar lelang yang sedang diikuti dari database Modul Tender. Saat dipilih, nama paket, lokasi dinas, dan nomor otomatis langsung terisi otomatis.</td>
-                <td>Otomatisasi Isian Paket</td>
+                <td><strong><code>Nama Paket Tender *</code></strong></td>
+                <td>Dropdown pilihan tender</td>
+                <td>Nama paket lelang yang akan dicantumkan secara otomatis pada konsiderans pembuka surat perjanjian kemitraan.</td>
               </tr>
               <tr>
-                <td><strong>Tab Stepper <code>Step 1 (KSO)</code></strong></td>
-                <td>Atas Bilah Formulir</td>
-                <td>Membuka formulir pengaturan kemitraan KSO, lead firm, persentase saham, dan live preview Surat Perjanjian KSO A4.</td>
-                <td>Beralih ke Tahap 1</td>
+                <td><strong><code>Kota Surat KSO</code></strong></td>
+                <td><code>Padang</code></td>
+                <td>Kota domisili hukum penandatanganan akta perjanjian kemitraan KSO.</td>
               </tr>
               <tr>
-                <td><strong>Tab Stepper <code>Step 2 (Kualifikasi)</code></strong></td>
-                <td>Atas Bilah Formulir</td>
-                <td>Membuka formulir legalitas badan usaha anggota KSO (NIB, SBU, Akta Notaris, KSWP) dan live preview Formulir Isian Kualifikasi.</td>
-                <td>Beralih ke Tahap 2</td>
+                <td><strong><code>Nomor Surat Perjanjian KSO</code></strong></td>
+                <td><code>01/KSO/...</code></td>
+                <td>Nomor registrasi internal surat perjanjian KSO yang disepakati bersama oleh seluruh pimpinan badan usaha.</td>
               </tr>
               <tr>
-                <td><strong>Tab Stepper <code>Step 3 (Pengalaman)</code></strong></td>
-                <td>Atas Bilah Formulir</td>
-                <td>Membuka tabel verifikasi kontrak pengalaman 10 tahun, perhitungan nilai KD, serta daftar fasilitas peralatan kantor.</td>
-                <td>Beralih ke Tahap 3</td>
+                <td><strong><code>Tanggal Surat KSO</code></strong></td>
+                <td><code>dd/mm/yyyy 📅</code></td>
+                <td>Tanggal resmi penandatanganan surat perjanjian (wajib bertanggal sebelum batas akhir pemasukan dokumen kualifikasi SPSE).</td>
               </tr>
               <tr>
-                <td><strong>Tombol <code>🖨️ Cetak Tab Ini</code></strong></td>
-                <td>Pojok Kanan Atas Live Preview</td>
-                <td>Mencetak dokumen yang sedang aktif di layar pratinjau (hanya mencetak Step yang sedang dibuka tanpa merusak tata letak).</td>
-                <td>Cetak / Simpan PDF</td>
+                <td><strong><code>Porsi Lead (%)</code></strong></td>
+                <td><code>70</code> %</td>
+                <td>Persentase modal Lead Firm. Sesuai Permen PUPR, Lead Firm wajib memiliki porsi saham/keikutsertaan terbesar (minimal &gt; 50% atau porsi mayoritas).</td>
               </tr>
               <tr>
-                <td><strong>Tombol <code>💾 Simpan Draft</code></strong></td>
-                <td>Bawah Panel Formulir</td>
-                <td>Menyimpan draf isian KSO dan kualifikasi ke memori lokal dan cloud Supabase agar data tidak hilang saat browser ditutup.</td>
-                <td>Penyimpanan Permanen</td>
+                <td><strong><code>Porsi Anggota 1 (%)</code></strong></td>
+                <td><code>30</code> %</td>
+                <td>Persentase keikutsertaan modal Anggota KSO 1 (Mitra).</td>
               </tr>
               <tr>
-                <td><strong>Tombol <code>🔄 Sinkronkan Master</code></strong></td>
-                <td>Bawah Panel Formulir</td>
-                <td>Menarik ulang data profil legalitas terbaru dari Modul Perusahaan jika ada pembaruan akta atau nomor rekening.</td>
-                <td>Pembaruan Data Instan</td>
-              </tr>
-              <tr>
-                <td><strong>Tombol Navigasi <code>Lanjut ➡️</code> / <code>⬅️ Kembali</code></strong></td>
-                <td>Bawah Panel Formulir</td>
-                <td>Melangkah secara berurutan antar Step 1, 2, dan 3 dengan validasi kolom wajib isi.</td>
-                <td>Navigasi Stepper Bertahap</td>
+                <td><strong><code>Porsi Anggota 2 (%)</code></strong></td>
+                <td><code>0</code> %</td>
+                <td>Persentase Anggota KSO 2 (jika konsorsium terdiri dari 3 perusahaan). Total porsi (Lead + Anggota 1 + Anggota 2) wajib tepat bernilai 100%.</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- PROSEDUR TATA CARA OPERASIONAL STANDAR (SOP) -->
-        <div class="sub-title"><span class="sub-title-icon">📋</span> Prosedur Operasional Standar (SOP): Penyusunan Dokumen PQ KSO dari Nol</div>
-        <ol class="step-list">
-          <li class="step-item">
-            <strong>Langkah 1 - Pilih Paket Tender yang Diikuti:</strong>
-            Buka menu <strong>📑 PQ Anggota KSO</strong> dari sidebar. Pada bagian atas panel, klik dropdown <em>Pilih Tender</em> dan pilih nama lelang yang terdaftar (contoh: <em>Pengawasan Jalan Lintas Provinsi</em>). Sistem akan otomatis mengisi nama pekerjaan dan instansi dinas terkait.
-          </li>
-          <li class="step-item">
-            <strong>Langkah 2 - Konfigurasi Perjanjian Kemitraan KSO (Step 1):</strong>
-            Tentukan <strong>Lead Firm</strong> (Pemimpin Konsorsium yang mewakili KSO) dan <strong>Partner Firm</strong> (Anggota Kemitraan). Masukkan pembagian porsi saham (contoh: <code>60%</code> Lead Firm dan <code>40%</code> Partner Firm). Pilih rekening bank yang digunakan untuk penampungan pembayaran termin. Periksa nomor surat KSO yang digenerate otomatis oleh sistem.
-          </li>
-          <li class="step-item">
-            <strong>Langkah 3 - Verifikasi Formulir Isian Kualifikasi (Step 2):</strong>
-            Klik tombol <code>Lanjut ke Step 2 (Kualifikasi)</code>. Periksa keabsahan NIB, tanggal berakhirnya SBU pengawasan, nomor akta perubahan terakhir, dan status KSWP pajak. Jika ada perubahan izin, perbarui di kolom formulir dan klik <em>Simpan Draft</em>.
-          </li>
-          <li class="step-item">
-            <strong>Langkah 4 - Pemilihan Pengalaman Kerja &amp; Validasi Nilai KD (Step 3):</strong>
-            Klik tombol <code>Lanjut ke Step 3 (Pengalaman)</code>. Pilih 3-5 paket pengalaman kerja sejenis yang memiliki nilai kontrak tertinggi dalam 10 tahun terakhir. Sistem akan secara otomatis menghitung nilai <strong>Kemampuan Dasar (KD)</strong>. Pastikan nilai KD melebihi nilai HPS lelang yang dipersyaratkan oleh Pokja Pemilihan.
-          </li>
-          <li class="step-item">
-            <strong>Langkah 5 - Pratinjau Live A4 &amp; Cetak Berkas Resmi:</strong>
-            Lihat panel sisi kanan untuk memastikan tata letak dokumen pratinjau A4 sudah rapi dan presisi. Klik tombol <strong>🖨️ Cetak Tab Ini</strong> pada masing-masing Step untuk mengunduh file PDF resmi, bubuhkan tanda tangan basah / digital bersertifikat dan materai Rp 10.000, lalu unggah ke formulir Prakualifikasi portal SPSE.
-          </li>
-        </ol>
+        <!-- KOTAK BAWAH: LEGALITAS LEAD FIRM -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah Bawah: Identitas Hukum &amp; Akta Notaris Lead Firm</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Nama Elemen &amp; Tombol</th>
+                <th style="width:35%;">Data pada Foto</th>
+                <th style="width:40%;">Fungsi Otomatisasi &amp; Validasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Header &amp; Badge</strong></td>
+                <td><code>• LEAD FIRM</code> <span class="badge b-teal" style="font-size:11px;">Utama</span></td>
+                <td>Menandai badan usaha ini sebagai pemimpin kemitraan yang bertindak mewakili KSO di hadapan Pokja Pemilihan SPSE.</td>
+              </tr>
+              <tr>
+                <td><strong>Bilah Tombol Aksi Cepat</strong></td>
+                <td>
+                  <code>+ Baru</code> | <code>📄 Bab A-G</code> | <code>✏️ Edit</code> | <code>💾 Simpan ke Master</code>
+                </td>
+                <td>
+                  • <strong>+ Baru:</strong> Memasukkan data entitas luar.<br>
+                  • <strong>Bab A-G:</strong> Membuka seluruh isian kualifikasi SPSE (Izin Usaha, Akta, Pajak, Pengurus).<br>
+                  • <strong>Simpan ke Master:</strong> Menyimpan pembaruan data akta langsung ke Modul Data Perusahaan.
+                </td>
+              </tr>
+              <tr>
+                <td><strong><code>Pilih Perusahaan *</code></strong></td>
+                <td><code>CV. Putra Cipta Mandiri Consultant ⌄</code></td>
+                <td>Memilih badan usaha dari master data perusahaan. Seluruh data legalitas di bawahnya otomatis terisi (*auto-fill*).</td>
+              </tr>
+              <tr>
+                <td><strong><code>Nama Direktur *</code> &amp; Jabatan</strong></td>
+                <td><code>Ir. NEVI AULIA (Direktur)</code> | Jabatan: <code>Direktur</code></td>
+                <td>Nama pimpinan berwenang bertandatangan sesuai akta notaris yang masih berlaku.</td>
+              </tr>
+              <tr>
+                <td><strong>NIK, Telepon, Email</strong></td>
+                <td>NIK: <code>1371110707630010</code><br>Telp: <code>0751 - 8972809</code><br>Email: <code>putracipta2017@gmail.com</code></td>
+                <td>Identitas verifikasi pejabat penanggung jawab badan usaha.</td>
+              </tr>
+              <tr>
+                <td><strong>Alamat Perusahaan</strong></td>
+                <td><code>Jl. Pekanbaru No 24. Asratek. Ulak Karang Selatan. Kec. Padang Utara. Kota Padang</code></td>
+                <td>Alamat domisili kantor resmi sesuai Nomor Induk Berusaha (NIB).</td>
+              </tr>
+              <tr>
+                <td><strong>Akta Pendirian</strong></td>
+                <td>No: <code>03</code> | Notaris: <code>Wahidah Septiani, SH</code></td>
+                <td>Landasan hukum pendirian awal badan usaha.</td>
+              </tr>
+              <tr>
+                <td><strong>Akta Perubahan Terakhir</strong></td>
+                <td>No: <code>02</code> | Tgl: <code>07/07/2026</code> | Notaris: <code>Wahidah Septiani, SH</code></td>
+                <td>Bukti akta perubahan anggaran dasar/susunan pengurus terbaru.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-        <!-- CONTOH SKENARIO NYATA -->
+        <!-- ======================================================== -->
+        <!-- BAGIAN 4: ANGGOTA KSO 1 & 2 (GAMBAR 6.4)                 -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🤝</span> 4. Identitas Anggota Mitra KSO 1 &amp; Anggota KSO 2 (Opsional):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/kso_user_4.png" alt="Formulir Anggota KSO 1 dan Anggota KSO 2 dengan 2 Kotak Penanda Merah" style="width: 100%; max-width: 1024px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 6.4: Rincian Kotak Atas (Anggota KSO 1 - Mitra PT. LIMA PILAR PERSADA) dan Kotak Bawah (Anggota KSO 2 - Opsional).</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 6.4</strong> di atas, terdapat 2 blok konfigurasi mitra kemitraan:</p>
+
+        <!-- KOTAK ATAS: ANGGOTA KSO 1 -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah Atas: Anggota KSO 1 (Mitra Konsorsium Resmi)</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Nama Kolom</th>
+                <th style="width:35%;">Data pada Foto</th>
+                <th style="width:40%;">Penjelasan Operasional</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Header &amp; Status</strong></td>
+                <td><code>• ANGGOTA KSO 1</code> <span class="badge b-teal" style="font-size:11px;">Mitra</span></td>
+                <td>Badan usaha mitra yang bersekutu dengan Lead Firm dalam pengerjaan paket lelang.</td>
+              </tr>
+              <tr>
+                <td><strong><code>Pilih Perusahaan *</code></strong></td>
+                <td><code>PT. LIMA PILAR PERSADA ⌄</code></td>
+                <td>Badan usaha anggota konsorsium pemegang porsi modal 30%.</td>
+              </tr>
+              <tr>
+                <td><strong>Pimpinan &amp; NIK</strong></td>
+                <td><code>DEVIN ADITYO, ST (Direktur)</code><br>Jabatan: <code>Direktur Utama</code><br>NIK: <code>3273120709940008</code></td>
+                <td>Pimpinan mitra yang memberikan kuasa dan menandatangani perjanjian kemitraan KSO secara bersama-sama.</td>
+              </tr>
+              <tr>
+                <td><strong>Alamat Studio &amp; Office</strong></td>
+                <td><code>Jl. Awiwulung No. 23 Astana Anyar Bandung</code></td>
+                <td>Domisili operasional kantor rekanan mitra KSO.</td>
+              </tr>
+              <tr>
+                <td><strong>Akta Pendirian</strong></td>
+                <td>No: <code>05</code> | Tgl: <code>10/12/2014</code><br>Notaris: <code>Dra. Siti Mariam Danoerahardja, SH</code></td>
+                <td>Legalitas notariat pendirian perseroan mitra.</td>
+              </tr>
+              <tr>
+                <td><strong>Akta Perubahan</strong></td>
+                <td>No: <code>03</code> | Tgl: <code>18/11/2021</code><br>Notaris: <code>Eva Siti Rahmatillah SH, MKn</code></td>
+                <td>Landasan hukum perubahan anggaran dasar perseroan mitra terakhir.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- KOTAK BAWAH: ANGGOTA KSO 2 -->
+        <div class="sub-title"><span class="sub-title-icon">🟥</span> Kotak Merah Bawah: Anggota KSO 2 (Mitra Ketiga — Bersifat Opsional)</div>
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Karakteristik Fitur</th>
+                <th style="width:35%;">Pengaturan pada Foto</th>
+                <th style="width:40%;">Logika Sistem Dokumen KSO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Header &amp; Sifat</strong></td>
+                <td><code>• ANGGOTA KSO 2</code> <span class="badge b-amb" style="font-size:11px;">Opsional</span></td>
+                <td>Disediakan khusus untuk paket proyek skala besar (&gt; Rp 15 Milyar) yang melibatkan konsorsium 3 badan usaha.</td>
+              </tr>
+              <tr>
+                <td><strong>Status Pemilihan</strong></td>
+                <td><code>-- Tanpa Anggota 2 (Kosongkan) -- ⌄</code></td>
+                <td>Jika lelang hanya terdiri dari 2 badan usaha (Lead + Mitra 1), pilih opsi ini. Sistem secara cerdas akan menyusun format naskah perjanjian hukum KSO khusus untuk 2 pihak tanpa menyisakan baris kosong (*clean legal layout*).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- BAGIAN 5: MODAL PILIHAN CETAK DOKUMEN PQ (GAMBAR 6.5)    -->
+        <!-- ======================================================== -->
+        <div class="sub-title"><span class="sub-title-icon">🖨️</span> 5. Dialog Modal Pilihan Cetak Dokumen PQ (Output Resmi SPSE):</div>
+
+        <div class="tut-screenshot-wrap" style="margin: 20px 0 26px; text-align: center; background: #090d16; padding: 14px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: var(--shadow);">
+          <img src="./img/kso_user_5.png" alt="Modal Pop-up Pilihan Cetak Dokumen PQ dengan Kotak Penanda Merah" style="width: 100%; max-width: 680px; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
+          <p style="margin-top: 12px; font-size: 12.5px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📸</span> <em>Gambar 6.5: Dialog Pop-Up "Pilihan Cetak Dokumen PQ" dengan Kotak Penanda Merah Mengelilingi 4 Opsi Cetak Dokumen Resmi.</em>
+          </p>
+        </div>
+
+        <p>Berdasarkan <strong>Gambar 6.5</strong> di atas, saat tombol <strong><code>🖨️ Cetak ⌄</code></strong> diklik, sistem memunculkan <strong>4 Opsi Cetak Dokumen KSO</strong>:</p>
+
+        <div class="table-responsive">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:28%;">Pilihan Dokumen Cetak</th>
+                <th style="width:32%;">Bentuk Tombol &amp; Warna</th>
+                <th style="width:40%;">Muatan Berkas &amp; Ketentuan Hukum SPSE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>🖨️ Cetak Semua Dokumen KSO<br>(Tab 1 Lengkap - 3 Lembar)</code></strong></td>
+                <td>Tombol hijau toska tua penuh (tombol rekomendasi utama)</td>
+                <td>
+                  <strong>Pencetakan Berkas Bundel Lengkap (3 Halaman):</strong><br>
+                  Mencetak sekaligus: (1) Surat Perjanjian Kemitraan KSO, (2) Surat Kuasa Kemitraan KSO, dan (3) Pakta Integritas Kemitraan KSO dalam satu file dokumen PDF siap upload SPSE.
+                </td>
+              </tr>
+              <tr>
+                <td><strong><code>📄 1. Hanya Surat Perjanjian Kemitraan (KSO)</code></strong></td>
+                <td>Kartu tombol putih (opsi mandiri 1)</td>
+                <td>Mencetak lembar utama akta perjanjian KSO yang memuat persentase keikutsertaan modal (70% - 30%), penunjukan Leading Firm, hak/kewajiban tanggung renteng, dan kolom tanda tangan bersama bermaterai.</td>
+              </tr>
+              <tr>
+                <td><strong><code>📄 2. Hanya Surat Kuasa KSO</code></strong></td>
+                <td>Kartu tombol putih (opsi mandiri 2)</td>
+                <td>Mencetak surat kuasa penunjukan resmi dari seluruh direksi anggota mitra kepada Lead Firm untuk menandatangani surat penawaran, menghadiri pembuktian kualifikasi, dan menandatangani kontrak SPPBJ atas nama KSO.</td>
+              </tr>
+              <tr>
+                <td><strong><code>📄 3. Hanya Pakta Integritas KSO</code></strong></td>
+                <td>Kartu tombol putih (opsi mandiri 3)</td>
+                <td>Mencetak naskah komitmen anti korupsi, kolusi, dan nepotisme (KKN) standar LKPP yang ditandatangani oleh seluruh pimpinan badan usaha anggota kemitraan.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <div class="case-box">
-          <span class="case-badge">💡 Contoh Skenario Penggunaan Nyata</span>
-          <div class="case-title">Penyusunan KSO Tender Pengawasan Jalan Senilai Rp 1,2 Milyar</div>
+          <span class="case-badge">💡 Contoh Kasus Nyata di Lapangan</span>
+          <div class="case-title">Penyusunan Perjanjian KSO Paket Pengawasan Jalan Rp 2,85 Milyar</div>
           <div class="case-content">
-            <strong>Kondisi Tender:</strong><br>
-            Pokja UKPBJ mensyaratkan peserta lelang memiliki Kemampuan Dasar (KD) minimal Rp 1,2 Milyar dan izin sub-bidang Pengawasan Rekayasa Jalan. PT. Putra Aulia Konsultan bersepakat membentuk kemitraan KSO dengan PT. Citra Rancang Mandiri.<br><br>
-            <strong>Pelaksanaan di Modul Dokumen PQ:</strong><br>
-            1. Pada <strong>Step 1</strong>, staf memilih paket lelang di dropdown. Memilih <em>PT. Putra Aulia Konsultan</em> sebagai Lead Firm (60%) dan <em>PT. Citra Rancang Mandiri</em> sebagai Partner Firm (40%). Sistem otomatis membuat nomor perjanjian: <code>01/KSO/PAK-PAG/PJN/XI/2026</code>.<br>
-            2. Pada <strong>Step 2</strong>, data NIB dan SBU kedua perusahaan terverifikasi aktif tanpa ada yang kedaluwarsa.<br>
-            3. Pada <strong>Step 3</strong>, staf memilih pengalaman kontrak PT. Putra Aulia pada paket supervisi tahun 2024 senilai Rp 550.000.000. Sistem menghitung $KD = 3 \times \text{Rp } 550.000.000 = \text{\textbf{Rp 1.650.000.000}}$. Karena Rp 1,65 Milyar &gt; Rp 1,2 Milyar, syarat kualifikasi dinyatakan <strong>Lolos / Memenuhi Ambang Batas Teknis</strong>.<br>
-            4. Seluruh berkas dicetak dan diserahkan ke direktur utama kedua belah pihak untuk penandatanganan bersama hanya dalam waktu 15 menit!
-          </div>
-        </div>
-
-        <div class="alert-callout alert-tip">
-          <div>
-            ⚡ <strong>Tips Kunci Kualifikasi KSO:</strong><br>
-            Sesuai aturan lelang pemerintah, anggota KSO yang bertindak sebagai <strong>Lead Firm wajib memiliki porsi kepemilikan modal terbesar</strong> (minimal di atas 50% atau porsi mayoritas). Pastikan persentase porsi di Step 1 mencerminkan kepemimpinan teknis ini agar tidak terkena diskualifikasi administrasi oleh Pokja.
+            1. Estimator memilih tender <strong>"Pengawasan IJD MYC PJN Wilayah I Sumbar"</strong> dari dropdown bilah atas.<br>
+            2. Mengatur persentase modal: <strong>CV. Putra Cipta Mandiri Consultant (70% - Lead Firm)</strong> dan <strong>PT. LIMA PILAR PERSADA (30% - Mitra)</strong>.<br>
+            3. Sistem secara otomatis menghasilkan barcode lelang <code>KSO-2026</code> dan menyusun lembar draf surat perjanjian di panel kanan.<br>
+            4. Klik <strong><code>🖨️ Cetak -> Cetak Semua Dokumen KSO (Tab 1 Lengkap - 3 Lembar)</code></strong> atau klik <strong><code>📦 ZIP Word</code></strong> untuk dikirimkan kepada direktur mitra guna pembubuhan e-meterai resmi sebelum batas waktu <code>Jadwal PQ: 09 November 2026</code>!
           </div>
         </div>
       </section>
